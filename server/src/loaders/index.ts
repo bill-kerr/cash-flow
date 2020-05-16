@@ -1,6 +1,8 @@
 import { initExpressApp } from './express';
+import { initMongoose } from './mongoose';
 
-function initializeApplication() {
+async function initializeApplication() {
+  await initMongoose();
   return initExpressApp();
 }
 
