@@ -4,7 +4,7 @@ import 'express-async-errors';
 
 import { userRouter } from '../controllers/user.controller';
 import { NotFoundError } from '../errors/not-found-error';
-import { errorHandler } from '../middleware/error-handler';
+import { errorHandler } from '../middleware/error-handler.middleware';
 
 function init(): Application {
   const app = express();

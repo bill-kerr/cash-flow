@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 import { hashPassword } from '../util/password';
 
-interface UserDto {
+interface CreateUserDto {
   email: string,
   password: string
 }
@@ -13,7 +13,7 @@ interface User extends mongoose.Document {
 }
 
 interface UserModel extends mongoose.Model<User> {
-  build(userDto: UserDto): User;
+  build(userDto: CreateUserDto): User;
 }
 
 const userSchema = new mongoose.Schema({
@@ -30,11 +30,16 @@ const userSchema = new mongoose.Schema({
 }, {
   toJSON: {
     transform(doc, ret) {
-      ret.object = 'user';
-      ret.id = ret._id;
+      const id = ret._id.toString();
       delete ret._id;
       delete ret.__v;
       delete ret.password;
+
+      return {
+        object: 'user',
+        id,
+        ...ret
+      }
     }
   }
 });
@@ -47,6 +52,11 @@ userSchema.pre('save', async function(done) {
   done();
 });
 
+
 const UserRepository = mongoose.model<User, UserModel>('UserRepository', userSchema);
 
-export { UserRepository };
+export { 
+  User,
+  CreateUserDto,
+  UserRepository 
+};
