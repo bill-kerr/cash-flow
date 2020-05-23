@@ -72,3 +72,29 @@ it('rejects Authorization headers without Bearer prefixes', async () => {
   expect(res.status).toBe(401);
   expect(res.body).toEqual(errorFormat);
 });
+
+it('rejects request with a 400 if no data is supplied', async () => {
+  const res = await request(app)
+  .post(url)
+  .set({
+    'Authorization': 'Bearer dsfsdfsdf',
+    'Content-Type': 'application/json'
+  })
+  .send({})
+
+  expect(res.status).toBe(400);
+  expect(res.body).toEqual(errorFormat);
+});
+
+it('rejects HTTP methods that are not allowed', async () => {
+  const res = await request(app)
+  .patch(url)
+  .set({
+    'Authorization': 'Bearer dsfsdfsdf',
+    'Content-Type': 'application/json'
+  })
+  .send({})
+
+  expect(res.status).toBe(405);
+  expect(res.body).toEqual(errorFormat);
+});

@@ -1,5 +1,5 @@
 import { BaseError, SerializedError } from './base-error';
-import { HttpResponse } from '../util/http-response';
+import { HttpResponse } from '../types/http-response';
 
 class NotAuthorizedError extends BaseError {
   statusCode = HttpResponse.UNAUTHORIZED;

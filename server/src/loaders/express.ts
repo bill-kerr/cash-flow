@@ -2,17 +2,21 @@ import express, { Application, Request, Response } from 'express';
 import { json } from 'body-parser';
 import 'express-async-errors';
 import cors from 'cors';
+import helmet from 'helmet';
 
 import { NotFoundError } from '../errors/not-found-error';
 import { errorHandler } from '../middleware/error-handler.middleware';
 import { verifyJsonMediaType } from '../middleware/verify-json-media-type.middleware';
 import { transactionScheduleRouter } from '../controllers/transaction-schedule.controller';
+import { requestMethodChecker } from '../middleware/request-method-checker.middleware';
 
 function init(): Application {
   const app = express();
 
+  app.use(helmet());
   app.use(cors());
   app.use(json());
+  app.use(requestMethodChecker);
   app.use(verifyJsonMediaType);
 
   // Example auth code

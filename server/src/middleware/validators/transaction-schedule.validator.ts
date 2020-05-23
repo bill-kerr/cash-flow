@@ -1,6 +1,5 @@
 import { body } from 'express-validator';
-
-import { dateRegex } from '../../util/date-regex';
+import { isValidDate } from '../../util/is-valid-date';
 
 const createTransactionScheduleValidator = [
   body('amount')
@@ -27,16 +26,16 @@ const createTransactionScheduleValidator = [
     .notEmpty()
     .bail()
     .withMessage('The startDate field is required and cannot be empty.')
-    .matches(dateRegex)
-    .withMessage('The endDate field must contain a date formatted as YYYY-MM-DD.'),
+    .custom(isValidDate)
+    .withMessage('The startDate field must contain a valid date formatted as YYYY-MM-DD.'),
   body('endDate')
     .optional()
     .trim()
     .notEmpty()
     .bail()
     .withMessage('The endDate field cannot be empty.')
-    .matches(dateRegex)
-    .withMessage('The endDate field must contain a date formatted as YYYY-MM-DD.')
+    .custom(isValidDate)
+    .withMessage('The endDate field must contain a valid date formatted as YYYY-MM-DD.')
 ];
 
 export { createTransactionScheduleValidator };

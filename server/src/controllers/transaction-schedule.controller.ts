@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 
-import { HttpResponse } from '../util/http-response';
+import { HttpResponse } from '../types/http-response';
 import { handleValidationResult } from '../middleware/validation-handler.middleware';
 import { transactionScheduleService } from '../services/transaction-schedule.service';
 import { createTransactionScheduleValidator } from '../middleware/validators/transaction-schedule.validator';

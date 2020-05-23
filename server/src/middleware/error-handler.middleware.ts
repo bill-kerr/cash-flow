@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 
-import { HttpResponse } from '../util/http-response';
+import { HttpResponse } from '../types/http-response';
 import { BaseError } from '../errors/base-error'
 import { ErrorResponse } from '../errors/error-response';
 
@@ -24,9 +24,22 @@ function errorHandler(
       object: 'error',
       statusCode: err.statusCode,
       errors: err.serializeErrors()
-    }
+    };
 
     return res.status(err.statusCode).send(errorResponse);
+  }
+
+  if (err instanceof SyntaxError) {
+    const errorResponse: ErrorResponse = {
+      object: 'error',
+      statusCode: HttpResponse.BAD_REQUEST,
+      errors: [{
+        title: 'Syntax error',
+        detail: 'Request contained invalid JSON.'
+      }]
+    };
+
+    return res.status(HttpResponse.BAD_REQUEST).send(errorResponse);
   }
 
   console.error(err);

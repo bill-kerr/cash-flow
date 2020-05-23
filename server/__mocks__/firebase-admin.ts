@@ -20,7 +20,7 @@ const fakeUser = {
   email: 'test@test.com',
   email_verified: false,
   firebase: { identities: { email: ['test@test.com'] }, sign_in_provider: 'password' },
-  uid: 'ccccc'
+  uid: 'fake-id'
 }
 
 export function auth() {
