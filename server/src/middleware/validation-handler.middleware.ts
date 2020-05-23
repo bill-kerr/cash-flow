@@ -18,20 +18,14 @@ export const handleValidationResult = (
 
 function getValidationResult(req: Request): ValidationError[] {
   const validationErrors = validationResult(req).array();
-  const unknownFieldErrors = checkForUnknownFields(req);
+  const unknownFieldErrors = generateUnknownFieldErrors(req);
 
   return [...validationErrors, ...unknownFieldErrors];
 }
 
-function checkForUnknownFields(req: Request): ValidationError[] {
-  const validKeys = Object.keys(matchedData(req, { onlyValidData: false }));
-  const requestFields = Object.entries(req.body);
-  const unknownFields = requestFields.filter(field => !validKeys.includes(field[0]));
-  return generateUnknownFieldErrors(unknownFields);
-}
-
-function generateUnknownFieldErrors(fields: [string, any][]): ValidationError[] {
-  return fields.map(field => {
+function generateUnknownFieldErrors(req: Request): ValidationError[] {
+  const unknownFields = getUnknownFields(req);
+  return unknownFields.map(field => {
     return {
       location: 'body',
       param: field[0],
@@ -39,4 +33,11 @@ function generateUnknownFieldErrors(fields: [string, any][]): ValidationError[] 
       msg: `Unknown property ${ field[0] } with value ${ field[1] }.`
     }
   });
+}
+
+function getUnknownFields(req: Request): [string, any][] {
+  const validKeys = Object.keys(matchedData(req, { onlyValidData: false }));
+  const requestFields = Object.entries(req.body);
+  const unknownFields = requestFields.filter(field => !validKeys.includes(field[0]));
+  return unknownFields;
 }

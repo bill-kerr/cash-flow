@@ -1,6 +1,6 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
-import firebase from '@firebase/testing';
+jest.mock('firebase-admin');
 
 let mongo: MongoMemoryServer;
 beforeAll(async () => {
@@ -11,8 +11,6 @@ beforeAll(async () => {
     useNewUrlParser: true,
     useUnifiedTopology: true
   });
-
-  firebase.initializeAdminApp({ projectId: 'test-app' });
 });
 
 beforeEach(async () => {

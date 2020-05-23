@@ -1,4 +1,4 @@
-import HttpResponse from '../util/http-response';
+import { HttpResponse } from '../util/http-response';
 
 export interface SerializedError {
   title: string,

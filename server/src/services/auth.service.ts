@@ -2,11 +2,12 @@ import * as admin from 'firebase-admin';
 
 class AuthService {
 
-  static async verifyToken(token: string) {
-    const decodedToken = await admin.auth().verifyIdToken(token);
-    console.log(decodedToken);
+  getUserFromToken(token: string) {
+    return admin.auth().verifyIdToken(token);
   }
 
 }
 
-export { AuthService };
+const authService = new AuthService();
+Object.freeze(authService);
+export { authService };

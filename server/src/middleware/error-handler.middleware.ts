@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 
-import HttpResponse from '../util/http-response';
+import { HttpResponse } from '../util/http-response';
 import { BaseError } from '../errors/base-error'
 import { ErrorResponse } from '../errors/error-response';
 
@@ -29,6 +29,7 @@ function errorHandler(
     return res.status(err.statusCode).send(errorResponse);
   }
 
+  console.error(err);
   res.status(HttpResponse.INTERNAL_SERVER_ERROR).send(defaultError);
 }
 

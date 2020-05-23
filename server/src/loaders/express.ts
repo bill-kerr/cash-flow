@@ -3,27 +3,30 @@ import { json } from 'body-parser';
 import 'express-async-errors';
 import cors from 'cors';
 
-import * as admin from 'firebase-admin';
-
 import { NotFoundError } from '../errors/not-found-error';
 import { errorHandler } from '../middleware/error-handler.middleware';
+import { verifyJsonMediaType } from '../middleware/verify-json-media-type.middleware';
+import { transactionScheduleRouter } from '../controllers/transaction-schedule.controller';
 
 function init(): Application {
   const app = express();
 
   app.use(cors());
   app.use(json());
+  app.use(verifyJsonMediaType);
 
-  app.get('/api/v1', async (req: Request, res: Response) => {
-    try {
-      const token = req.headers['authentication']!.toString().split(' ')[1];
-      const user = await admin.auth().verifyIdToken(token);
-      res.send(user.email)
-    } catch (err) {
-      console.log(err);
-    }
-  });
+  // Example auth code
+  // app.get('/api/v1', async (req: Request, res: Response) => {
+  //   try {
+  //     const token = req.headers['authentication']!.toString().split(' ')[1];
+  //     const user = await admin.auth().verifyIdToken(token);
+  //     res.send(user.email)
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // });
 
+  app.use('/api/v1/transaction-schedules', transactionScheduleRouter);
   app.all('*', (req: Request, res: Response) => {
     throw new NotFoundError('The specified endpoint does not exist.');
   });

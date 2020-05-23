@@ -9,4 +9,4 @@ enum HttpResponse {
   INTERNAL_SERVER_ERROR = 500
 }
 
-export default HttpResponse;
+export { HttpResponse };

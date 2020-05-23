@@ -1,17 +1,17 @@
 import { BaseError, SerializedError } from './base-error';
 import { HttpResponse } from '../util/http-response';
 
-class NotFoundError extends BaseError {
-  statusCode = HttpResponse.NOT_FOUND;
+class NotAuthorizedError extends BaseError {
+  statusCode = HttpResponse.UNAUTHORIZED;
   error: SerializedError = {
-    title: 'Not found',
+    title: 'Not authorized',
     detail: ''
   };
 
-  constructor(message: string) {
+  constructor(message = 'User is not authorized.') {
     super(message);
-    Object.setPrototypeOf(this, NotFoundError.prototype);
     this.error.detail = message;
+    Object.setPrototypeOf(this, NotAuthorizedError.prototype);
   }
 
   serializeErrors() {
@@ -19,4 +19,4 @@ class NotFoundError extends BaseError {
   }
 }
 
-export { NotFoundError };
+export { NotAuthorizedError };
