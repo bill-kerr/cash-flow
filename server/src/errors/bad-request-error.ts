@@ -4,6 +4,7 @@ import { HttpResponse } from '../types/http-response';
 class BadRequestError extends BaseError {
   statusCode = HttpResponse.BAD_REQUEST;
   error: SerializedError = {
+    object: 'error-detail',
     title: 'Bad request',
     detail: ''
   };

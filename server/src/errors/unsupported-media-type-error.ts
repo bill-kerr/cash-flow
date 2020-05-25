@@ -5,6 +5,7 @@ class UnsupportedMediaTypeError extends BaseError {
   statusCode = HttpResponse.UNSUPPORTED_MEDIA_TYPE;
 
   error: SerializedError = {
+    object: 'error-detail',
     title: 'Unsupported media type',
     detail: 'Requests must contain a Content-Type header of application/json.'
   };

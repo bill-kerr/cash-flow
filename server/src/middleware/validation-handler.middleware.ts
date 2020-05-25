@@ -30,7 +30,7 @@ function generateUnknownFieldErrors(req: Request): ValidationError[] {
       location: 'body',
       param: field[0],
       value: field[1],
-      msg: `Unknown property ${ field[0] } with value ${ field[1] }.`
+      msg: `Unknown property '${ field[0] }' with value '${ field[1] }'.`
     }
   });
 }

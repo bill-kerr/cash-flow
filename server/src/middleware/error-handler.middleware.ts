@@ -8,6 +8,7 @@ const defaultError: ErrorResponse = {
   object: 'error',
   statusCode: HttpResponse.INTERNAL_SERVER_ERROR,
   errors: [{
+    object: 'error-detail',
     title: 'Internal server error',
     detail: 'An unknown error occured.'
   }]
@@ -34,6 +35,7 @@ function errorHandler(
       object: 'error',
       statusCode: HttpResponse.BAD_REQUEST,
       errors: [{
+        object: 'error-detail',
         title: 'Syntax error',
         detail: 'Request contained invalid JSON.'
       }]

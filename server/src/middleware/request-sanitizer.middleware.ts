@@ -6,7 +6,6 @@ const requestSanitizer = (
   next: NextFunction
 ) => {
   
-
   next();
 }
 

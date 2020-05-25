@@ -4,6 +4,7 @@ import { HttpResponse } from '../types/http-response';
 class NotFoundError extends BaseError {
   statusCode = HttpResponse.NOT_FOUND;
   error: SerializedError = {
+    object: 'error-detail',
     title: 'Not found',
     detail: ''
   };

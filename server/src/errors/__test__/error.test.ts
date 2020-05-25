@@ -7,6 +7,7 @@ const errorFormat = {
   object: 'error',
   statusCode: expect.any(Number),
   errors: expect.arrayContaining([{
+    object: 'error-detail',
     title: expect.any(String),
     detail: expect.any(String)
   }])

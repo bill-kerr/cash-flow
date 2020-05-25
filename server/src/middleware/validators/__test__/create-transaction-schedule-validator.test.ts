@@ -8,15 +8,7 @@ const headers = {
   'Content-Type': 'application/json'
 }
 
-interface Data {
-  amount: any,
-  description: any,
-  isRecurring: any,
-  startDate: any,
-  endDate: any
-}
-
-const fakeData: Data = {
+const fakeData: any = {
   amount: 500,
   description: 'test description',
   isRecurring: true,
@@ -39,6 +31,28 @@ const badTypeMessage = (field: string, contains: string) => {
   return `The ${ field } field must contain ${ contains }.`;
 };
 
+it('sanitizes script tags', async () => {
+  const data = { ...fakeData };
+  data.description = '<script>alert(\'hello\')</script>';
+  const res = await makeRequest(data);
+  expect(res.body.description).toBe('&lt;script&gt;alert(&#x27;hello&#x27;)&lt;&#x2F;script&gt;');
+});
+
+it('trims whitespace from fields', async () => {
+  const data = { ...fakeData };
+  data.description = 'test description    ';
+  const res = await makeRequest(data);
+  expect(res.body.description).toBe('test description');
+});
+
+it('rejects unknown fields', async () => {
+  const data = { ...fakeData };
+  data.test = 'bad data';
+  const res = await makeRequest(data);
+  expect(res.status).toBe(400);
+  expect(res.body.errors[0].detail).toBe('Unknown property \'test\' with value \'bad data\'.')
+});
+
 it('rejects an empty amount field', async () => {
   const data = { ...fakeData };
   delete data.amount;
@@ -53,6 +67,20 @@ it('rejects a non-number amount field', async () => {
   const res = await makeRequest(data);
   expect(res.status).toBe(400);
   expect(res.body.errors[0].detail).toBe(badTypeMessage('amount', 'a number'));
+});
+
+it('rounds the amount field to two decimal places', async () => {
+  let data = { ...fakeData };
+  data.amount = 33.335;
+  let res = await makeRequest(data);
+  expect(res.status).toBe(201);
+  expect(res.body.data.amount).toBe(33.34);
+
+  data = { ...fakeData };
+  data.amount = 33.333;
+  res = await makeRequest(data);
+  expect(res.status).toBe(201);
+  expect(res.body.data.amount).toBe(33.33);
 });
 
 it('rejects an empty description field', async () => {

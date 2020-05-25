@@ -13,7 +13,7 @@ const fakeUser = {
   iss: 'https://securetoken.google.com/cash-flow-calculator',
   aud: 'cash-flow-calculator',
   auth_time: 1590180916,
-  user_id: 'aaaaa',
+  user_id: 'fake-id',
   sub: 'bbbbb',
   iat: 1590180916,
   exp: 1590184516,

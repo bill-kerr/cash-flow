@@ -1,6 +1,7 @@
 import { HttpResponse } from '../types/http-response';
 
 export interface SerializedError {
+  object: 'error-detail',
   title: string,
   detail: string
 }

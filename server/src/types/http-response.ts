@@ -1,4 +1,4 @@
-enum HttpResponse {
+export enum HttpResponse {
   OK = 200,
   CREATED = 201,
   BAD_REQUEST = 400,
@@ -9,5 +9,3 @@ enum HttpResponse {
   UNSUPPORTED_MEDIA_TYPE = 415,
   INTERNAL_SERVER_ERROR = 500
 }
-
-export { HttpResponse };

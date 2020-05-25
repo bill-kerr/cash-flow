@@ -1,4 +1,4 @@
-import { BaseError } from './base-error';
+import { BaseError, SerializedError } from './base-error';
 import { HttpResponse } from '../types/http-response';
 import { ValidationError } from 'express-validator';
 
@@ -13,9 +13,10 @@ class RequestValidationError extends BaseError {
   serializeErrors() {
     return this.errors.map(error => {
       return {
+        object: 'error-detail',
         title: 'Request validation error',
         detail: error.msg
-      }
+      } as SerializedError;
     });
   }
 }

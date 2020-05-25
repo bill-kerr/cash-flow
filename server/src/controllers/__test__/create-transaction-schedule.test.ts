@@ -6,7 +6,7 @@ const url = '/api/v1/transaction-schedules';
 const headers = {
   'Authorization': 'Bearer sldjflk',
   'Content-Type': 'application/json'
-}
+};
 
 const fakeData = {
   amount: 500,
