@@ -1,3 +1,5 @@
+import { Frequency, DayOfWeek, Month } from '../../types';
+
 interface CreateTransactionScheduleDto {
   id: string;
   amount: number;
@@ -5,6 +7,11 @@ interface CreateTransactionScheduleDto {
   recurring: boolean;
   startDate: string;
   endDate?: string;
+  frequency?: Frequency;
+  separation?: number;
+  dayOfWeek?: DayOfWeek;
+  dayOfMonth?: number;
+  month?: Month
   userId: string;
 }
 

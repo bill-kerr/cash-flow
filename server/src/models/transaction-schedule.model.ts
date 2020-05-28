@@ -1,14 +1,19 @@
 import mongoose from 'mongoose';
 import { Moment } from 'moment';
-
 import { CreateTransactionScheduleDto } from './dto/transaction-schedule.dto';
+import { Frequency, DayOfWeek, Month } from '../types';
 
 interface TransactionSchedule extends mongoose.Document {
   id: string;
   amount: string;
   description: string;
   startDate: Moment;
-  endDate: Moment;
+  endDate?: Moment;
+  frequency?: Frequency;
+  separation?: number;
+  dayOfWeek?: DayOfWeek;
+  dayOfMonth?: number;
+  month?: Month;
   userId: string;
 }
 
@@ -37,9 +42,34 @@ const transactionScheduleSchema = new mongoose.Schema({
     type: String,
     required: false
   },
+  frequency: {
+    type: String,
+    required: false
+  },
+  separation: {
+    type: Number,
+    required: false,
+    default: null
+  },
+  dayOfWeek: {
+    type: String,
+    required: false,
+    default: null
+  },
+  dayOfMonth: {
+    type: String,
+    required: false,
+    default: null
+  },
+  month: {
+    type: String,
+    required: false,
+    default: null
+  },
   userId: {
     type: String,
-    required: true
+    required: true,
+    default: null
   }
 }, {
   toJSON: {

@@ -16,7 +16,7 @@ router.get(
 
     const resData = {
       object: 'list',
-      data: [...transactionSchedules]
+      data: transactionSchedules
     };
     res.status(HttpResponse.OK).send(resData);
   }

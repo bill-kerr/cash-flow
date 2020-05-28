@@ -13,7 +13,11 @@ const fakeData = {
   description: 'test description',
   isRecurring: true,
   startDate: '2020-05-01',
-  endDate: '2020-05-30'
+  endDate: '2020-05-30',
+  frequency: 'YEARLY',
+  separation: 0,
+  month: 'OCTOBER',
+  dayOfMonth: 30
 };
 
 const makeRequest = async (body: {}) => {
@@ -38,6 +42,10 @@ it('returns a properly formatted object on successful request', async () => {
     isRecurring: fakeData.isRecurring,
     startDate: fakeData.startDate,
     endDate: fakeData.endDate,
+    frequency: fakeData.frequency,
+    separation: 0,
+    month: fakeData.month,
+    dayOfMonth: fakeData.dayOfMonth,
     userId: expect.any(String)
   });
 });

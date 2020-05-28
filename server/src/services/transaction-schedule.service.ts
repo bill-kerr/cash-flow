@@ -1,6 +1,7 @@
 import { CreateTransactionScheduleDto } from '../models/dto/transaction-schedule.dto';
 import { TransactionSchedule, TransactionScheduleRepository } from '../models/transaction-schedule.model';
 import { BadRequestError } from '../errors/bad-request-error';
+import { transactionService } from './transaction.service';
 
 class TransactionScheduleService {
 
@@ -11,6 +12,9 @@ class TransactionScheduleService {
 
     const transactionSchedule = TransactionScheduleRepository.build(dto);
     await transactionSchedule.save();
+
+    transactionService.createTransactionsFromSchedule(transactionSchedule);
+
     return transactionSchedule;
   }
 
