@@ -22,6 +22,11 @@ interface ScheduleModel extends mongoose.Model<ScheduleDoc> {
 }
 
 const scheduleSchema = new mongoose.Schema({
+  id: {
+    type: String,
+    unique: true,
+    required: true
+  },
   amount: {
     type: Number,
     required: true
@@ -74,15 +79,15 @@ const scheduleSchema = new mongoose.Schema({
 }, {
   toJSON: {
     transform(doc: any, ret: any) {
-      const id = ret._id;
       delete ret._id;
       delete ret.__v;
-      return { id, object: 'schedule', ...ret };
+      return { object: 'schedule', id: ret.id, ...ret };
     }
   }
 });
 
 scheduleSchema.statics.build = (dto: CreateScheduleDto) => {
+  dto.id = mongoose.Types.ObjectId().toHexString();
   return new Schedule(dto);
 }
 

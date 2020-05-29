@@ -33,4 +33,24 @@ router.post(
   }
 );
 
+router.get(
+  '/:id',
+  requireAuth,
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const schedule = await scheduleService.getScheduleById(id, req.currentUserId);
+    res.status(HttpResponse.OK).send(schedule);
+  }
+);
+
+router.get(
+  '/:id/occurences',
+  requireAuth,
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+    await scheduleService.getScheduleOccurences(id, 'test', 'test', req.currentUserId);
+    res.sendStatus(200);
+  }
+)
+
 export { router as scheduleRouter };
