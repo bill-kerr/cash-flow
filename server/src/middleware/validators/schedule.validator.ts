@@ -58,17 +58,17 @@ export const createScheduleValidator = [
     .escape()
     .custom(isFrequency)
     .withMessage('The frequency field must contain one of \'DAILY\', \'WEEKLY\', \'MONTHLY\', or \'YEARLY\'.'),
-  body('separation')
-    .custom((_, { req }) => !(req.body.isRecurring === 'false' && keyExists(req.body, 'separation')))
-    .withMessage('The separation field should not exist if isRecurring is set to false.')
+  body('interval')
+    .custom((_, { req }) => !(req.body.isRecurring === 'false' && keyExists(req.body, 'interval')))
+    .withMessage('The interval field should not exist if isRecurring is set to false.')
     .if(body('isRecurring').equals('true'))
     .notEmpty()
     .bail()
-    .withMessage('The separation field cannot be empty if isRecurring is set to true.')
+    .withMessage('The interval field cannot be empty if isRecurring is set to true.')
     .trim()
     .escape()
     .isInt({ min: 0 })
-    .withMessage('The separation field must contain an integer not less than zero.'),
+    .withMessage('The interval field must contain an integer not less than zero.'),
   body('dayOfWeek')
     .custom((_, { req }) => !(req.body.isRecurring === 'false' && keyExists(req.body, 'dayOfWeek')))
     .bail()

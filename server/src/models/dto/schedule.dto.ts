@@ -8,7 +8,7 @@ interface CreateScheduleDto {
   startDate: string;
   endDate?: string;
   frequency?: Frequency;
-  separation?: number;
+  interval?: number;
   dayOfWeek?: DayOfWeek;
   dayOfMonth?: number;
   month?: Month

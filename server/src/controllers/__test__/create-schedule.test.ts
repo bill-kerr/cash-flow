@@ -15,7 +15,7 @@ const fakeData = {
   startDate: '2020-05-01',
   endDate: '2020-05-30',
   frequency: 'YEARLY',
-  separation: 0,
+  interval: 0,
   month: 'OCTOBER',
   dayOfMonth: 30
 };
@@ -43,7 +43,7 @@ it('returns a properly formatted object on successful request', async () => {
     startDate: fakeData.startDate,
     endDate: fakeData.endDate,
     frequency: fakeData.frequency,
-    separation: 0,
+    interval: 0,
     dayOfWeek: null,
     month: fakeData.month,
     dayOfMonth: fakeData.dayOfMonth,

@@ -22,7 +22,7 @@ const dailyData: any = {
   startDate: '2020-05-01',
   endDate: '2020-05-31',
   frequency: 'DAILY',
-  separation: 0
+  interval: 0
 };
 
 const weeklyData: any = {
@@ -32,7 +32,7 @@ const weeklyData: any = {
   startDate: '2020-05-01',
   endDate: '2020-05-31',
   frequency: 'WEEKLY',
-  separation: 0,
+  interval: 0,
   dayOfWeek: 'SUNDAY'
 };
 
@@ -43,7 +43,7 @@ const monthlyData: any = {
   startDate: '2020-05-01',
   endDate: '2020-05-31',
   frequency: 'MONTHLY',
-  separation: 0,
+  interval: 0,
   dayOfMonth: 28
 };
 
@@ -54,7 +54,7 @@ const yearlyData: any = {
   startDate: '2020-05-01',
   endDate: '2020-05-31',
   frequency: 'YEARLY',
-  separation: 0,
+  interval: 0,
   month: 'OCTOBER',
   dayOfMonth: 28
 };
@@ -178,7 +178,7 @@ it('rejects recurrence fields when isRecurring is false', async () => {
   const data = { ...nonrecurringData };
   data.endDate = '';
   data.frequency = '';
-  data.separation = null;
+  data.interval = null;
   data.dayOfWeek = '';
   data.dayOfMonth = null;
   data.month = 'OCTOBER';
@@ -187,7 +187,7 @@ it('rejects recurrence fields when isRecurring is false', async () => {
   expect(res.body.errors).toStrictEqual([
     { object: 'error-detail', title: 'Request validation error', detail: shouldNotExistIfMessage('endDate') },
     { object: 'error-detail', title: 'Request validation error', detail: shouldNotExistIfMessage('frequency') },
-    { object: 'error-detail', title: 'Request validation error', detail: shouldNotExistIfMessage('separation') },
+    { object: 'error-detail', title: 'Request validation error', detail: shouldNotExistIfMessage('interval') },
     { object: 'error-detail', title: 'Request validation error', detail: shouldNotExistIfMessage('dayOfWeek') },
     { object: 'error-detail', title: 'Request validation error', detail: shouldNotExistIfMessage('dayOfMonth') },
     { object: 'error-detail', title: 'Request validation error', detail: shouldNotExistIfMessage('month') },
