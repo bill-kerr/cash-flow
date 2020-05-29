@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 import { Moment } from 'moment';
-import { CreateTransactionScheduleDto } from './dto/transaction-schedule.dto';
+import { CreateScheduleDto } from './dto/schedule.dto';
 import { Frequency, DayOfWeek, Month } from '../types';
 
-interface TransactionSchedule extends mongoose.Document {
+interface ScheduleDoc extends mongoose.Document {
   id: string;
   amount: string;
   description: string;
@@ -17,11 +17,11 @@ interface TransactionSchedule extends mongoose.Document {
   userId: string;
 }
 
-interface TransactionScheduleModel extends mongoose.Model<TransactionSchedule> {
-  build(createTransactionScheduleDto: CreateTransactionScheduleDto): TransactionSchedule;
+interface ScheduleModel extends mongoose.Model<ScheduleDoc> {
+  build(createScheduleDto: CreateScheduleDto): ScheduleDoc;
 }
 
-const transactionScheduleSchema = new mongoose.Schema({
+const scheduleSchema = new mongoose.Schema({
   amount: {
     type: Number,
     required: true
@@ -57,7 +57,7 @@ const transactionScheduleSchema = new mongoose.Schema({
     default: null
   },
   dayOfMonth: {
-    type: String,
+    type: Number,
     required: false,
     default: null
   },
@@ -77,16 +77,16 @@ const transactionScheduleSchema = new mongoose.Schema({
       const id = ret._id;
       delete ret._id;
       delete ret.__v;
-      return { id, object: 'transaction-schedule', ...ret };
+      return { id, object: 'schedule', ...ret };
     }
   }
 });
 
-transactionScheduleSchema.statics.build = (dto: CreateTransactionScheduleDto) => {
-  return new TransactionScheduleRepository(dto);
+scheduleSchema.statics.build = (dto: CreateScheduleDto) => {
+  return new Schedule(dto);
 }
 
-const TransactionScheduleRepository = mongoose.model<TransactionSchedule, TransactionScheduleModel>
-  ('TransactionSchedule', transactionScheduleSchema);
+const Schedule = mongoose.model<ScheduleDoc, ScheduleModel>
+  ('Schedule', scheduleSchema);
 
-export { TransactionSchedule, TransactionScheduleRepository };
+export { ScheduleDoc, Schedule };

@@ -1,6 +1,6 @@
 import { Frequency, DayOfWeek, Month } from '../../types';
 
-interface CreateTransactionScheduleDto {
+interface CreateScheduleDto {
   id: string;
   amount: number;
   description: string;
@@ -15,4 +15,4 @@ interface CreateTransactionScheduleDto {
   userId: string;
 }
 
-export { CreateTransactionScheduleDto };
+export { CreateScheduleDto };

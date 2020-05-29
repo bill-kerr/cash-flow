@@ -1,8 +1,8 @@
 import { Moment } from 'moment';
 
-export interface CreateTransactionDto {
+export interface CreateScheduleExceptionDto {
   date: Moment;
   amount: number;
   description: string;
-  transactionSchedule: string;
+  schedule: string;
 }

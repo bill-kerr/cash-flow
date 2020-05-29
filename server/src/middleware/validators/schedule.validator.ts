@@ -2,7 +2,7 @@ import { isValidDate, isDayOfWeek, isFrequency, isMonth, keyExists } from '../..
 import { Frequency } from '../../types';
 import { body } from 'express-validator';
 
-export const createTransactionScheduleValidator = [
+export const createScheduleValidator = [
   body('amount')
     .notEmpty()
     .bail()

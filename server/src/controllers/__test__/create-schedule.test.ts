@@ -2,7 +2,7 @@ import request from 'supertest';
 import { initExpressApp } from '../../loaders/express';
 
 const app = initExpressApp();
-const url = '/api/v1/transaction-schedules';
+const url = '/api/v1/schedules';
 const headers = {
   'Authorization': 'Bearer sldjflk',
   'Content-Type': 'application/json'
@@ -36,7 +36,7 @@ it('returns a properly formatted object on successful request', async () => {
   const res = await makeRequest(fakeData);
   expect(res.body).toEqual({
     id: expect.any(String),
-    object: 'transaction-schedule',
+    object: 'schedule',
     amount: fakeData.amount,
     description: fakeData.description,
     isRecurring: fakeData.isRecurring,
@@ -44,6 +44,7 @@ it('returns a properly formatted object on successful request', async () => {
     endDate: fakeData.endDate,
     frequency: fakeData.frequency,
     separation: 0,
+    dayOfWeek: null,
     month: fakeData.month,
     dayOfMonth: fakeData.dayOfMonth,
     userId: expect.any(String)
