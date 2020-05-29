@@ -7,7 +7,7 @@ import helmet from 'helmet';
 import { NotFoundError } from '../errors/not-found-error';
 import { errorHandler } from '../middleware/error-handler.middleware';
 import { verifyJsonMediaType } from '../middleware/verify-json-media-type.middleware';
-import { transactionScheduleRouter } from '../controllers/transaction-schedule.controller';
+import { scheduleRouter } from '../controllers/schedule.controller';
 import { requestMethodChecker } from '../middleware/request-method-checker.middleware';
 
 function init(): Application {
@@ -30,7 +30,7 @@ function init(): Application {
   //   }
   // });
 
-  app.use('/api/v1/transaction-schedules', transactionScheduleRouter);
+  app.use('/api/v1/schedules', scheduleRouter);
   app.all('*', (req: Request, res: Response) => {
     throw new NotFoundError('The specified endpoint does not exist.');
   });

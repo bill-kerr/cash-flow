@@ -2,7 +2,7 @@ import request from 'supertest';
 import { initExpressApp } from '../../../loaders/express';
 
 const app = initExpressApp();
-const url = '/api/v1/transaction-schedules';
+const url = '/api/v1/schedules';
 const headers = {
   'Authorization': 'Bearer sldjflk',
   'Content-Type': 'application/json'
