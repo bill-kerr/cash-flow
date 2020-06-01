@@ -2,8 +2,10 @@ import express, { Request, Response } from 'express';
 import { HttpResponse } from '../types/http-response';
 import { handleValidationResult } from '../middleware/validation-handler.middleware';
 import { scheduleService } from '../services/schedule.service';
+import { scheduleExceptionService } from '../services/schedule-exception.service';
 import { createScheduleValidator } from '../middleware/validators/schedule.validator';
 import { requireAuth } from '../middleware/require-auth.middleware';
+import { getOccurrencesValidator } from '../middleware/validators/occurrence.validator';
 
 const router = express.Router();
 
@@ -28,8 +30,8 @@ router.post(
   handleValidationResult,
   async (req: Request, res: Response) => {
     const data = { ...req.body, userId: req.currentUserId }
-    const Schedule = await scheduleService.createSchedule(data);
-    res.status(HttpResponse.CREATED).send(Schedule);
+    const schedule = await scheduleService.createSchedule(data);
+    res.status(HttpResponse.CREATED).send(schedule);
   }
 );
 
@@ -46,11 +48,34 @@ router.get(
 router.get(
   '/:id/occurences',
   requireAuth,
+  getOccurrencesValidator,
+  handleValidationResult,
   async (req: Request, res: Response) => {
     const { id } = req.params;
-    await scheduleService.getScheduleOccurences(id, 'test', 'test', req.currentUserId);
-    res.sendStatus(200);
+    const { startDate, endDate } = req.query;
+    const occurrences = await scheduleService.getScheduleOccurences(
+      id, 
+      startDate.toString(), 
+      endDate.toString(), 
+      req.currentUserId
+    );
+
+    const resData = {
+      object: 'list',
+      data: occurrences
+    };
+    res.status(HttpResponse.OK).send(resData);
   }
-)
+);
+
+router.post(
+  '/:id/schedule-exceptions',
+  requireAuth,
+  async (req: Request, res: Response) => {
+    const schedule = req.params.id;
+    const exception = await scheduleExceptionService.createScheduleException({ ...req.body, schedule });
+    res.status(HttpResponse.CREATED).send(exception);
+  }
+);
 
 export { router as scheduleRouter };

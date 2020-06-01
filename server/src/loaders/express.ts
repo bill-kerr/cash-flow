@@ -19,17 +19,6 @@ function init(): Application {
   app.use(requestMethodChecker);
   app.use(verifyJsonMediaType);
 
-  // Example auth code
-  // app.get('/api/v1', async (req: Request, res: Response) => {
-  //   try {
-  //     const token = req.headers['authentication']!.toString().split(' ')[1];
-  //     const user = await admin.auth().verifyIdToken(token);
-  //     res.send(user.email)
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // });
-
   app.use('/api/v1/schedules', scheduleRouter);
   app.all('*', (req: Request, res: Response) => {
     throw new NotFoundError('The specified endpoint does not exist.');

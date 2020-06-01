@@ -26,7 +26,7 @@
     "firebase-admin": "^8.12.1",
     "helmet": "^3.22.0",
     "later": "^1.2.0",
-    "moment": "^2.25.3",
+    "moment": "^2.26.0",
     "mongoose": "^5.9.14",
     "rrule": "^2.6.4"
   },

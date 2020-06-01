@@ -4,14 +4,15 @@ interface CreateScheduleDto {
   id: string;
   amount: number;
   description: string;
-  recurring: boolean;
+  isRecurring: boolean;
   startDate: string;
   endDate?: string;
   frequency?: Frequency;
   interval?: number;
   dayOfWeek?: DayOfWeek;
   dayOfMonth?: number;
-  month?: Month
+  month?: Month;
+  recurrenceRule?: string;
   userId: string;
 }
 

@@ -1,19 +1,19 @@
 import mongoose from 'mongoose';
-import { Moment } from 'moment';
 import { CreateScheduleDto } from './dto/schedule.dto';
 import { Frequency, DayOfWeek, Month } from '../types';
 
 interface ScheduleDoc extends mongoose.Document {
   id: string;
-  amount: string;
+  amount: number;
   description: string;
-  startDate: Moment;
-  endDate?: Moment;
-  frequency?: Frequency;
-  interval?: number;
-  dayOfWeek?: DayOfWeek;
-  dayOfMonth?: number;
-  month?: Month;
+  startDate: string;
+  endDate: string;
+  frequency: Frequency;
+  interval: number;
+  dayOfWeek: DayOfWeek;
+  dayOfMonth: number;
+  month: Month;
+  recurrenceRule: string;
   userId: string;
 }
 
@@ -45,6 +45,7 @@ const scheduleSchema = new mongoose.Schema({
   },
   endDate: {
     type: String,
+    default: null,
     required: false
   },
   frequency: {
@@ -54,7 +55,7 @@ const scheduleSchema = new mongoose.Schema({
   interval: {
     type: Number,
     required: false,
-    default: null
+    default: 1
   },
   dayOfWeek: {
     type: String,
@@ -67,6 +68,11 @@ const scheduleSchema = new mongoose.Schema({
     default: null
   },
   month: {
+    type: String,
+    required: false,
+    default: null
+  },
+  recurrenceRule: {
     type: String,
     required: false,
     default: null

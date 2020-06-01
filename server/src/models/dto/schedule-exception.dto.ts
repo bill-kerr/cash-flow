@@ -1,7 +1,6 @@
-import { Moment } from 'moment';
-
 export interface CreateScheduleExceptionDto {
-  date: Moment;
+  date: string;
+  deleted: boolean;
   amount: number;
   description: string;
   schedule: string;

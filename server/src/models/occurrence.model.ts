@@ -1,7 +1,6 @@
-import { Moment } from 'moment';
-
 export interface Occurrence {
-  date: Moment;
+  object: 'occurrence';
+  date: string;
   amount: number;
   description: string;
   schedule: string;

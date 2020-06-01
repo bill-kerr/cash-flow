@@ -5,7 +5,7 @@ import { BaseError } from '../errors/base-error'
 import { ErrorResponse } from '../errors/error-response';
 
 const defaultError: ErrorResponse = {
-  object: 'error',
+  object: 'list',
   statusCode: HttpResponse.INTERNAL_SERVER_ERROR,
   errors: [{
     object: 'error-detail',
@@ -22,7 +22,7 @@ function errorHandler(
 ) {
   if (err instanceof BaseError) {
     const errorResponse: ErrorResponse = {
-      object: 'error',
+      object: 'list',
       statusCode: err.statusCode,
       errors: err.serializeErrors()
     };
@@ -32,7 +32,7 @@ function errorHandler(
 
   if (err instanceof SyntaxError) {
     const errorResponse: ErrorResponse = {
-      object: 'error',
+      object: 'list',
       statusCode: HttpResponse.BAD_REQUEST,
       errors: [{
         object: 'error-detail',

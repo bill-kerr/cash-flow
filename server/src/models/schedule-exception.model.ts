@@ -1,10 +1,9 @@
 import mongoose from 'mongoose';
-import { Moment } from 'moment';
 import { CreateScheduleExceptionDto } from './dto/schedule-exception.dto';
 
 interface ScheduleExceptionDoc extends mongoose.Document {
+  date: string;
   deleted: boolean;
-  date: Moment;
   amount: number;
   description: string;
   schedule: string;
@@ -15,12 +14,12 @@ interface ScheduleExceptionModel extends mongoose.Model<ScheduleExceptionDoc> {
 }
 
 const scheduleExceptionSchema = new mongoose.Schema({
-  deleted: {
-    type: Boolean,
-    required: true
-  },
   date: {
     type: String,
+    required: true
+  },
+  deleted: {
+    type: Boolean,
     required: true
   },
   amount: {

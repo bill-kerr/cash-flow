@@ -26,8 +26,10 @@ export const createScheduleValidator = [
     .withMessage('The isRecurring field is required and cannot be empty.')
     .trim()
     .escape()
+    .customSanitizer(val => val.toLowerCase())
     .isBoolean()
-    .withMessage('The isRecurring field must contain a boolean.'),
+    .withMessage('The isRecurring field must contain a boolean.')
+    .customSanitizer(val => val === 'true'),
   body('startDate')
     .notEmpty()
     .bail()
@@ -40,9 +42,10 @@ export const createScheduleValidator = [
     .custom((_, { req }) => !(req.body.isRecurring === 'false' && keyExists(req.body, 'endDate')))
     .withMessage('The endDate field should not exist if isRecurring is set to false.')
     .if(body('isRecurring').equals('true'))
+    .optional()
     .notEmpty()
     .bail()
-    .withMessage('The endDate field cannot be empty if isRecurring is set to true.')
+    .withMessage('The endDate field cannot be empty.')
     .trim()
     .escape()
     .custom(isValidDate)
@@ -67,8 +70,9 @@ export const createScheduleValidator = [
     .withMessage('The interval field cannot be empty if isRecurring is set to true.')
     .trim()
     .escape()
-    .isInt({ min: 0 })
-    .withMessage('The interval field must contain an integer not less than zero.'),
+    .isInt({ min: 1 })
+    .withMessage('The interval field must contain an integer not less than one.')
+    .customSanitizer(val => parseInt(val)),
   body('dayOfWeek')
     .custom((_, { req }) => !(req.body.isRecurring === 'false' && keyExists(req.body, 'dayOfWeek')))
     .bail()

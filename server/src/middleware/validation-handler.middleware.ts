@@ -37,7 +37,7 @@ function generateUnknownFieldErrors(req: Request): ValidationError[] {
 
 function getUnknownFields(req: Request): [string, any][] {
   const validKeys = Object.keys(matchedData(req, { onlyValidData: false }));
-  const requestFields = Object.entries(req.body);
+  const requestFields = [...Object.entries(req.body), ...Object.entries(req.query)];
   const unknownFields = requestFields.filter(field => !validKeys.includes(field[0]));
   return unknownFields;
 }

@@ -2,9 +2,7 @@ import { CreateScheduleDto } from '../models/dto/schedule.dto';
 import { Schedule, ScheduleDoc } from '../models/schedule.model';
 import { BadRequestError } from '../errors/bad-request-error';
 import { NotAuthorizedError } from '../errors/not-authorized-error';
-import { Moment } from 'moment';
-import { Occurrence } from '../models/occurrence.model';
-import { RRule } from 'rrule';
+import { occurrenceService } from '../services/occurrence.service';
 
 class ScheduleService {
 
@@ -13,12 +11,16 @@ class ScheduleService {
       throw new BadRequestError('The end date must be after the start date.');
     }
 
-    const schdeule = Schedule.build(dto);
-    await schdeule.save();
+    if (dto.isRecurring) {
+      const rule = occurrenceService.generateRecurrenceRule(dto);
+      dto.recurrenceRule = rule;
+    }
+    const schedule = Schedule.build(dto);
+    await schedule.save();
 
-    //transactionService.createTransactionsFromSchedule(schdeule);
+    //transactionService.createTransactionsFromSchedule(schedule);
 
-    return schdeule;
+    return schedule;
   }
 
   async getSchedules(userId: string): Promise<ScheduleDoc[]> {
@@ -42,18 +44,7 @@ class ScheduleService {
     userId: string
   ) {
     const schedule = await this.getScheduleById(scheduleId, userId);
-
-    const rule = new RRule({
-      freq: RRule.WEEKLY,
-      interval: 1,
-      byweekday: [RRule.MO],
-      dtstart: new Date(Date.UTC(2020, 5, 5)),
-      until: new Date(Date.UTC(2020, 12, 31)),
-      count: 5000
-    });
-
-    console.log(rule.all());
-    console.log(rule.toString());
+    return occurrenceService.getOccurrences(schedule, startDate, endDate);
   }
 
 }

@@ -4,7 +4,7 @@ import { initExpressApp } from '../../loaders/express';
 const app = initExpressApp();
 const url = '/api/v1/schedules';
 const errorFormat = {
-  object: 'error',
+  object: 'list',
   statusCode: expect.any(Number),
   errors: expect.arrayContaining([{
     object: 'error-detail',
