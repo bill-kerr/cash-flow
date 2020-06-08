@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { CreateScheduleDto } from './dto/schedule.dto';
 import { Frequency, DayOfWeek, Month } from '../types';
+import { Occurrence } from './occurrence.model';
 
 interface ScheduleDoc extends mongoose.Document {
   id: string;
@@ -15,6 +16,7 @@ interface ScheduleDoc extends mongoose.Document {
   month: Month;
   recurrenceRule: string;
   userId: string;
+  createOccurrence(date: string): Occurrence;
 }
 
 interface ScheduleModel extends mongoose.Model<ScheduleDoc> {
@@ -95,6 +97,16 @@ const scheduleSchema = new mongoose.Schema({
 scheduleSchema.statics.build = (dto: CreateScheduleDto) => {
   dto.id = mongoose.Types.ObjectId().toHexString();
   return new Schedule(dto);
+}
+
+scheduleSchema.methods.createOccurrence = function (date: string): Occurrence {
+  return {
+    object: 'occurrence',
+    date,
+    amount: this.amount,
+    description: this.description,
+    schedule: this.id
+  };
 }
 
 const Schedule = mongoose.model<ScheduleDoc, ScheduleModel>

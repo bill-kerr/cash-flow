@@ -6,6 +6,8 @@ import { scheduleExceptionService } from '../services/schedule-exception.service
 import { createScheduleValidator } from '../middleware/validators/schedule.validator';
 import { requireAuth } from '../middleware/require-auth.middleware';
 import { getOccurrencesValidator } from '../middleware/validators/occurrence.validator';
+import { requireOwnership } from '../middleware/require-ownership.middleware';
+import { Schedule } from '../models/schedule.model';
 
 const router = express.Router();
 
@@ -38,9 +40,10 @@ router.post(
 router.get(
   '/:id',
   requireAuth,
+  requireOwnership(Schedule, 'id'),
   async (req: Request, res: Response) => {
     const { id } = req.params;
-    const schedule = await scheduleService.getScheduleById(id, req.currentUserId);
+    const schedule = await scheduleService.getScheduleById(id);
     res.status(HttpResponse.OK).send(schedule);
   }
 );
@@ -48,6 +51,7 @@ router.get(
 router.get(
   '/:id/occurences',
   requireAuth,
+  requireOwnership(Schedule, 'id'),
   getOccurrencesValidator,
   handleValidationResult,
   async (req: Request, res: Response) => {
@@ -71,6 +75,7 @@ router.get(
 router.post(
   '/:id/schedule-exceptions',
   requireAuth,
+  requireOwnership(Schedule, 'id'),
   async (req: Request, res: Response) => {
     const schedule = req.params.id;
     const exception = await scheduleExceptionService.createScheduleException({ ...req.body, schedule });

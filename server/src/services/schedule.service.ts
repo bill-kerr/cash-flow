@@ -27,10 +27,10 @@ class ScheduleService {
     return Schedule.find({ userId });
   }
 
-  async getScheduleById(scheduleId: string, userId: string): Promise<ScheduleDoc> {
+  async getScheduleById(scheduleId: string): Promise<ScheduleDoc> {
     const schedule = await Schedule.findOne({ id: scheduleId });
     
-    if (!schedule || schedule.userId !== userId) {
+    if (!schedule) {
       throw new NotAuthorizedError('Not authorized to access this route.');
     }
 

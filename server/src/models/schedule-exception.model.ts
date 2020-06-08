@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { CreateScheduleExceptionDto } from './dto/schedule-exception.dto';
+import { Occurrence } from './occurrence.model';
 
 interface ScheduleExceptionDoc extends mongoose.Document {
   date: string;
@@ -7,6 +8,7 @@ interface ScheduleExceptionDoc extends mongoose.Document {
   amount: number;
   description: string;
   schedule: string;
+  createOccurrence(scheduleId: string, date: string): Occurrence;
 }
 
 interface ScheduleExceptionModel extends mongoose.Model<ScheduleExceptionDoc> {
@@ -14,6 +16,11 @@ interface ScheduleExceptionModel extends mongoose.Model<ScheduleExceptionDoc> {
 }
 
 const scheduleExceptionSchema = new mongoose.Schema({
+  id: {
+    type: String,
+    unique: true,
+    required: true
+  },
   date: {
     type: String,
     required: true
@@ -36,18 +43,28 @@ const scheduleExceptionSchema = new mongoose.Schema({
   }
 }, {
   toJSON: {
-    transform(doc, ret) {
-      const id = ret._id;
+    transform(doc: any, ret: any) {
       delete ret._id;
       delete ret.__v;
-      return { id, object: 'schedule-exception', ...ret };
+      return { object: 'schedule-exception', id: ret.id, ...ret };
     }
   }
 });
 
 scheduleExceptionSchema.statics.build = (dto: CreateScheduleExceptionDto) => {
+  dto.id = mongoose.Types.ObjectId().toHexString();
   return new ScheduleException(dto);
 }
+
+scheduleExceptionSchema.methods.createOccurrence = function (scheduleId: string, date: string): Occurrence {
+  return {
+    object: 'occurrence',
+    date,
+    amount: this.amount,
+    description: this.description,
+    schedule: scheduleId
+  };
+};
 
 const ScheduleException = mongoose.model<ScheduleExceptionDoc, ScheduleExceptionModel>
   ('ScheduleException', scheduleExceptionSchema);

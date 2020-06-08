@@ -2,8 +2,9 @@ import { RRule, rrulestr } from 'rrule';
 import { getUTCDateFromString, parseUTCDateList } from '../util';
 import { Frequency, DayOfWeek, Month } from '../types';
 import { CreateScheduleDto } from '../models/dto/schedule.dto';
-import { ScheduleDoc } from '../models/schedule.model';
+import { ScheduleDoc, Schedule } from '../models/schedule.model';
 import { Occurrence } from '../models/occurrence.model';
+import { scheduleExceptionService } from './schedule-exception.service';
 
 const WeekDays = {
   [DayOfWeek.SUNDAY]: RRule.SU,
@@ -114,17 +115,33 @@ class OccurrenceService {
     }
   }
 
-  public getOccurrences(schedule: ScheduleDoc, startDate: string, endDate: string): Occurrence[] {
+  public async scheduleHasOccurrenceOn(scheduleId: string, date: string): Promise<boolean> {
+    const schedule = await Schedule.findOne({ id: scheduleId });
+
+    if (!schedule) {
+      return false;
+    }
+
+    const rule = rrulestr(schedule.recurrenceRule);
+    const occurrence = rule.between(getUTCDateFromString(date), getUTCDateFromString(date), true);
+    return occurrence.length > 0;
+  }
+
+  public async getOccurrences(schedule: ScheduleDoc, startDate: string, endDate: string): Promise<Occurrence[]> {
     const occurrenceDates = this.getOccurrenceDates(schedule.recurrenceRule, startDate, endDate);
-    return occurrenceDates.map(date => {
-      return {
-        object: 'occurrence',
-        date,
-        amount: schedule.amount,
-        description: schedule.description,
-        schedule: schedule.id
-      };
+    const exceptions = await scheduleExceptionService.getScheduleExceptions(schedule.id, startDate, endDate);
+
+    const occurrences: Occurrence[] = [];
+    occurrenceDates.forEach(date => {
+      const exception = exceptions.find(exception => exception.date === date);
+      if (exception && !exception.deleted) {
+        occurrences.push(exception.createOccurrence(schedule.id, date));
+      } else if (!exception) {
+        occurrences.push(schedule.createOccurrence(date)); 
+      }
     });
+
+    return occurrences;
   }
 }
 
