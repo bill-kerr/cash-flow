@@ -9,7 +9,7 @@ class NotAuthorizedError extends BaseError {
     detail: ''
   };
 
-  constructor(message = 'User is not authorized.') {
+  constructor(message = 'User is not authorized to access this resource.') {
     super(message);
     this.error.detail = message;
     Object.setPrototypeOf(this, NotAuthorizedError.prototype);
