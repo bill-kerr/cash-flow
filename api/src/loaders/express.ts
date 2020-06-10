@@ -10,6 +10,7 @@ import { verifyJsonMediaType } from '../middleware/verify-json-media-type.middle
 import { scheduleRouter } from '../controllers/schedule.controller';
 import { scheduleExceptionRouter } from '../controllers/schedule-exception.controller';
 import { requestMethodChecker } from '../middleware/request-method-checker.middleware';
+import { occurrenceRouter } from '../controllers/occurrence.controller';
 
 function init(): Application {
   const app = express();
@@ -22,6 +23,7 @@ function init(): Application {
 
   app.use('/api/v1/schedules', scheduleRouter);
   app.use('/api/v1/schedule-exceptions', scheduleExceptionRouter);
+  app.use('/api/v1/occurrences', occurrenceRouter);
   
   app.all('*', (req: Request, res: Response) => {
     throw new NotFoundError('The specified endpoint does not exist.');

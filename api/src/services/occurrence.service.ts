@@ -127,7 +127,24 @@ class OccurrenceService {
     return occurrence.length > 0;
   }
 
-  public async getOccurrences(schedule: ScheduleDoc, startDate: string, endDate: string): Promise<Occurrence[]> {
+  public async getOccurrencesByUser(userId: string, startDate: string, endDate: string): Promise<Occurrence[]> {
+    const schedules = await Schedule.find({ userId });
+    const occurrences: Occurrence[] = [];
+
+    for (const schedule of schedules) {
+      const scheduleOccurrences = await this.getOccurrencesBySchedule(schedule, startDate, endDate);
+      occurrences.push(...scheduleOccurrences);
+    }
+
+    occurrences.sort((a, b) => a.date > b.date ? 1 : -1);
+    return occurrences;
+  }
+
+  public async getOccurrencesBySchedule(
+    schedule: ScheduleDoc, 
+    startDate: string, 
+    endDate: string
+  ): Promise<Occurrence[]> {
     const occurrenceDates = this.getOccurrenceDates(schedule.recurrenceRule, startDate, endDate);
     const exceptions = await scheduleExceptionService.getScheduleExceptions(schedule.id, startDate, endDate);
 

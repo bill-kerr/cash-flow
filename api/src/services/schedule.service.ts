@@ -41,7 +41,7 @@ class ScheduleService {
     endDate: string
   ) {
     const schedule = await this.getScheduleById(scheduleId);
-    return occurrenceService.getOccurrences(schedule, startDate, endDate);
+    return occurrenceService.getOccurrencesBySchedule(schedule, startDate, endDate);
   }
 
 }
