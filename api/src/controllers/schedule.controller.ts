@@ -5,10 +5,10 @@ import { scheduleService } from '../services/schedule.service';
 import { scheduleExceptionService } from '../services/schedule-exception.service';
 import { createScheduleValidator } from '../middleware/validators/schedule.validator';
 import { requireAuth } from '../middleware/require-auth.middleware';
-import { getOccurrencesValidator } from '../middleware/validators/occurrence.validator';
+import { queryDateRangeValidator } from '../middleware/validators/date-range.validator';
 import { requireOwnership } from '../middleware/require-ownership.middleware';
 import { Schedule } from '../models/schedule.model';
-import { createScheduleExceptionValidator } from '../middleware/validators/schedule-exception.validator';
+import { createScheduleExceptionByScheduleValidator } from '../middleware/validators/schedule-exception.validator';
 
 const router = express.Router();
 
@@ -41,7 +41,7 @@ router.post(
 router.get(
   '/:id',
   requireAuth,
-  requireOwnership(Schedule, 'id'),
+  requireOwnership(Schedule, 'params', 'id'),
   async (req: Request, res: Response) => {
     const { id } = req.params;
     const schedule = await scheduleService.getScheduleById(id);
@@ -52,8 +52,8 @@ router.get(
 router.get(
   '/:id/occurences',
   requireAuth,
-  requireOwnership(Schedule, 'id'),
-  getOccurrencesValidator,
+  requireOwnership(Schedule, 'params', 'id'),
+  queryDateRangeValidator,
   handleValidationResult,
   async (req: Request, res: Response) => {
     const { id } = req.params;
@@ -61,8 +61,7 @@ router.get(
     const occurrences = await scheduleService.getScheduleOccurences(
       id, 
       startDate.toString(), 
-      endDate.toString(), 
-      req.currentUserId
+      endDate.toString()
     );
 
     const resData = {
@@ -76,14 +75,38 @@ router.get(
 router.post(
   '/:id/schedule-exceptions',
   requireAuth,
-  requireOwnership(Schedule, 'id'),
-  createScheduleExceptionValidator,
+  requireOwnership(Schedule, 'params', 'id'),
+  createScheduleExceptionByScheduleValidator,
   handleValidationResult,
   async (req: Request, res: Response) => {
     const schedule = req.params.id;
-    const exception = await scheduleExceptionService.createScheduleException({ ...req.body, schedule });
+    const exception = await scheduleExceptionService.createScheduleException({ 
+      ...req.body,
+      userId: req.currentUserId, 
+      schedule
+    });
     res.status(HttpResponse.CREATED).send(exception);
   }
 );
+
+router.get(
+  '/:id/schedule-exceptions',
+  requireAuth,
+  requireOwnership(Schedule, 'params', 'id'),
+  queryDateRangeValidator,
+  handleValidationResult,
+  async (req: Request, res: Response) => {
+    const scheduleId = req.params.id;
+    const { startDate, endDate } = req.query;
+    const exceptions = await scheduleExceptionService
+      .getScheduleExceptions(scheduleId, startDate.toString(), endDate.toString());
+    
+    const resData = {
+      object: 'list',
+      data: exceptions
+    };
+    res.status(HttpResponse.OK).send(resData);
+  }
+)
 
 export { router as scheduleRouter };

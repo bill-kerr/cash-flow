@@ -1,7 +1,7 @@
 import { query } from 'express-validator';
 import { isValidDate } from '../../util';
 
-export const getOccurrencesValidator = [
+export const queryDateRangeValidator = [
   query('startDate')
     .notEmpty()
     .bail()

@@ -8,6 +8,7 @@ interface ScheduleExceptionDoc extends mongoose.Document {
   amount: number;
   description: string;
   schedule: string;
+  userId: string;
   createOccurrence(scheduleId: string, date: string): Occurrence;
 }
 
@@ -40,6 +41,10 @@ const scheduleExceptionSchema = new mongoose.Schema({
   schedule: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Schedule'
+  },
+  userId: {
+    type: String,
+    required: true
   }
 }, {
   toJSON: {

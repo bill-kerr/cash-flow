@@ -1,7 +1,7 @@
 import { isValidDate } from '../../util';
 import { body } from 'express-validator';
 
-export const createScheduleExceptionValidator = [
+export const createScheduleExceptionByScheduleValidator = [
   body('date')
     .notEmpty()
     .bail()
@@ -37,4 +37,16 @@ export const createScheduleExceptionValidator = [
     .escape()
     .isString()
     .withMessage('The description field must contain a string.')
+];
+
+export const createScheduleExceptionValidator = [
+  ...createScheduleExceptionByScheduleValidator,
+  body('schedule')
+    .notEmpty()
+    .bail()
+    .withMessage('The schedule field is required and cannot be empty.')
+    .trim()
+    .escape()
+    .isString()
+    .withMessage('The schedule field must contain a string.')
 ];

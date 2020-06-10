@@ -8,6 +8,7 @@ import { NotFoundError } from '../errors/not-found-error';
 import { errorHandler } from '../middleware/error-handler.middleware';
 import { verifyJsonMediaType } from '../middleware/verify-json-media-type.middleware';
 import { scheduleRouter } from '../controllers/schedule.controller';
+import { scheduleExceptionRouter } from '../controllers/schedule-exception.controller';
 import { requestMethodChecker } from '../middleware/request-method-checker.middleware';
 
 function init(): Application {
@@ -20,6 +21,8 @@ function init(): Application {
   app.use(verifyJsonMediaType);
 
   app.use('/api/v1/schedules', scheduleRouter);
+  app.use('/api/v1/schedule-exceptions', scheduleExceptionRouter);
+  
   app.all('*', (req: Request, res: Response) => {
     throw new NotFoundError('The specified endpoint does not exist.');
   });

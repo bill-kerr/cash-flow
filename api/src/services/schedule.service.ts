@@ -15,11 +15,9 @@ class ScheduleService {
       const rule = occurrenceService.generateRecurrenceRule(dto);
       dto.recurrenceRule = rule;
     }
+
     const schedule = Schedule.build(dto);
     await schedule.save();
-
-    //transactionService.createTransactionsFromSchedule(schedule);
-
     return schedule;
   }
 
@@ -40,10 +38,9 @@ class ScheduleService {
   async getScheduleOccurences(
     scheduleId: string, 
     startDate: string, 
-    endDate: string, 
-    userId: string
+    endDate: string
   ) {
-    const schedule = await this.getScheduleById(scheduleId, userId);
+    const schedule = await this.getScheduleById(scheduleId);
     return occurrenceService.getOccurrences(schedule, startDate, endDate);
   }
 
