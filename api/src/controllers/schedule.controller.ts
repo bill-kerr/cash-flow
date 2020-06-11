@@ -5,7 +5,7 @@ import { scheduleService } from '../services/schedule.service';
 import { scheduleExceptionService } from '../services/schedule-exception.service';
 import { createScheduleValidator } from '../middleware/validators/schedule.validator';
 import { requireAuth } from '../middleware/require-auth.middleware';
-import { queryDateRangeValidator } from '../middleware/validators/date-range.validator';
+import { queryDateRangeValidator, optionalQueryDateRangeValidator } from '../middleware/validators/date-range.validator';
 import { requireOwnership } from '../middleware/require-ownership.middleware';
 import { Schedule } from '../models/schedule.model';
 import { createScheduleExceptionByScheduleValidator } from '../middleware/validators/schedule-exception.validator';
@@ -93,13 +93,13 @@ router.get(
   '/:id/schedule-exceptions',
   requireAuth,
   requireOwnership(Schedule, 'params', 'id'),
-  queryDateRangeValidator,
+  optionalQueryDateRangeValidator,
   handleValidationResult,
   async (req: Request, res: Response) => {
     const scheduleId = req.params.id;
     const { startDate, endDate } = req.query;
     const exceptions = await scheduleExceptionService
-      .getScheduleExceptions(scheduleId, startDate.toString(), endDate.toString());
+      .getScheduleExceptions(scheduleId, startDate as string, endDate as string);
     
     const resData = {
       object: 'list',
@@ -107,6 +107,16 @@ router.get(
     };
     res.status(HttpResponse.OK).send(resData);
   }
-)
+);
+
+router.delete(
+  '/:id',
+  requireAuth,
+  requireOwnership(Schedule, 'params', 'id'),
+  async (req: Request, res: Response) => {
+    const schedule = await scheduleService.deleteSchedule(req.params.id);
+    res.status(HttpResponse.OK).send(schedule);
+  }
+);
 
 export { router as scheduleRouter };

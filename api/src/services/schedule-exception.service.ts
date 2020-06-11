@@ -8,6 +8,20 @@ import { NotAuthorizedError } from '../errors/not-authorized-error';
 
 class ScheduleExceptionService {
 
+  private buildDateFilter(startDate?: string, endDate?: string) {
+    const filter: any = {};
+
+    if (startDate) {
+      filter.$gte = startDate;
+    }
+
+    if (endDate) {
+      filter.$lte = endDate;
+    }
+
+    return filter;
+  }
+
   async getScheduleException(scheduleId: string,  date: string): Promise<ScheduleExceptionDoc> {
     const exception = await ScheduleException.findOne({ schedule: scheduleId, date });
 
@@ -35,24 +49,35 @@ class ScheduleExceptionService {
 
   async getScheduleExceptions(
     scheduleId: string, 
-    startDate: string, 
-    endDate: string
+    startDate?: string, 
+    endDate?: string
   ): Promise<ScheduleExceptionDoc[]> {
-    const exceptions = await ScheduleException.find({ 
-      schedule: scheduleId,
-      date: { $gte: startDate, $lte: endDate }
-    });
+    const filters: any = {
+      schedule: scheduleId
+    };
 
+    if (startDate || endDate) {
+      filters.date = this.buildDateFilter(startDate, endDate);
+    }
+
+    const exceptions = await ScheduleException.find(filters);
     return exceptions;
   }
 
-  async getScheduleExceptionsByUser(userId: string): Promise<ScheduleExceptionDoc[]> {
+  async getScheduleExceptionsByUser(
+    userId: string, 
+    startDate?: string, 
+    endDate?: string
+  ): Promise<ScheduleExceptionDoc[]> {
     const schedules = await scheduleService.getSchedules(userId);
     const scheduleIds = schedules.map(schedule => schedule.id);
-    const exceptions = await ScheduleException.find({
-      schedule: { $in: scheduleIds }
-    });
+    const filters: any = { schedule: { $in: scheduleIds } };
 
+    if (startDate || endDate) {
+      filters.date = this.buildDateFilter(startDate, endDate);
+    }
+
+    const exceptions = await ScheduleException.find(filters);
     return exceptions;
   }
 
@@ -67,6 +92,12 @@ class ScheduleExceptionService {
 
     const exception = ScheduleException.build(dto);
     await exception.save();
+    return exception;
+  }
+
+  async deleteScheduleException(id: string): Promise<ScheduleExceptionDoc> {
+    const exception = await this.getScheduleExceptionById(id);
+    exception.remove();
     return exception;
   }
 

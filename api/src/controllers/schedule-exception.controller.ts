@@ -7,14 +7,19 @@ import { ScheduleException } from '../models/schedule-exception.model';
 import { createScheduleExceptionValidator } from '../middleware/validators/schedule-exception.validator';
 import { handleValidationResult } from '../middleware/validation-handler.middleware';
 import { Schedule } from '../models/schedule.model';
+import { optionalQueryDateRangeValidator } from '../middleware/validators/date-range.validator';
 
 const router = express.Router();
 
 router.get(
   '/',
   requireAuth,
+  optionalQueryDateRangeValidator,
+  handleValidationResult,
   async (req: Request, res: Response) => {
-    const exceptions = await scheduleExceptionService.getScheduleExceptionsByUser(req.currentUserId);
+    const { startDate, endDate } = req.query;
+    const exceptions = await scheduleExceptionService
+      .getScheduleExceptionsByUser(req.currentUserId, startDate as string, endDate as string);
 
     const resData = {
       object: 'list',
@@ -44,6 +49,16 @@ router.post(
     const data = { ...req.body, userId: req.currentUserId };
     const exception = await scheduleExceptionService.createScheduleException(data);
     res.status(HttpResponse.CREATED).send(exception);
+  }
+);
+
+router.delete(
+  '/:id',
+  requireAuth,
+  requireOwnership(ScheduleException, 'params', 'id'),
+  async (req: Request, res: Response) => {
+    const exception = await scheduleExceptionService.deleteScheduleException(req.params.id);
+    res.status(HttpResponse.OK).send(exception);
   }
 );
 

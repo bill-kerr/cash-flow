@@ -29,7 +29,7 @@ class ScheduleService {
     const schedule = await Schedule.findOne({ id: scheduleId });
     
     if (!schedule) {
-      throw new NotAuthorizedError('Not authorized to access this route.');
+      throw new NotAuthorizedError();
     }
 
     return schedule;
@@ -42,6 +42,12 @@ class ScheduleService {
   ) {
     const schedule = await this.getScheduleById(scheduleId);
     return occurrenceService.getOccurrencesBySchedule(schedule, startDate, endDate);
+  }
+
+  async deleteSchedule(scheduleId: string): Promise<ScheduleDoc> {
+    const schedule = await this.getScheduleById(scheduleId);
+    await schedule.remove();
+    return schedule;
   }
 
 }

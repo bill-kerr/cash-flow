@@ -12,7 +12,7 @@ const config = {
   mongodbUri: process.env.MONGODB_URI,
 
   firebaseDatabaseUrl: process.env.FIREBASE_DB_URL
-}
+};
 
 function checkRequiredConfigVariables() {
   try {

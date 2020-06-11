@@ -17,5 +17,26 @@ export const queryDateRangeValidator = [
     .trim()
     .escape()
     .custom(isValidDate)
-    .withMessage('The endDate query parameter must contain a valid date formatted as YYYY-MM-DD.'),
+    .withMessage('The endDate query parameter must contain a valid date formatted as YYYY-MM-DD.')
+];
+
+export const optionalQueryDateRangeValidator = [
+  query('startDate')
+    .optional()
+    .notEmpty()
+    .bail()
+    .withMessage('The startDate query parameter is required and cannot be empty.')
+    .trim()
+    .escape()
+    .custom(isValidDate)
+    .withMessage('The startDate query parameter must contain a valid date formatted as YYYY-MM-DD.'),
+  query('endDate')
+    .optional()
+    .notEmpty()
+    .bail()
+    .withMessage('The endDate query parameter is required and cannot be empty.')
+    .trim()
+    .escape()
+    .custom(isValidDate)
+    .withMessage('The endDate query parameter must contain a valid date formatted as YYYY-MM-DD.')
 ];
