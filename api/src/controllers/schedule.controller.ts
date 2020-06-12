@@ -3,7 +3,7 @@ import { HttpResponse } from '../types/http-response';
 import { handleValidationResult } from '../middleware/validation-handler.middleware';
 import { scheduleService } from '../services/schedule.service';
 import { scheduleExceptionService } from '../services/schedule-exception.service';
-import { createScheduleValidator } from '../middleware/validators/schedule.validator';
+import { createScheduleValidator, editScheduleValidator } from '../middleware/validators/schedule.validator';
 import { requireAuth } from '../middleware/require-auth.middleware';
 import { queryDateRangeValidator, optionalQueryDateRangeValidator } from '../middleware/validators/date-range.validator';
 import { requireOwnership } from '../middleware/require-ownership.middleware';
@@ -116,6 +116,19 @@ router.delete(
   async (req: Request, res: Response) => {
     const schedule = await scheduleService.deleteSchedule(req.params.id);
     res.status(HttpResponse.OK).send(schedule);
+  }
+);
+
+router.put(
+  '/:id',
+  requireAuth,
+  requireOwnership(Schedule, 'params', 'id'),
+  editScheduleValidator,
+  handleValidationResult,
+  async (req: Request, res: Response) => {
+    const data = { ...req.body, id: req.params.id };
+    const schedule = await scheduleService.editSchedule(data);
+    res.sendStatus(200);
   }
 );
 

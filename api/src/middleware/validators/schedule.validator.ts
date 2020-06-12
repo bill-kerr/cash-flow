@@ -1,93 +1,21 @@
-import { isValidDate, isDayOfWeek, isFrequency, isMonth, keyExists } from '../../util';
+import { isDayOfWeek, isMonth, floatField, stringField, booleanField, dateField, checkIsRecurring, recurringIsTrue, positiveIntegerField, frequencyField, dayOfWeekField } from './custom-validators';
+import { keyExists } from '../../util';
 import { Frequency } from '../../types';
 import { body } from 'express-validator';
 
 export const createScheduleValidator = [
-  body('amount')
-    .notEmpty()
-    .bail()
-    .withMessage('The amount field is required and cannot be empty.')
-    .trim()
-    .escape()
-    .isFloat()
-    .withMessage('The amount field must contain a number.')
-    .customSanitizer(val => parseFloat(val).toFixed(2)),
-  body('description')
-    .notEmpty()
-    .bail()
-    .withMessage('The description field is required and cannot be empty.')
-    .trim()
-    .escape()
-    .isString()
-    .withMessage('The description field must contain a string.'),
-  body('isRecurring')
-    .notEmpty()
-    .bail()
-    .withMessage('The isRecurring field is required and cannot be empty.')
-    .trim()
-    .escape()
-    .customSanitizer(val => val.toLowerCase())
-    .isBoolean()
-    .withMessage('The isRecurring field must contain a boolean.')
-    .customSanitizer(val => val === 'true'),
-  body('startDate')
-    .notEmpty()
-    .bail()
-    .withMessage('The startDate field is required and cannot be empty.')
-    .trim()
-    .escape()
-    .custom(isValidDate)
-    .withMessage('The startDate field must contain a valid date formatted as YYYY-MM-DD.'),
-  body('endDate')
-    .custom((_, { req }) => !(req.body.isRecurring === 'false' && keyExists(req.body, 'endDate')))
-    .withMessage('The endDate field should not exist if isRecurring is set to false.')
-    .if(body('isRecurring').equals('true'))
-    .optional()
-    .notEmpty()
-    .bail()
-    .withMessage('The endDate field cannot be empty.')
-    .trim()
-    .escape()
-    .custom(isValidDate)
-    .withMessage('The endDate field must contain a valid date formatted as YYYY-MM-DD.'),
-  body('frequency')
-    .custom((_, { req }) => !(req.body.isRecurring === 'false' && keyExists(req.body, 'frequency')))
-    .withMessage('The frequency field should not exist if isRecurring is set to false.')
-    .if(body('isRecurring').equals('true'))
-    .notEmpty()
-    .bail()
-    .withMessage('The frequency field cannot be empty if isRecurring is set to true.')
-    .trim()
-    .escape()
-    .custom(isFrequency)
-    .withMessage('The frequency field must contain one of \'DAILY\', \'WEEKLY\', \'MONTHLY\', or \'YEARLY\'.'),
-  body('interval')
-    .custom((_, { req }) => !(req.body.isRecurring === 'false' && keyExists(req.body, 'interval')))
-    .withMessage('The interval field should not exist if isRecurring is set to false.')
-    .if(body('isRecurring').equals('true'))
-    .notEmpty()
-    .bail()
-    .withMessage('The interval field cannot be empty if isRecurring is set to true.')
-    .trim()
-    .escape()
-    .isInt({ min: 1 })
-    .withMessage('The interval field must contain an integer not less than one.')
-    .customSanitizer(val => parseInt(val)),
-  body('dayOfWeek')
-    .custom((_, { req }) => !(req.body.isRecurring === 'false' && keyExists(req.body, 'dayOfWeek')))
-    .bail()
-    .withMessage('The dayOfWeek field should not exist if isRecurring is set to false.')
-    .custom((_, { req }) => !(req.body.frequency !== Frequency.WEEKLY && keyExists(req.body, 'dayOfWeek')))
-    .bail()
-    .withMessage('The dayOfWeek field should not exist if frequency is not set to \'WEEKLY\'.')
-    .if(body('frequency').equals(Frequency.WEEKLY))
-    .notEmpty()
-    .bail()
-    .withMessage('The dayOfWeek field should not be empty if frequency is set to \'WEEKLY\'.')
-    .trim()
-    .escape()
-    .custom(isDayOfWeek)
-    .withMessage('The dayOfWeek field must contain one of \'SUNDAY\', \'MONDAY\', \'TUESDAY\', \'WEDNESDAY\', \'THURSDAY\', \'FRIDAY\', OR \'SATURDAY\'.'),
+  floatField('amount'),
+  stringField('description'),
+  booleanField('isRecurring'),
+  dateField('startDate'),
+  checkIsRecurring('endDate'),
+  dateField('endDate', recurringIsTrue).optional(),
+  checkIsRecurring('frequency'),
+  frequencyField('frequency', recurringIsTrue),
+  checkIsRecurring('interval'),
+  positiveIntegerField('interval', recurringIsTrue),
+  checkIsRecurring('dayOfWeek'),
+  dayOfWeekField('dayOfWeek', recurringIsTrue),
   body('dayOfMonth')
     .custom((_, { req }) => !(req.body.isRecurring === 'false' && keyExists(req.body, 'dayOfMonth')))
     .bail()
@@ -118,4 +46,8 @@ export const createScheduleValidator = [
     .escape()
     .custom(isMonth)
     .withMessage('The month field must contain one of \'JANUARY\', \'FEBRUARY\', \'MARCH\', \'APRIL\', \'MAY\', \'JUNE\', \'JULY\', \'AUGUST\', \'SEPTEMBER\', \'OCTOBER\', \'NOVEMBER\', OR \'DECEMBER\'.')
+];
+
+export const editScheduleValidator = [
+  stringField('description')
 ];

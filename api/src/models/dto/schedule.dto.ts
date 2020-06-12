@@ -1,6 +1,6 @@
 import { Frequency, DayOfWeek, Month } from '../../types';
 
-interface CreateScheduleDto {
+export interface CreateScheduleDto {
   id: string;
   amount: number;
   description: string;
@@ -16,4 +16,17 @@ interface CreateScheduleDto {
   userId: string;
 }
 
-export { CreateScheduleDto };
+export interface EditScheduleDto {
+  id: string;
+  amount?: number;
+  description?: string;
+  isRecurring?: boolean;
+  startDate?: string;
+  endDate?: string;
+  frequency?: Frequency;
+  interval?: number;
+  dayOfWeek?: DayOfWeek;
+  dayOfMonth?: number;
+  month?: Month;
+  recurrenceRule?: string;
+}

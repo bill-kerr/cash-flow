@@ -101,6 +101,12 @@ class ScheduleExceptionService {
     return exception;
   }
 
+  async deleteScheduleExceptionsBySchedule(scheduleId: string) {
+    const exceptions = await ScheduleException.find({ schedule: scheduleId });
+    console.log(exceptions)
+    exceptions.map(async exception => await exception.remove());
+  }
+
 }
 
 const scheduleExceptionService = new ScheduleExceptionService();
