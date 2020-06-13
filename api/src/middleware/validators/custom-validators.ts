@@ -149,3 +149,23 @@ export const dayOfMonthField = (
   .escape()
   .isInt({ min: 1, max: 31 })
   .withMessage(`The ${ fieldName } field must contain an integer between 1 and 31.`);
+
+export const monthField = (
+  fieldName: string,
+  runCondition = body(fieldName).exists()
+) => body(fieldName)
+  .if(runCondition)
+  .custom((_, { req }) => !(req.body.isRecurring === 'false' && keyExists(req.body, fieldName)))
+    .bail()
+    .withMessage(`The ${ fieldName } field should not exist if isRecurring is set to false.`)
+    .custom((_, { req }) => !(req.body.frequency !== Frequency.YEARLY && keyExists(req.body, fieldName)))
+    .bail()
+    .withMessage(`The ${ fieldName } field should not exist if frequency is not set to \'YEARLY\'.`)
+    .if(body('frequency').equals(Frequency.YEARLY))
+    .notEmpty()
+    .bail()
+    .withMessage(`The ${ fieldName } field should not be empty if frequency is set to \'YEARLY\'.`)
+    .trim()
+    .escape()
+    .custom(isMonth)
+    .withMessage(`The ${ fieldName } field must contain one of \'JANUARY\', \'FEBRUARY\', \'MARCH\', \'APRIL\', \'MAY\', \'JUNE\', \'JULY\', \'AUGUST\', \'SEPTEMBER\', \'OCTOBER\', \'NOVEMBER\', OR \'DECEMBER\'.`);

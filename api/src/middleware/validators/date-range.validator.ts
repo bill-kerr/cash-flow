@@ -1,5 +1,5 @@
 import { query } from 'express-validator';
-import { isValidDate } from '../../util';
+import { isValidDate } from '../validators/custom-validators';
 
 export const queryDateRangeValidator = [
   query('startDate')

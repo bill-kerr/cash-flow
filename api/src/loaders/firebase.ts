@@ -1,5 +1,4 @@
 import * as admin from 'firebase-admin';
-
 import config from '../config';
 
 function initFirebase() {

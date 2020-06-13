@@ -1,4 +1,4 @@
-import { isValidDate } from '../../util';
+import { isValidDate } from '../validators/custom-validators';
 import { body } from 'express-validator';
 
 export const createScheduleExceptionByScheduleValidator = [
