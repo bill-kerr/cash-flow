@@ -32,6 +32,18 @@ const Months = {
 };
 
 class OccurrenceService {
+  private generateOnceRecurrenceRule(interval = 1, startDate: string): string {
+    const rule = new RRule({
+      freq: RRule.DAILY,
+      count: 1,
+      interval,
+      dtstart: getUTCDateFromString(startDate),
+      until: null
+    });
+
+    return rule.toString();
+  }
+
   private generateDailyRecurrenceRule(interval = 1, startDate: string, endDate?: string): string {
     const rule = new RRule({
       freq: RRule.DAILY,
@@ -104,6 +116,8 @@ class OccurrenceService {
 
   public generateRecurrenceRule(dto: CreateScheduleDto) {
     switch(dto.frequency) {
+      case Frequency.ONCE:
+        return this.generateOnceRecurrenceRule(dto.interval, dto.startDate);
       case Frequency.DAILY:
         return this.generateDailyRecurrenceRule(dto.interval, dto.startDate, dto.endDate);
       case Frequency.WEEKLY:

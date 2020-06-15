@@ -37,10 +37,6 @@ const scheduleSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  isRecurring: {
-    type: Boolean,
-    required: true
-  },
   startDate: {
     type: String,
     required: true

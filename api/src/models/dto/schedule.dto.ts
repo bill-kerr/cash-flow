@@ -4,7 +4,6 @@ export interface CreateScheduleDto {
   id: string;
   amount: number;
   description: string;
-  isRecurring: boolean;
   startDate: string;
   endDate?: string;
   frequency?: Frequency;
@@ -20,7 +19,6 @@ export interface EditScheduleDto {
   id: string;
   amount?: number;
   description?: string;
-  isRecurring?: boolean;
   startDate?: string;
   endDate?: string;
   frequency?: Frequency;
