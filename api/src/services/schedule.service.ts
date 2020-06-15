@@ -8,7 +8,6 @@ import { scheduleExceptionService } from './schedule-exception.service';
 class ScheduleService {
 
   private recurrenceKeys = [
-    'isRecurring',
     'interval',
     'dayOfWeek',
     'dayOfMonth',
@@ -35,14 +34,11 @@ class ScheduleService {
 
   async createSchedule(dto: CreateScheduleDto): Promise<ScheduleDoc> {
     if (dto.endDate && dto.endDate < dto.startDate) {
-      throw new BadRequestError('The end date must be after the start date.');
+      throw new BadRequestError('The end date must occur after the start date.');
     }
 
-    if (dto.isRecurring) {
-      const rule = occurrenceService.generateRecurrenceRule(dto);
-      dto.recurrenceRule = rule;
-    }
-
+    dto.recurrenceRule = occurrenceService.generateRecurrenceRule(dto);
+    
     const schedule = Schedule.build(dto);
     await schedule.save();
     return schedule;
