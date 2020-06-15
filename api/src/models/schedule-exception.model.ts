@@ -4,7 +4,7 @@ import { Occurrence } from './occurrence.model';
 
 interface ScheduleExceptionDoc extends mongoose.Document {
   date: string;
-  deleted: boolean;
+  occurrenceDeleted: boolean;
   amount: number;
   description: string;
   schedule: string;
@@ -26,9 +26,10 @@ const scheduleExceptionSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  deleted: {
+  occurrenceDeleted: {
     type: Boolean,
-    required: true
+    required: true,
+    default: false
   },
   amount: {
     type: Number,

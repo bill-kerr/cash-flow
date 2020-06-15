@@ -22,6 +22,25 @@ class ScheduleExceptionService {
     return filter;
   }
 
+  private async populateMissingFields(dto: CreateScheduleExceptionDto): Promise<CreateScheduleExceptionDto> {
+    const populatedDto = { ...dto };
+    const schedule = await scheduleService.getScheduleById(dto.schedule);
+
+    if (!populatedDto.description) {
+      populatedDto.description = schedule.description;
+    }
+
+    if (!populatedDto.amount) {
+      populatedDto.amount = schedule.amount;
+    }
+
+    if (!populatedDto.occurrenceDeleted) {
+      populatedDto.occurrenceDeleted = false;
+    }
+
+    return populatedDto;
+  }
+
   async getScheduleException(scheduleId: string,  date: string): Promise<ScheduleExceptionDoc> {
     const exception = await ScheduleException.findOne({ schedule: scheduleId, date });
 
@@ -82,6 +101,12 @@ class ScheduleExceptionService {
   }
 
   async createScheduleException(dto: CreateScheduleExceptionDto): Promise<ScheduleExceptionDoc> {
+    if (!dto.amount && !dto.occurrenceDeleted && !dto.description) {
+      throw new BadRequestError(
+        'A schedule-exception must change include one of \'amount\', \'description\', or \'occurrenceDeleted\''
+      );
+    }
+
     if (await this.scheduleExceptionExists(dto.schedule, dto.date)) {
       throw new BadRequestError(`A schedule-exception already exists on ${ dto.date }.`);
     }
@@ -90,7 +115,8 @@ class ScheduleExceptionService {
       throw new BadRequestError(`The specified schedule does not occur on ${ dto.date }.`);
     }
 
-    const exception = ScheduleException.build(dto);
+    const data = await this.populateMissingFields(dto);
+    const exception = ScheduleException.build(data);
     await exception.save();
     return exception;
   }
@@ -103,7 +129,6 @@ class ScheduleExceptionService {
 
   async deleteScheduleExceptionsBySchedule(scheduleId: string) {
     const exceptions = await ScheduleException.find({ schedule: scheduleId });
-    console.log(exceptions)
     exceptions.map(async exception => await exception.remove());
   }
 

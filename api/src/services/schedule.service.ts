@@ -79,12 +79,14 @@ class ScheduleService {
     if (this.isRecurrenceEdited(schedule, dto)) {
       await scheduleExceptionService.deleteScheduleExceptionsBySchedule(schedule.id);
       this.resetRecurrenceFields(schedule);
-      console.log(schedule)
     }
 
-    await schedule.updateOne(dto);
-    console.log(schedule)
-    return schedule;
+    const updatedSchedule = await Schedule.findOneAndUpdate({ id: dto.id }, dto, { new: true });
+    if (!updatedSchedule) {
+      throw new NotAuthorizedError();
+    }
+
+    return updatedSchedule;
   }
 
 }

@@ -128,7 +128,7 @@ router.put(
   async (req: Request, res: Response) => {
     const data = { ...req.body, id: req.params.id };
     const schedule = await scheduleService.editSchedule(data);
-    res.sendStatus(200);
+    res.status(HttpResponse.OK).send(schedule);
   }
 );
 

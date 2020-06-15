@@ -1,9 +1,8 @@
 export interface CreateScheduleExceptionDto {
   id: string;
-  currentDate: string;
   date: string;
-  deleted: boolean;
-  amount: number;
-  description: string;
+  occurrenceDeleted?: boolean;
+  amount?: number;
+  description?: string;
   schedule: string;
 }
