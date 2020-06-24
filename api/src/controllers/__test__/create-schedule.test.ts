@@ -11,11 +11,10 @@ const headers = {
 const fakeData = {
   amount: 500,
   description: 'test description',
-  isRecurring: true,
   startDate: '2020-05-01',
   endDate: '2020-05-30',
-  frequency: 'YEARLY',
-  interval: 0,
+  frequency: 'DAILY',
+  interval: 1,
   month: 'OCTOBER',
   dayOfMonth: 30
 };
@@ -39,11 +38,11 @@ it('returns a properly formatted object on successful request', async () => {
     object: 'schedule',
     amount: fakeData.amount,
     description: fakeData.description,
-    isRecurring: fakeData.isRecurring,
     startDate: fakeData.startDate,
     endDate: fakeData.endDate,
     frequency: fakeData.frequency,
-    interval: 0,
+    recurrenceRule: expect.any(String),
+    interval: 1,
     dayOfWeek: null,
     month: fakeData.month,
     dayOfMonth: fakeData.dayOfMonth,
@@ -58,7 +57,6 @@ it('rejects a request with improperly formatted data', async () => {
     .send({
       amount: '500',
       description: 123,
-      isRecurring: 'nope',
       startDate: '2020-5-01',
       endDate: '2020-05-3'
     })

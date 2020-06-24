@@ -1,7 +1,7 @@
 import { Frequency, DayOfWeek, Month } from '../../types';
 
 export interface CreateScheduleDto {
-  id: string;
+  id?: string;
   amount: number;
   description: string;
   startDate: string;

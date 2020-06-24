@@ -1,6 +1,8 @@
 import request from 'supertest';
 import { initExpressApp } from '../../loaders/express';
 import { Schedule } from '../../models/schedule.model';
+import { scheduleService } from '../../services/schedule.service';
+import { Frequency } from '../../types';
 
 const app = initExpressApp();
 const url = '/api/v1/schedules';
@@ -11,7 +13,7 @@ const headers = {
 const fakeData = {
   amount: 500,
   description: 'test description',
-  isRecurring: true,
+  frequency: Frequency.ONCE,
   startDate: '2020-05-01',
   endDate: '2020-05-30'
 };
@@ -24,8 +26,8 @@ const makeRequest = async () => {
 };
 
 it('retrieves a list of schedules', async () => {
-  await Schedule.create({ ...fakeData, userId: 'fake-id' });
-  await Schedule.create({ ...fakeData, userId: 'fake-id' });
+  await Schedule.create({ ...fakeData, userId: 'fake-id', id: 'schedule1' });
+  await Schedule.create({ ...fakeData, userId: 'fake-id', id: 'schedule2' });
 
   const res = await makeRequest();
   expect(res.status).toBe(200);
@@ -35,9 +37,9 @@ it('retrieves a list of schedules', async () => {
 });
 
 it('only retrieves schedules for the current user', async () => {
-  await Schedule.create({ ...fakeData, userId: 'fake-id' });
-  await Schedule.create({ ...fakeData, userId: 'fake-id' });
-  await Schedule.create({ ...fakeData, userId: 'userTwo' });
+  await scheduleService.createSchedule({ ...fakeData, userId: 'fake-id' });
+  await scheduleService.createSchedule({ ...fakeData, userId: 'fake-id' });
+  await scheduleService.createSchedule({ ...fakeData, userId: 'user-two' });
 
   const res = await makeRequest();
   expect(res.status).toBe(200);
