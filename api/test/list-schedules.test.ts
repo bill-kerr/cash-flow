@@ -1,8 +1,8 @@
 import request from 'supertest';
-import { initExpressApp } from '../../loaders/express';
-import { Schedule } from '../../models/schedule.model';
-import { scheduleService } from '../../services/schedule.service';
-import { Frequency } from '../../types';
+import { initExpressApp } from '../src/loaders/express';
+import { Schedule } from '../src/models/schedule.model';
+import { scheduleService } from '../src/services/schedule.service';
+import { Frequency } from '../src/types';
 
 const app = initExpressApp();
 const url = '/api/v1/schedules';

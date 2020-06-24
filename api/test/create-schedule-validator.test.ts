@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { initExpressApp } from '../../../loaders/express';
+import { initExpressApp } from '../src/loaders/express';
 
 const app = initExpressApp();
 const url = '/api/v1/schedules';
