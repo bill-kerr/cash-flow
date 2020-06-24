@@ -165,7 +165,7 @@ class OccurrenceService {
     const occurrences: Occurrence[] = [];
     occurrenceDates.forEach(date => {
       const exception = exceptions.find(exception => exception.date === date);
-      if (exception && !exception.deleted) {
+      if (exception && !exception.occurrenceDeleted) {
         occurrences.push(exception.createOccurrence(schedule.id, date));
       } else if (!exception) {
         occurrences.push(schedule.createOccurrence(date)); 

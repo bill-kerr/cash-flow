@@ -66,7 +66,9 @@ export const frequencyField = (fieldName: string) => body(fieldName)
   .trim()
   .escape()
   .custom(isFrequency)
-  .withMessage(`The ${ fieldName } field must contain one of \'DAILY\', \'WEEKLY\', \'MONTHLY\', or \'YEARLY\'.`);
+  .withMessage(
+    `The ${ fieldName } field must contain one of \'ONCE\', \'DAILY\', \'WEEKLY\', \'MONTHLY\', or \'YEARLY\'.`
+  );
 
 export const positiveIntegerField = (fieldName: string) => body(fieldName)
   .notEmpty()
@@ -86,7 +88,7 @@ export const dayOfWeekField = (fieldName: string) => body(fieldName)
   .trim()
   .escape()
   .custom(isDayOfWeek)
-  .withMessage(`The ${ fieldName } field must contain one of \'SUNDAY\', \'MONDAY\', \'TUESDAY\', \'WEDNESDAY\', \'THURSDAY\', \'FRIDAY\', OR \'SATURDAY\'.`);
+  .withMessage(`The ${ fieldName } field must contain one of \'SUNDAY\', \'MONDAY\', \'TUESDAY\', \'WEDNESDAY\', \'THURSDAY\', \'FRIDAY\', or \'SATURDAY\'.`);
 
 export const dayOfMonthField = (fieldName: string) => body(fieldName)
   .if(body('frequency').custom(val => val === Frequency.MONTHLY || val === Frequency.YEARLY))
@@ -95,8 +97,8 @@ export const dayOfMonthField = (fieldName: string) => body(fieldName)
   .withMessage(`The ${ fieldName } field should not be empty if frequency is set to \'MONTHLY\' or \'YEARLY\'.`)
   .trim()
   .escape()
-  .isInt({ min: 1, max: 31 })
-  .withMessage(`The ${ fieldName } field must contain an integer between 1 and 31.`);
+  .isInt({ min: 0, max: 31 })
+  .withMessage(`The ${ fieldName } field must contain an integer between 0 and 31.`);
 
 export const monthField = (fieldName: string) => body(fieldName)
   .if(body('frequency').equals(Frequency.YEARLY))
@@ -106,4 +108,4 @@ export const monthField = (fieldName: string) => body(fieldName)
   .trim()
   .escape()
   .custom(isMonth)
-  .withMessage(`The ${ fieldName } field must contain one of \'JANUARY\', \'FEBRUARY\', \'MARCH\', \'APRIL\', \'MAY\', \'JUNE\', \'JULY\', \'AUGUST\', \'SEPTEMBER\', \'OCTOBER\', \'NOVEMBER\', OR \'DECEMBER\'.`);
+  .withMessage(`The ${ fieldName } field must contain one of \'JANUARY\', \'FEBRUARY\', \'MARCH\', \'APRIL\', \'MAY\', \'JUNE\', \'JULY\', \'AUGUST\', \'SEPTEMBER\', \'OCTOBER\', \'NOVEMBER\', or \'DECEMBER\'.`);
