@@ -5,7 +5,6 @@ import { fetchOccurrences } from '../../actions';
 class OccurrenceList extends React.Component {
   componentDidMount() {
     const items = this.props.fetchOccurrences();
-    console.log(items);
   }
 
   render() {

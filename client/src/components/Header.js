@@ -1,9 +1,23 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
-const Header = () => {
+const Header = props => {
   return (
-    <div>Header</div>
+    <div class="flex justify-between">
+      <div>Site Title</div>
+      <div>
+        <img src={ props.user.photoURL } />
+      </div>
+    </div>
   );
 };
 
-export default Header;
+const mapStateToProps = state => {
+  return {
+    user: state.auth.user
+  };
+};
+
+export default connect(
+  mapStateToProps
+)(Header);
