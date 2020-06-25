@@ -5,4 +5,5 @@ export interface CreateScheduleExceptionDto {
   amount?: number;
   description?: string;
   schedule: string;
+  userId: string;
 }

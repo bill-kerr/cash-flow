@@ -103,7 +103,7 @@ class ScheduleExceptionService {
   async createScheduleException(dto: CreateScheduleExceptionDto): Promise<ScheduleExceptionDoc> {
     if (!dto.amount && !dto.occurrenceDeleted && !dto.description) {
       throw new BadRequestError(
-        'A schedule-exception must change include one of \'amount\', \'description\', or \'occurrenceDeleted\''
+        'A schedule-exception must include one of \'amount\', \'description\', or \'occurrenceDeleted\''
       );
     }
 

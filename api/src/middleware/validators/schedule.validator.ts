@@ -22,5 +22,13 @@ export const createScheduleValidator = [
 ];
 
 export const editScheduleValidator = [
-  stringField('description').optional()
+  floatField('amount').optional(),
+  stringField('description').optional(),
+  dateField('startDate').optional(),
+  dateField('endDate').optional(),
+  frequencyField('frequency').optional(),
+  positiveIntegerField('interval').optional(),
+  dayOfWeekField('dayOfWeek'),
+  dayOfMonthField('dayOfMonth'),
+  monthField('month')
 ];
