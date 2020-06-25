@@ -78,11 +78,13 @@ class OccurrenceService {
     startDate: string, 
     endDate?: string
   ): string {
+    const bymonthday = dayOfMonth === 0 ? [28, 29, 30, 31] : [dayOfMonth];
     const rule = new RRule({
       freq: RRule.MONTHLY,
       interval,
       dtstart: getUTCDateFromString(startDate),
-      bymonthday: [dayOfMonth],
+      bymonthday,
+      bysetpos: bymonthday.length > 1 ? -1 : null,
       until: endDate ? getUTCDateFromString(endDate) : null
     });
 
@@ -96,11 +98,13 @@ class OccurrenceService {
     startDate: string, 
     endDate?: string
   ): string {
+    const bymonthday = dayOfMonth === 0 ? [28, 29, 30, 31] : [dayOfMonth];
     const rule = new RRule({
       freq: RRule.YEARLY,
       interval,
       dtstart: getUTCDateFromString(startDate),
-      bymonthday: [dayOfMonth],
+      bymonthday,
+      bysetpos: bymonthday.length > 1 ? -1 : null,
       bymonth: [Months[month]],
       until: endDate ? getUTCDateFromString(endDate) : null
     });

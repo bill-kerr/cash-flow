@@ -37,7 +37,7 @@ export const floatField = (fieldName: string) => body(fieldName)
   .escape()
   .isFloat()
   .withMessage(`The ${ fieldName } field must contain a number.`)
-  .customSanitizer(val => parseFloat(val).toFixed(2));
+  .customSanitizer(val => parseFloat(parseFloat(val).toFixed(2)));
 
 export const booleanField = (fieldName: string) => body(fieldName)
   .notEmpty()
@@ -98,7 +98,8 @@ export const dayOfMonthField = (fieldName: string) => body(fieldName)
   .trim()
   .escape()
   .isInt({ min: 0, max: 31 })
-  .withMessage(`The ${ fieldName } field must contain an integer between 0 and 31.`);
+  .withMessage(`The ${ fieldName } field must contain an integer between 0 and 31.`)
+  .customSanitizer(val => parseInt(val));
 
 export const monthField = (fieldName: string) => body(fieldName)
   .if(body('frequency').equals(Frequency.YEARLY))

@@ -58,7 +58,7 @@ class ScheduleService {
     return schedule;
   }
 
-  async getScheduleOccurences(
+  async getScheduleOccurrences(
     scheduleId: string, 
     startDate: string, 
     endDate: string
