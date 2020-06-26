@@ -2,10 +2,10 @@ import {
   FETCH_OCCURRENCES
 } from '../actions/types';
 
-export default (state = {}, action) => {
+export default (state = [], action) => {
   switch (action.type) {
     case FETCH_OCCURRENCES:
-      return { ...state };
+      return [ ...state, ...action.payload ];
     default:
       return state;
   }

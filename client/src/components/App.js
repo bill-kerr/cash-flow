@@ -13,10 +13,10 @@ class App extends React.Component {
         token,
         displayName: user.displayName,
         email: user.email,
-        photoURL: user.photoURL
+        photoURL: user.photoURL,
+        isSignedIn: true
       });
     });
-    console.log(this.props.token)
   }
 
   render() {

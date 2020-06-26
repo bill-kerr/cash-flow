@@ -16,22 +16,18 @@ class Auth {
     appId: '1:236580790004:web:38e2dde703ecf012be88a1'
   };
 
-  initialize = () => {
-    firebase.initializeApp(this.firebaseConfig);
-  }
+  initialize = () => firebase.initializeApp(this.firebaseConfig);
 
   onAuthStateChanged = callback => {
     firebase.auth().onAuthStateChanged(user => callback(user));
   };
 
-  signInWithGoogle() {
+  signInWithGoogle = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
     return firebase.auth().signInWithPopup(provider);
-  }
+  };
 
-  getIdToken() {
-    return firebase.auth().currentUser.getIdToken();
-  }
+  getIdToken = () => firebase.auth().currentUser.getIdToken();
 }
 
 const auth = new Auth();
