@@ -3,8 +3,10 @@ import { connect } from 'react-redux';
 
 const Header = props => {
   return (
-    <div className="flex justify-between">
-      <div>Site Title</div>
+    <div className="flex items-center justify-between">
+      <div className="pl-4 text-lg font-bold">
+        Personal Cash Flow Tracker
+      </div>
       <div className="flex justify-between">
         <img 
           src={ props.user.photoURL }

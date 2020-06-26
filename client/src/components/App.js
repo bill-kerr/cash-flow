@@ -4,6 +4,7 @@ import Header from './Header';
 import OccurrenceList from './occurrences/OccurrenceList';
 import auth from '../apis/auth';
 import { signIn } from '../actions';
+import ScheduleList from './schedules/ScheduleList';
 
 class App extends React.Component {
   componentDidMount() {
@@ -24,6 +25,10 @@ class App extends React.Component {
       <div className="w-full max-w-screen-xl mx-auto px-6">
         <Header />
         <div>
+          <ScheduleList />
+        </div>
+        <div>{ this.props.user.email }</div>
+        <div>
           <OccurrenceList />
         </div>
       </div>
@@ -31,9 +36,9 @@ class App extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
-    token: state.token
+    user: state.auth.user
   };
 };
 
