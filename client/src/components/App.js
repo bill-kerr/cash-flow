@@ -3,21 +3,30 @@ import { connect } from 'react-redux';
 import Header from './Header';
 import OccurrenceList from './occurrences/OccurrenceList';
 import auth from '../apis/auth';
-import { signIn } from '../actions';
+import { signIn, fetchOccurrences, fetchSchedules } from '../actions';
 import ScheduleList from './schedules/ScheduleList';
+import StateForm from './StateForm';
 
 class App extends React.Component {
   componentDidMount() {
     auth.onAuthStateChanged(async user => {
       const token = await auth.getIdToken();
-      this.props.signIn({
+      await this.props.signIn({
         token,
         displayName: user.displayName,
         email: user.email,
         photoURL: user.photoURL,
         isSignedIn: true
       });
+
+      this.fetchData()
     });
+  }
+
+  fetchData() {
+    const { token } = this.props.user;
+    this.props.fetchSchedules(token);
+    this.props.fetchOccurrences(token, '2020-05-01', '2021-04-30');
   }
 
   render() {
@@ -27,7 +36,9 @@ class App extends React.Component {
         <div>
           <ScheduleList />
         </div>
-        <div>{ this.props.user.email }</div>
+        <div>
+          <StateForm />
+        </div>
         <div>
           <OccurrenceList />
         </div>
@@ -44,5 +55,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  { signIn }
+  { signIn, fetchOccurrences, fetchSchedules }
 )(App);

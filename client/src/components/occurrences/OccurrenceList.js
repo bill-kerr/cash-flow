@@ -2,17 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { fetchOccurrences } from '../../actions';
-import Occurrence from './Occurrence';
+import Occurrence from './OccurrenceItem';
 
 class OccurrenceList extends React.Component {
 
   componentDidMount() {
-    if (this.props.user.isSignedIn) {
-      this.fetchOccurrences();
-    }
-  }
-
-  componentDidUpdate(prevProps) {
     if (this.props.user.isSignedIn) {
       this.fetchOccurrences();
     }

@@ -1,14 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { fetchSchedules } from '../../actions';
+import ScheduleItem from './ScheduleItem';
 
 class ScheduleList extends React.Component {
   
   componentDidMount() {
-    this.fetchSchedules();
-  }
-
-  componentDidUpdate() {
     this.fetchSchedules();
   }
 
@@ -18,12 +15,10 @@ class ScheduleList extends React.Component {
     }
   }
 
-  renderList() {
+  renderScheduleItems() {
     return this.props.schedules.map(schedule => {
       return (
-        <div key={ schedule.id } className="w-full py-2 pl-4">
-          { schedule.description }
-        </div>
+        <ScheduleItem key={ schedule.id } schedule={ schedule } />
       );
     });
   }
@@ -31,7 +26,7 @@ class ScheduleList extends React.Component {
   render() {
     return (
       <div>
-        { this.renderList() }
+        { this.renderScheduleItems() }
       </div>
     );
   }
