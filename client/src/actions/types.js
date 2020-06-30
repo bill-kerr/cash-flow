@@ -4,5 +4,7 @@ export const SIGN_OUT = 'SIGN_OUT';
 export const FETCH_SCHEDULES = 'FETCH_SCHEDULES';
 
 export const FETCH_OCCURRENCES = 'FETCH_OCCURRENCES';
+export const SET_START_DATE = 'SET_START_DATE';
+export const SET_END_DATE = 'SET_END_DATE';
 
 export const SET_STARTING_BALANCE = 'SET_STARTING_BALANCE';

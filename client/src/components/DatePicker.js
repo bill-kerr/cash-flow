@@ -49,17 +49,17 @@ const DatePicker = ({ selectedDate, setSelectedDate }) => {
     setBlankDates(startDay);
 
     setDaysInMonth(new Date(year, month + 1, 0).getDate());
-  }, [month]);
+  }, [month, year]);
 
   const onDateChange = date => {
     setMonth(date.getMonth());
     setYear(date.getFullYear());
-    setSelectedDate(date.toDateString());
+    setSelectedDate(date);
   };
 
   const onClickDate = date => {
     const newDate = new Date(year, month, date);
-    setSelectedDate(newDate.toDateString());
+    setSelectedDate(newDate);
     setOpen(false);
   };
 
@@ -202,19 +202,23 @@ const DatePicker = ({ selectedDate, setSelectedDate }) => {
 
   return (
     <div className="w-64">
-      <label htmlFor="datePicker" className="">
-        Select Date
-      </label>
       <div className="relative">
         <input type="hidden" name="date" />
         <input 
           type="text"
           readOnly
           placeholder="Select date"
-          className="w-full pl-4 pr-10 py-3 leading-none rounded shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium"
+          className="w-full pl-4 pr-10 py-3 leading-none rounded shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium transition-shadow duration-100"
           onClick={ () => setOpen(!open) }
-          value={ selectedDate }
+          value={ selectedDate.toDateString() }
         />
+        <div className="absolute top-0 right-0 px-3 py-2 pointer-events-none">
+          <svg fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24"
+            stroke="currentColor" className="h-6 w-6 text-gray-400"
+          >
+            <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+          </svg>
+        </div>
         { open && renderCalendar() }
       </div>
     </div>

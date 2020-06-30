@@ -53,7 +53,7 @@ class OccurrenceList extends React.Component {
 
 const mapStateToProps = state => {
   return { 
-    occurrences: state.occurrences,
+    occurrences: state.occurrenceList.occurrences,
     user: state.auth.user,
     startingBalance: state.balance.startingBalance
   };
