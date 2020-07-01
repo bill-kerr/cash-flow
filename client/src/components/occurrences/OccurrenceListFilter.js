@@ -32,7 +32,7 @@ const OccurrenceListFilter = props => {
   };
 
   return (
-    <div className="flex p-2 bg-gray-200 border border-gray-300 rounded">
+    <div className="flex p-2 bg-gray-200 shadow rounded">
       <div className="flex flex-col">
         <label  
           className="text-xs font-bold text-gray-600 uppercase"
@@ -71,7 +71,9 @@ const mapStateToProps = state => {
   return {
     startDate: state.occurrenceList.startDate,
     endDate: state.occurrenceList.endDate,
-    user: state.auth.user
+    user: state.auth.user,
+    startingBalance: state.occurrenceList.startingBalance,
+    currencyCode: state.settings.currencyCode
   };
 };
 

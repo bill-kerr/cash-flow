@@ -1,15 +1,37 @@
 import React from 'react';
 import { getFrequencyDescription } from '../../util';
+import TransactionBadge from '../TransactionBadge';
+
+const styles = {
+  positive: {
+    wrapperDiv: 'text-green-900',
+    upperDiv: 'bg-green-200',
+    freqDesc: 'text-green-700',
+    lowerDiv: 'bg-green-100',
+    menu: 'hover:bg-green-300'
+  },
+  negative: {
+    wrapperDiv: 'text-red-900',
+    upperDiv: 'bg-red-200',
+    freqDesc: 'text-red-700',
+    lowerDiv: 'bg-red-100',
+    menu: 'hover:bg-red-300'
+  }
+};
 
 const ScheduleItem = ({ schedule }) => {
+
+  const currentStyle = schedule.amount >= 0 ? 'positive' : 'negative';
+
   return (
-    <div className="w-full shadow text-green-900 mx-2">
-      <div className="p-2 bg-green-200 rounded-t">
+    <div 
+      className={ `w-full flex flex-col shadow ${ styles[currentStyle].wrapperDiv } mx-2` } 
+      style={{ maxWidth: '16rem' }}
+    >
+      <div className={ `p-2 rounded-t ${ styles[currentStyle].upperDiv }` }>
         <div className="flex justify-between items-center">
-          <span className="font-bold text-lg">
-            ${ schedule.amount }
-          </span>
-          <span className="cursor-pointer rounded-full p-1 hover:bg-green-300">
+          <TransactionBadge amount={ schedule.amount } />
+          <span className={ `cursor-pointer rounded-full p-1 ${ styles[currentStyle].menu }` }>
             <svg fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24"
               stroke="currentColor" className="h-4 w-4"
             >
@@ -17,11 +39,11 @@ const ScheduleItem = ({ schedule }) => {
             </svg>
           </span>
         </div>
-        <p className="text-xs text-green-700">
+        <p className={ `text-xs ${ styles[currentStyle].freqDesc }` }>
           { getFrequencyDescription(schedule) }
         </p>
       </div>
-      <div className="p-2 bg-green-100 rounded-b">
+      <div className={ `p-2 rounded-b flex-1 ${ styles[currentStyle].lowerDiv }` }>
         <h4 className="font-medium text-sm">
           { schedule.description }
         </h4>

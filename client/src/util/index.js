@@ -12,6 +12,8 @@ export const getFrequencyDescription = schedule => {
       return `every ${ schedule.interval } months on the ${ addMonthDateSuffix(schedule.dayOfMonth) }`;
     case 'YEARLY':
       return `every ${ schedule.interval } years in ${ schedule.month } on the ${ addMonthDateSuffix(schedule.dayOfMonth) }`;
+    default:
+      return '';
   }
 };
 
@@ -39,4 +41,13 @@ export const numberSuffix = num => {
     return 'rd';
   }
   return 'th';
+};
+
+export const formatCurrency = (amount, currencyCode, absoluteValue = false) => {
+  amount = absoluteValue ? Math.abs(amount) : amount;
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: currencyCode,
+    minimumFractionDigits: 2
+  }).format(amount);
 };

@@ -1,4 +1,4 @@
-export const SET_CURRENCY = 'SET_CURRENCY';
+export const SET_CURRENCY_CODE = 'SET_CURRENCY_CODE';
 
 export const SIGN_IN = 'SIGN_IN';
 export const SIGN_OUT = 'SIGN_OUT';

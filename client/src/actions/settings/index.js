@@ -1,7 +1,7 @@
 import {
-  SET_CURRENCY
+  SET_CURRENCY_CODE
 } from '../types';
 
-export const setCurrency = currency => {
-  return { type: SET_CURRENCY, payload: currency };
+export const setCurrencyCode = currencyCode => {
+  return { type: SET_CURRENCY_CODE, payload: currencyCode };
 };
