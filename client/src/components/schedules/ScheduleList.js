@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchSchedules } from '../../actions';
+import { fetchSchedules } from '../../actions/schedules';
 import ScheduleItem from './ScheduleItem';
 
 class ScheduleList extends React.Component {

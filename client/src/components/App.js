@@ -1,11 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import moment from 'moment';
 import Header from './Header';
 import OccurrenceList from './occurrences/OccurrenceList';
 import auth from '../apis/auth';
-import { signIn, fetchOccurrences, fetchSchedules } from '../actions';
+import { signIn } from '../actions/auth';
+import { fetchOccurrences } from '../actions/occurrences';
+import { fetchSchedules } from '../actions/schedules';
 import ScheduleList from './schedules/ScheduleList';
-import StateForm from './StateForm';
+import OccurrenceListFilter from './occurrences/OccurrenceListFilter';
 
 class App extends React.Component {
   componentDidMount() {
@@ -26,7 +29,9 @@ class App extends React.Component {
   fetchData() {
     const { token } = this.props.user;
     this.props.fetchSchedules(token);
-    this.props.fetchOccurrences(token, '2020-05-01', '2021-04-30');
+    const startDate = moment(this.props.occurrenceList.startDate).format('YYYY-MM-DD');
+    const endDate = moment(this.props.occurrenceList.endDate).format('YYYY-MM-DD');
+    this.props.fetchOccurrences(token, startDate, endDate);
   }
 
   render() {
@@ -37,7 +42,7 @@ class App extends React.Component {
           <ScheduleList />
         </div>
         <div>
-          <StateForm />
+          <OccurrenceListFilter />
         </div>
         <div>
           <OccurrenceList />
@@ -49,7 +54,8 @@ class App extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    user: state.auth.user
+    user: state.auth.user,
+    occurrenceList: state.occurrenceList
   };
 };
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { fetchOccurrences } from '../../actions';
+import { fetchOccurrences } from '../../actions/occurrences';
 import Occurrence from './OccurrenceItem';
 
 class OccurrenceList extends React.Component {

@@ -31,8 +31,6 @@ const DatePicker = ({ selectedDate, setSelectedDate, maxDate, minDate = null }) 
     year: selectedDate.getFullYear()
   });
 
-  console.log(maxDate)
-
   const monthStrings = {
     0: 'January',
     1: 'February',
@@ -216,7 +214,7 @@ const DatePicker = ({ selectedDate, setSelectedDate, maxDate, minDate = null }) 
   };
 
   return (
-    <div className="w-64">
+    <div className="w-56">
       <div className="relative">
         <input type="hidden" name="date" />
         <input 
