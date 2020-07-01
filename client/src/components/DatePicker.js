@@ -1,12 +1,35 @@
 import React, { useState, useEffect, useRef } from 'react';
 
+const useDate = ({month, year}) => {
+  const getDaysInMonth = (month, year) => new Date(year, month + 1, 0).getDate();
+  const getBlankDates = (month, year) => new Date(year, month).getDay();
+  
+  const [currentDate, setCurrentDate] = useState({
+    month,
+    year,
+    daysInMonth: getDaysInMonth(month, year),
+    blankDates: getBlankDates(month, year)
+  });
+
+  const setDate = ({month, year}) => {
+    setCurrentDate({
+      month: month,
+      year: year,
+      daysInMonth: getDaysInMonth(month, year),
+      blankDates: getBlankDates(month, year)
+    });
+  };
+
+  return [currentDate, setDate];
+};
+
 const DatePicker = ({ selectedDate, setSelectedDate }) => {
   const node = useRef();
   const [open, setOpen] = useState(false);
-  const [year, setYear] = useState(0);
-  const [month, setMonth] = useState(0);
-  const [daysInMonth, setDaysInMonth] = useState(0);
-  const [blankDates, setBlankDates] = useState(0);
+  const [currentDate, setCurrentDate] = useDate({
+    month: selectedDate.getMonth(), 
+    year: selectedDate.getFullYear()
+  });
 
   const monthStrings = {
     0: 'January',
@@ -22,6 +45,28 @@ const DatePicker = ({ selectedDate, setSelectedDate }) => {
     10: 'November',
     11: 'December'
   };
+  
+  const onClickDate = date => {
+    const newDate = new Date(currentDate.year, currentDate.month, date);
+    setSelectedDate(newDate);
+    setOpen(false);
+  };
+
+  const onClickNextMonth = () => {
+    if (currentDate.month === 11) {
+      setCurrentDate({ ...currentDate, month: 0, year: currentDate.year + 1 });
+    } else {
+      setCurrentDate({ ...currentDate, month: currentDate.month + 1 });
+    }
+  };
+
+  const onClickPreviousMonth = () => {
+    if (currentDate.month === 0) {
+      setCurrentDate({ ...currentDate, month: 11, year: currentDate.year - 1 });
+    } else {
+      setCurrentDate({ ...currentDate, month: currentDate.month - 1 });
+    }
+  };
 
   const handleClickOutside = e => {
     if (node.current.contains(e.target)) {
@@ -29,57 +74,18 @@ const DatePicker = ({ selectedDate, setSelectedDate }) => {
     }
     setOpen(false);
   };
-
-  useEffect(() => onDateChange(new Date()), []);
-
+  
   useEffect(() => {
     if (open) {
       document.addEventListener("mousedown", handleClickOutside);
     } else {
       document.removeEventListener("mousedown", handleClickOutside);
     }
-
+    
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [open]);
-
-  useEffect(() => {
-    const startDay = new Date(year, month).getDay();
-    setBlankDates(startDay);
-
-    setDaysInMonth(new Date(year, month + 1, 0).getDate());
-  }, [month, year]);
-
-  const onDateChange = date => {
-    setMonth(date.getMonth());
-    setYear(date.getFullYear());
-    setSelectedDate(date);
-  };
-
-  const onClickDate = date => {
-    const newDate = new Date(year, month, date);
-    setSelectedDate(newDate);
-    setOpen(false);
-  };
-
-  const onClickNextMonth = () => {
-    if (month === 11) {
-      setMonth(0);
-      setYear(year + 1);
-    } else {
-      setMonth(month + 1);
-    }
-  };
-
-  const onClickPreviousMonth = () => {
-    if (month === 0) {
-      setMonth(11);
-      setYear(year - 1);
-    } else {
-      setMonth(month - 1);
-    }
-  };
 
   const renderCalendar = () => {
     return (
@@ -92,8 +98,8 @@ const DatePicker = ({ selectedDate, setSelectedDate }) => {
         {/* Month and Year Header w/ Arrows */}
         <div className="mb-2 flex justify-between items-center">
           <div>
-            <span className="text-lg font-bold text-gray-800">{ monthStrings[month] }</span>
-            <span className="ml-1 text-lg text-gray-600 font-normal">{ year }</span>
+            <span className="text-lg font-bold text-gray-800">{ monthStrings[currentDate.month] }</span>
+            <span className="ml-1 text-lg text-gray-600 font-normal">{ currentDate.year }</span>
           </div>
           <div>
             <button
@@ -151,7 +157,7 @@ const DatePicker = ({ selectedDate, setSelectedDate }) => {
 
   const renderDates = () => {
     const renderedDates = [];
-    for (let i = 0; i < daysInMonth; i++) {
+    for (let i = 0; i < currentDate.daysInMonth; i++) {
       renderedDates.push(
         <div style={{ width: '14.26%' }} className="px-1 mb-1" key={ i }>
           <div
@@ -169,7 +175,7 @@ const DatePicker = ({ selectedDate, setSelectedDate }) => {
 
   const renderBlankDates = () => {
     const renderedBlanks = [];
-    for (let i = 0; i < blankDates; i++) {
+    for (let i = 0; i < currentDate.blankDates; i++) {
       renderedBlanks.push(
         <div
           style={{ width: '14.28%' }}
@@ -181,11 +187,10 @@ const DatePicker = ({ selectedDate, setSelectedDate }) => {
     return renderedBlanks;
   };
 
-  const isToday = (year, month, day) => {
-    const today = new Date();
-    const isYear = today.getFullYear() === year;
-    const isMonth = today.getMonth() === month;
-    const isDay = today.getDate() === day;
+  const isDate = (year, month, day, matchDate = new Date()) => {
+    const isYear = matchDate.getFullYear() === year;
+    const isMonth = matchDate.getMonth() === month;
+    const isDay = matchDate.getDate() === day;
 
     return isYear && isMonth && isDay;
   };
@@ -193,8 +198,12 @@ const DatePicker = ({ selectedDate, setSelectedDate }) => {
   const getDateStyles = date => {
     let baseStyles = 'cursor-pointer text-center text-sm rounded-full leading-loose transition ease-in-out duration-100';
 
-    if (isToday(year, month, date)) {
+    if (isDate(currentDate.year, currentDate.month, date)) {
       return baseStyles += ' bg-blue-500 text-white';
+    }
+
+    if (isDate(currentDate.year, currentDate.month, date, selectedDate)) {
+      return baseStyles += ' bg-blue-200 text-gray-700';
     }
 
     return baseStyles += ' text-gray-700 hover:bg-blue-200';

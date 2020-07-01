@@ -13,8 +13,8 @@ class OccurrenceList extends React.Component {
   }
 
   fetchOccurrences() {
-    const startDate = moment().format('YYYY-MM-DD');
-    const endDate = moment().add(1, 'years').format('YYYY-MM-DD');
+    const startDate = moment(this.props.startDate).format('YYYY-MM-DD');
+    const endDate = moment(this.props.endDate).format('YYYY-MM-DD');
     this.props.fetchOccurrences(this.props.user.token, startDate, endDate);
   }
 
@@ -54,8 +54,10 @@ class OccurrenceList extends React.Component {
 const mapStateToProps = state => {
   return { 
     occurrences: state.occurrenceList.occurrences,
-    user: state.auth.user,
-    startingBalance: state.balance.startingBalance
+    startDate: state.occurrenceList.startDate,
+    endDate: state.occurrenceList.endDate,
+    startingBalance: state.occurrenceList.startingBalance,
+    user: state.auth.user
   };
 };
 

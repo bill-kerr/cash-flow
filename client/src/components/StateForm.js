@@ -3,17 +3,25 @@ import { connect } from 'react-redux';
 import DatePicker from './DatePicker';
 import { setStartDate, setEndDate } from '../actions';
 
-const StateForm = props => {
-
-  const [formStartDate, setFormStartDate] = useState(props.startDate);
-  const [formEndDate, setFormEndDate] = useState(props.endDate);
+const StateForm = ({ 
+  startDate, 
+  setStartDate,
+  endDate,
+  setEndDate
+}) => {
+  const [formStartDate, setFormStartDate] = useState(startDate);
+  const [formEndDate, setFormEndDate] = useState(endDate);
 
   useEffect(() => {
-    props.setStartDate(formStartDate)
+    if (startDate !== formStartDate) {
+      setStartDate(formStartDate)
+    }
   }, [formStartDate]);
 
   useEffect(() => {
-    props.setEndDate(formEndDate)
+    if (endDate !== formEndDate) {
+      setEndDate(formEndDate)
+    }
   }, [formEndDate]);
 
   return (
