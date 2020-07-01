@@ -23,13 +23,15 @@ const useDate = ({month, year}) => {
   return [currentDate, setDate];
 };
 
-const DatePicker = ({ selectedDate, setSelectedDate }) => {
+const DatePicker = ({ selectedDate, setSelectedDate, maxDate, minDate = null }) => {
   const node = useRef();
   const [open, setOpen] = useState(false);
   const [currentDate, setCurrentDate] = useDate({
     month: selectedDate.getMonth(), 
     year: selectedDate.getFullYear()
   });
+
+  console.log(maxDate)
 
   const monthStrings = {
     0: 'January',
@@ -198,15 +200,19 @@ const DatePicker = ({ selectedDate, setSelectedDate }) => {
   const getDateStyles = date => {
     let baseStyles = 'cursor-pointer text-center text-sm rounded-full leading-loose transition ease-in-out duration-100';
 
-    if (isDate(currentDate.year, currentDate.month, date)) {
+    if (
+      new Date(currentDate.year, currentDate.month, date) > maxDate ||
+      new Date(currentDate.year, currentDate.month, date) < minDate
+    ) {
+      return baseStyles += ' pointer-events-none text-gray-400';
+    } else if (isDate(currentDate.year, currentDate.month, date)) {
       return baseStyles += ' bg-blue-500 text-white';
-    }
-
-    if (isDate(currentDate.year, currentDate.month, date, selectedDate)) {
+    } else if (isDate(currentDate.year, currentDate.month, date, selectedDate)) {
       return baseStyles += ' bg-blue-200 text-gray-700';
+    } else {
+      return baseStyles += ' text-gray-700 hover:bg-blue-200';
     }
 
-    return baseStyles += ' text-gray-700 hover:bg-blue-200';
   };
 
   return (

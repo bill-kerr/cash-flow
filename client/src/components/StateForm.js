@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import DatePicker from './DatePicker';
 import { setStartDate, setEndDate } from '../actions';
@@ -9,20 +9,22 @@ const StateForm = ({
   endDate,
   setEndDate
 }) => {
-  const [formStartDate, setFormStartDate] = useState(startDate);
   const [formEndDate, setFormEndDate] = useState(endDate);
+  const [formStartDate, setFormStartDate] = useState(startDate);
 
-  useEffect(() => {
+  const updateStartDate = date => {
+    setFormStartDate(date);
     if (startDate !== formStartDate) {
       setStartDate(formStartDate)
     }
-  }, [formStartDate]);
+  };
 
-  useEffect(() => {
+  const updateEndDate = date => {
+    setFormEndDate(date);
     if (endDate !== formEndDate) {
       setEndDate(formEndDate)
     }
-  }, [formEndDate]);
+  };
 
   return (
     <div className="flex p-2 bg-gray-200 border border-gray-300 rounded">
@@ -34,7 +36,7 @@ const StateForm = ({
           Start date
         </label>
         <div className="mt-1">
-          <DatePicker selectedDate={ formStartDate } setSelectedDate={ setFormStartDate } />
+          <DatePicker selectedDate={ formStartDate } setSelectedDate={ updateStartDate } maxDate={ formEndDate } />
         </div>
       </div>
       <div className="ml-3 flex flex-col">
@@ -45,7 +47,7 @@ const StateForm = ({
           End date
         </label>
         <div className="mt-1">
-          <DatePicker selectedDate={ formEndDate } setSelectedDate={ setFormEndDate } />
+          <DatePicker selectedDate={ formEndDate } setSelectedDate={ updateEndDate } minDate={ formStartDate } />
         </div>
       </div>
     </div>
