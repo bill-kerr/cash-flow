@@ -9,6 +9,7 @@ import { fetchOccurrences } from '../actions/occurrences';
 import { fetchSchedules } from '../actions/schedules';
 import ScheduleList from './schedules/ScheduleList';
 import OccurrenceListFilter from './occurrences/OccurrenceListFilter';
+import Toolbar from './Toolbar';
 
 class App extends React.Component {
   componentDidMount() {
@@ -22,7 +23,7 @@ class App extends React.Component {
         isSignedIn: true
       });
 
-      this.fetchData()
+      this.fetchData();
     });
   }
 
@@ -38,13 +39,16 @@ class App extends React.Component {
     return (
       <div className="w-full max-w-screen-xl mx-auto px-6">
         <Header />
-        <div>
+        <div className="mt-4">
+          <Toolbar />
+        </div>
+        <div className="mt-4">
           <ScheduleList />
         </div>
-        <div>
+        <div className="mt-4">
           <OccurrenceListFilter />
         </div>
-        <div>
+        <div className="mt-4">
           <OccurrenceList />
         </div>
       </div>

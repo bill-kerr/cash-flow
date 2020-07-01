@@ -25,8 +25,21 @@ class ScheduleList extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="flex items-center items-stretch justify-between -mx-1">
+        <div className="flex items-center w-32 mx-1 text-gray-500 rounded cursor-pointer hover:bg-gray-200 hover:shadow">
+          <svg fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" 
+            stroke="currentColor" className="h-8 w-8"
+          >
+            <path d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </div>
         { this.renderScheduleItems() }
+        <div className="flex items-center w-32 mx-1 text-gray-500 rounded cursor-pointer hover:bg-gray-200 hover:shadow">
+          <svg fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" 
+            stroke="currentColor" className="h-8 w-8">
+            <path d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
       </div>
     );
   }

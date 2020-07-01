@@ -1,10 +1,6 @@
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
 
-export const onAuthStateChanged = callback => {
-  firebase.auth().onAuthStateChanged(user => callback(user));
-};
-
 class Auth {
   firebaseConfig = {
     apiKey: 'AIzaSyD5KDsUaecKcanBTxaqU0tb2fLTVURMSaM',

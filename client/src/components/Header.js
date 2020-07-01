@@ -3,9 +3,10 @@ import { connect } from 'react-redux';
 
 const Header = props => {
   return (
-    <div className="flex items-center justify-between">
-      <div className="pl-4 text-lg font-bold">
-        Personal Cash Flow Tracker
+    <div className="flex items-center justify-between p-2">
+      <div>
+        <h1 className="text-lg font-bold">Personal Cash Flow Tracker</h1>
+        <p className="text-sm">A dead simple cash flow manager.</p>
       </div>
       <div className="flex justify-between">
         <img 
