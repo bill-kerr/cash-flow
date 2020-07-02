@@ -1,16 +1,20 @@
-
+import moment from 'moment';
 
 export const getFrequencyDescription = schedule => {
   switch (schedule.frequency) {
     case 'ONCE':
       return `on ${ schedule.startDate }`;
     case 'DAILY':
+      if (schedule.interval === 1) return `every day`;
       return `every ${ schedule.interval } days`;
     case 'WEEKLY':
+      if (schedule.interval === 1) return `every week on ${ capitalCase(schedule.dayOfWeek) }`;
       return `every ${ schedule.interval } weeks on ${ capitalCase(schedule.dayOfWeek) }`;
     case 'MONTHLY':
+      if (schedule.interval === 1) return `every month on the ${ addMonthDateSuffix(schedule.dayOfMonth) }`;
       return `every ${ schedule.interval } months on the ${ addMonthDateSuffix(schedule.dayOfMonth) }`;
     case 'YEARLY':
+      if (schedule.interval === 1) return `every year in ${ schedule.month } on the ${ addMonthDateSuffix(schedule.dayOfMonth) }`;
       return `every ${ schedule.interval } years in ${ schedule.month } on the ${ addMonthDateSuffix(schedule.dayOfMonth) }`;
     default:
       return '';
@@ -50,4 +54,8 @@ export const formatCurrency = (amount, currencyCode, absoluteValue = false) => {
     currency: currencyCode,
     minimumFractionDigits: 2
   }).format(amount);
+};
+
+export const formatDate = (date, format = 'YYYY-MM-DD') => {
+  return moment(date).format(format);
 };

@@ -32,7 +32,7 @@ class App extends React.Component {
     this.props.fetchSchedules(token);
     const startDate = moment(this.props.occurrenceList.startDate).format('YYYY-MM-DD');
     const endDate = moment(this.props.occurrenceList.endDate).format('YYYY-MM-DD');
-    this.props.fetchOccurrences(token, startDate, endDate);
+    this.props.fetchOccurrences(startDate, endDate);
   }
 
   render() {

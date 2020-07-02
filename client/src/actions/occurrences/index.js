@@ -1,4 +1,5 @@
 import cashFlow from '../../apis/cashFlow';
+import { formatDate } from '../../util';
 
 import {
   FETCH_OCCURRENCES,
@@ -19,10 +20,18 @@ export const setEndDate = endDate => {
   return { type: SET_END_DATE, payload: endDate };
 };
 
-export const fetchOccurrences = (token, startDate, endDate) => async dispatch => {
+export const fetchOccurrences = (startDate, endDate) => async (dispatch, getState) => {
+  if (!startDate) {
+    startDate = formatDate(getState().occurrenceList.startDate);
+  }
+
+  if (!endDate) {
+    endDate = formatDate(getState().occurrenceList.endDate);
+  }
+
   const response = await cashFlow.get('/occurrences', {
     headers: {
-      'Authorization': `Bearer ${ token }`
+      'Authorization': `Bearer ${ getState().auth.user.token }`
     },
     params: { startDate, endDate }
   });

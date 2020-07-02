@@ -68,7 +68,7 @@ const DatePicker = ({ selectedDate, setSelectedDate, maxDate, minDate = null }) 
     }
   };
 
-  const handleClickOutside = e => {
+  const onClickOutside = e => {
     if (node.current.contains(e.target)) {
       return;
     }
@@ -77,20 +77,20 @@ const DatePicker = ({ selectedDate, setSelectedDate, maxDate, minDate = null }) 
   
   useEffect(() => {
     if (open) {
-      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("mousedown", onClickOutside);
     } else {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("mousedown", onClickOutside);
     }
     
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("mousedown", onClickOutside);
     };
   }, [open]);
 
   const renderCalendar = () => {
     return (
       <div 
-        className="absolute top-0 left-0 p-4 mt-12 bg-white rounded shadow" 
+        className="absolute top-0 left-0 p-4 mt-12 bg-white rounded shadow"
         style={{ width: '17rem' }}
         ref={ node }
       >
@@ -221,7 +221,7 @@ const DatePicker = ({ selectedDate, setSelectedDate, maxDate, minDate = null }) 
           type="text"
           readOnly
           placeholder="Select date"
-          className="w-full pl-4 pr-10 py-3 leading-none rounded shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium transition-shadow duration-100"
+          className={ `w-full pl-4 pr-10 py-3 leading-none rounded shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium transition-shadow duration-100 ${ open ? 'pointer-events-none': '' }` }
           onClick={ () => setOpen(!open) }
           value={ selectedDate.toDateString() }
         />

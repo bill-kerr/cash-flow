@@ -4,6 +4,8 @@ export const SIGN_IN = 'SIGN_IN';
 export const SIGN_OUT = 'SIGN_OUT';
 
 export const FETCH_SCHEDULES = 'FETCH_SCHEDULES';
+export const DELETE_SCHEDULE = 'DELETE_SCHEDULE';
+export const CREATE_SCHEDULE = 'CREATE_SCHEDULE';
 
 export const FETCH_OCCURRENCES = 'FETCH_OCCURRENCES';
 export const SET_START_DATE = 'SET_START_DATE';

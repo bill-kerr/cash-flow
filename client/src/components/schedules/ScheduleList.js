@@ -11,7 +11,7 @@ class ScheduleList extends React.Component {
 
   fetchSchedules() {
     if (this.props.user.isSignedIn) {
-      this.props.fetchSchedules(this.props.user.token);
+      this.props.fetchSchedules();
     }
   }
 
@@ -91,7 +91,7 @@ class ScheduleList extends React.Component {
 const mapStateToProps = state => {
   return {
     user: state.auth.user,
-    schedules: state.schedules
+    schedules: Object.values(state.schedules)
   };
 };
 

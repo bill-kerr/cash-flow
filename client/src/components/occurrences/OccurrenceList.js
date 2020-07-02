@@ -15,7 +15,7 @@ class OccurrenceList extends React.Component {
   fetchOccurrences() {
     const startDate = moment(this.props.startDate).format('YYYY-MM-DD');
     const endDate = moment(this.props.endDate).format('YYYY-MM-DD');
-    this.props.fetchOccurrences(this.props.user.token, startDate, endDate);
+    this.props.fetchOccurrences(startDate, endDate);
   }
 
   renderList() {
