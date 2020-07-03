@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { MethodNotAllowedError } from '../errors/method-not-allowed-error';
+import { MethodNotAllowedError } from '../errors';
 
 const requestMethodChecker = (
   req: Request,

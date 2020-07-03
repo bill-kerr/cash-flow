@@ -192,3 +192,18 @@ it('sets unnecessary fields to null on yearly schedule creation', async () => {
   const schedule = res.body;
   expect(schedule.dayOfWeek).toBe(null);
 });
+
+it('rejects schedules that have no occurrences', async () => {
+  const data = {
+    amount: 4,
+    description: 'test',
+    frequency: 'YEARLY',
+    dayOfMonth: 15,
+    month: 'DECEMBER',
+    startDate: '2020-01-01',
+    endDate: '2020-12-01'
+  };
+  const res = await makeRequest(data);
+  expect(res.status).toBe(400);
+  expect(res.body.errors[0].detail).toBe('The provided schedule has no occurrences.');
+});

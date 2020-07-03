@@ -117,3 +117,11 @@ it('allows endDates to be removed by passing null', async () => {
   expect(res.status).toBe(200);
   expect(res.body.endDate).toBe(null);
 });
+
+it('rejects edits that result in a schedule with no occurrences', async () => {
+  const schedule = await createSchedule();
+
+  const res = await makeRequest(schedule.id, { endDate: '2020-05-03' });
+  expect(res.status).toBe(400);
+  expect(res.body.errors[0].detail).toBe('The edited schedule has no occurrences.');
+});

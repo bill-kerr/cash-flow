@@ -4,7 +4,7 @@ import 'express-async-errors';
 import cors from 'cors';
 import helmet from 'helmet';
 
-import { NotFoundError } from '../errors/not-found-error';
+import { NotFoundError } from '../errors';
 import { errorHandler } from '../middleware/error-handler.middleware';
 import { verifyJsonMediaType } from '../middleware/verify-json-media-type.middleware';
 import { scheduleRouter } from '../controllers/schedule.controller';

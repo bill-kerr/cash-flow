@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { UnsupportedMediaTypeError } from '../errors/unsupported-media-type-error';
+import { UnsupportedMediaTypeError } from '../errors';
 
 const verifyJsonMediaType = (
   req: Request,

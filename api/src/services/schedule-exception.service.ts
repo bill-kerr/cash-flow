@@ -1,10 +1,8 @@
 import { CreateScheduleExceptionDto } from '../models/dto/schedule-exception.dto';
 import { ScheduleExceptionDoc, ScheduleException } from '../models/schedule-exception.model';
-import { NotFoundError } from '../errors/not-found-error';
-import { BadRequestError } from '../errors/bad-request-error';
+import { NotFoundError, BadRequestError, NotAuthorizedError } from '../errors';
 import { occurrenceService } from './occurrence.service';
 import { scheduleService } from './schedule.service';
-import { NotAuthorizedError } from '../errors/not-authorized-error';
 
 class ScheduleExceptionService {
 

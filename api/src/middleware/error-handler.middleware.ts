@@ -1,8 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-
 import { HttpResponse } from '../types/http-response';
-import { BaseError } from '../errors/base-error'
-import { ErrorResponse } from '../errors/error-response';
+import { BaseError, ErrorResponse } from '../errors';
 
 const defaultError: ErrorResponse = {
   object: 'list',
@@ -10,7 +8,7 @@ const defaultError: ErrorResponse = {
   errors: [{
     object: 'error-detail',
     title: 'Internal server error',
-    detail: 'An unknown error occured.'
+    detail: 'An unknown error occurred.'
   }]
 };
 

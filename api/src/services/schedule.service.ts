@@ -1,99 +1,51 @@
+import { omit } from 'lodash';
 import { CreateScheduleDto, EditScheduleDto } from '../models/dto/schedule.dto';
 import { Schedule, ScheduleDoc } from '../models/schedule.model';
-import { BadRequestError } from '../errors/bad-request-error';
-import { NotAuthorizedError } from '../errors/not-authorized-error';
+import { BadRequestError, NotAuthorizedError, InternalServerError } from '../errors';
 import { occurrenceService } from '../services/occurrence.service';
 import { scheduleExceptionService } from './schedule-exception.service';
 import { Frequency } from '../types';
 
 class ScheduleService {
 
-  private recurrenceKeys = [
-    'interval',
-    'dayOfWeek',
-    'dayOfMonth',
-    'month',
-    'frequency',
-    'startDate',
-    'endDate'
-  ];
-
-  private isRecurrenceEdited(schedule: ScheduleDoc, dto: EditScheduleDto): boolean {
-    const props = Object.entries(dto);
-    const changedProps = props.filter(
-      prop => this.recurrenceKeys.includes(prop[0]) && schedule.get(prop[0]) !== prop[1]
-    );
-    return changedProps.length > 0;
-  }
-
-  private resetRecurrenceFields(schedule: ScheduleDoc): ScheduleDoc {
-    const keys = [...this.recurrenceKeys, 'recurrenceRule'];
-    keys.map(key => {
-      schedule.set(key, null);
-    });
-
-    return schedule;
-  }
-
   private removeUnnecessaryFields(dto: CreateScheduleDto): CreateScheduleDto {
-    const d = { ...dto };
-    switch (d.frequency) {
+    switch (dto.frequency) {
       case Frequency.ONCE:
-        d.month = undefined;
-        d.dayOfWeek = undefined;
-        d.dayOfMonth = undefined;
-        d.endDate = undefined;
-        d.interval = undefined;
-        return d;
+        return omit(dto, ['month', 'dayOfWeek', 'dayOfMonth', 'endDate', 'interval']);
       case Frequency.DAILY:
-        d.month = undefined;
-        d.dayOfMonth = undefined;
-        d.dayOfWeek = undefined;
-        return d;
+        return omit(dto, ['month', 'dayOfMonth', 'dayOfWeek']);
       case Frequency.WEEKLY:
-        d.dayOfMonth = undefined;
-        d.month = undefined;
-        return d;
+        return omit(dto, ['dayOfMonth', 'month']);
       case Frequency.MONTHLY:
-        d.dayOfWeek = undefined;
-        d.month = undefined;
-        return d;
+        return omit(dto, ['dayOfWeek', 'month']);
       case Frequency.YEARLY:
-        d.dayOfWeek = undefined;
-        return d;
+        return omit(dto, 'dayOfWeek');
       default:
-        return d;
+        return dto;
     }
   }
 
-  private async nullUnnecessaryFields(schedule: ScheduleDoc): Promise<ScheduleDoc> {
+  private async nullUnnecessaryFields(schedule: ScheduleDoc) {
     switch (schedule.frequency) {
       case Frequency.ONCE:
         schedule.set({ interval: 1, month: null, dayOfWeek: null, dayOfMonth: null, endDate: null });
-        await schedule.save();
-        return schedule;
+        return;
       case Frequency.DAILY:
         schedule.set({ month: null, dayOfWeek: null, dayOfMonth: null });
-        await schedule.save();
-        return schedule;
+        return;
       case Frequency.WEEKLY:
         schedule.set({ month: null, dayOfMonth: null });
-        await schedule.save();
-        return schedule;
+        return;
       case Frequency.MONTHLY:
         schedule.set({ month: null, dayOfWeek: null });
-        await schedule.save();
-        return schedule;
+        return;
       case Frequency.YEARLY:
         schedule.set({ dayOfWeek: null });
-        await schedule.save();
-        return schedule;
-      default:
-        return schedule;
+        return;
     }
   }
 
-  validateDates(dto: EditScheduleDto, schedule: ScheduleDoc) {
+  private validateDates(dto: EditScheduleDto, schedule: ScheduleDoc) {
     if (dto.startDate && dto.endDate) {
       if (dto.startDate > dto.endDate) {
         throw new BadRequestError('The start date must occur before the end date.');
@@ -119,6 +71,10 @@ class ScheduleService {
 
     if (dto.endDate && dto.endDate < dto.startDate) {
       throw new BadRequestError('The end date must occur after the start date.');
+    }
+
+    if (dto.endDate && !occurrenceService.scheduleHasOccurrencesBetween(dto, dto.startDate, dto.endDate)) {
+      throw new BadRequestError('The provided schedule has no occurrences.');
     }
     
     const schedule = Schedule.build(dto);
@@ -157,28 +113,26 @@ class ScheduleService {
 
   async editSchedule(dto: EditScheduleDto): Promise<ScheduleDoc> {
     const schedule = await this.getScheduleById(dto.id);
+    const previousRrule = schedule.recurrenceRule;
 
     if (dto.endDate === '') {
-      delete dto.endDate;
-      schedule.set('endDate', null);
-      await schedule.save();
+      dto.endDate = null;
     }
-
     this.validateDates(dto, schedule);
 
-    if (this.isRecurrenceEdited(schedule, dto)) {
+    schedule.set(dto);
+
+    this.nullUnnecessaryFields(schedule);
+    schedule.set('recurrenceRule', occurrenceService.generateRecurrenceRule(schedule));
+    if (schedule.recurrenceRule !== previousRrule) {
       await scheduleExceptionService.deleteScheduleExceptionsBySchedule(schedule.id);
-      this.resetRecurrenceFields(schedule);
+    }
+    if (!occurrenceService.scheduleHasOccurrencesBetween(schedule, schedule.startDate, schedule.endDate)) {
+      throw new BadRequestError('The edited schedule has no occurrences.');
     }
 
-    const updatedSchedule = await Schedule.findOneAndUpdate({ id: dto.id }, dto, { new: true });
-    if (!updatedSchedule) {
-      throw new NotAuthorizedError();
-    }
-
-    await this.nullUnnecessaryFields(updatedSchedule);
-    updatedSchedule.set({ recurrenceRule: occurrenceService.generateRecurrenceRule(updatedSchedule) });
-    return updatedSchedule;
+    await schedule.save();
+    return schedule;
   }
 
 }

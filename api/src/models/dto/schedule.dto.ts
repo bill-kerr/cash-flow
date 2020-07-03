@@ -20,7 +20,7 @@ export interface EditScheduleDto {
   amount?: number;
   description?: string;
   startDate?: string;
-  endDate?: string;
+  endDate?: string | null;
   frequency?: Frequency;
   interval?: number;
   dayOfWeek?: DayOfWeek;

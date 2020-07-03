@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { authService } from '../services/auth.service';
-import { NotAuthorizedError } from '../errors/not-authorized-error';
+import { NotAuthorizedError } from '../errors';
 
 async function requireAuth(req: Request, res: Response, next: NextFunction) {
   if (!req.headers.authorization) {
