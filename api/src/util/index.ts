@@ -1,6 +1,7 @@
-import { getUTCDateFromString, parseUTCDateList } from './dates';
+import { getUTCDateFromString, parseUTCDateList, buildDateFilter } from './dates';
 
 export {
   getUTCDateFromString,
-  parseUTCDateList
+  parseUTCDateList,
+  buildDateFilter
 };

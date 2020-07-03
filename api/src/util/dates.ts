@@ -14,3 +14,16 @@ export function parseUTCDateList(dates: Date[]): string[] {
     return moment(date).utc().format('YYYY-MM-DD');
   });
 }
+
+export function buildDateFilter(startDate?: string, endDate?: string): { date: { $gte?: string, $lte?: string } } {
+  const filter: any = {};
+
+  if (startDate) {
+    filter.$gte = startDate;
+  }
+  if (endDate) {
+    filter.$lte = endDate;
+  }
+
+  return { date: filter };
+}
