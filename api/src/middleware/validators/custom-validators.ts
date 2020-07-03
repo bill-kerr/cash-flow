@@ -59,6 +59,13 @@ export const dateField = (fieldName: string) => body(fieldName)
   .custom(isValidDate)
   .withMessage(`The ${ fieldName } field must contain a valid date formatted as YYYY-MM-DD.`);
 
+export const nullableDateField = (fieldName: string) => body(fieldName)
+  .trim()
+  .escape()
+  .if(body(fieldName).notEmpty())
+  .custom(isValidDate)
+  .withMessage(`The ${ fieldName } field must contain a valid date formatted as YYYY-MM-DD.`);
+
 export const frequencyField = (fieldName: string) => body(fieldName)
   .notEmpty()
   .bail()

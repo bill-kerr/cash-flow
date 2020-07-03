@@ -93,6 +93,26 @@ class ScheduleService {
     }
   }
 
+  validateDates(dto: EditScheduleDto, schedule: ScheduleDoc) {
+    if (dto.startDate && dto.endDate) {
+      if (dto.startDate > dto.endDate) {
+        throw new BadRequestError('The start date must occur before the end date.');
+      }
+    }
+
+    if (dto.startDate && !dto.endDate && schedule.endDate) {
+      if (dto.startDate >= schedule.endDate) {
+        throw new BadRequestError('The start date must occur before the existing end date.');
+      }
+    }
+
+    if (dto.endDate && !dto.startDate) {
+      if (dto.endDate <= schedule.startDate) {
+        throw new BadRequestError('The end date must occur after the existing start date.');
+      }
+    }
+  }
+
   async createSchedule(dto: CreateScheduleDto): Promise<ScheduleDoc> {
     dto.recurrenceRule = occurrenceService.generateRecurrenceRule(dto);
     dto = this.removeUnnecessaryFields(dto);
@@ -137,6 +157,14 @@ class ScheduleService {
 
   async editSchedule(dto: EditScheduleDto): Promise<ScheduleDoc> {
     const schedule = await this.getScheduleById(dto.id);
+
+    if (dto.endDate === '') {
+      delete dto.endDate;
+      schedule.set('endDate', null);
+      await schedule.save();
+    }
+
+    this.validateDates(dto, schedule);
 
     if (this.isRecurrenceEdited(schedule, dto)) {
       await scheduleExceptionService.deleteScheduleExceptionsBySchedule(schedule.id);

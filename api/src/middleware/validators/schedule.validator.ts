@@ -1,7 +1,8 @@
 import { 
   floatField, 
   stringField, 
-  dateField, 
+  dateField,
+  nullableDateField,
   positiveIntegerField, 
   frequencyField, 
   dayOfWeekField, 
@@ -25,7 +26,7 @@ export const editScheduleValidator = [
   floatField('amount').optional(),
   stringField('description').optional(),
   dateField('startDate').optional(),
-  dateField('endDate').optional(),
+  nullableDateField('endDate').optional(),
   frequencyField('frequency').optional(),
   positiveIntegerField('interval').optional(),
   dayOfWeekField('dayOfWeek'),

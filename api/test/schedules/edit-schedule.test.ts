@@ -96,5 +96,24 @@ it('removes schedule-exceptions when recurrence properties are changed', async (
   expect(res.body.data.length).toBe(0);
 });
 
-it.todo('rejects edits that move the startDate after the endDate');
-it.todo('rejects edits that move the endDate before the startDate');
+it('rejects edits that move the startDate or endDate to an invalid order', async () => {
+  const schedule = await createSchedule();
+  let res = await makeRequest(schedule.id, { startDate: '2020-12-01' });
+  expect(res.status).toBe(400);
+
+  res = await makeRequest(schedule.id, { startDate: '2020-06-01', endDate: '2020-05-25' });
+  expect(res.status).toBe(400);
+
+  res = await makeRequest(schedule.id, { endDate: '2020-04-25' });
+  expect(res.status).toBe(400);
+});
+
+it('allows endDates to be removed by passing null', async () => {
+  const schedule = await createSchedule();
+  schedule.set('endDate', '2020-12-31');
+  await schedule.save();
+
+  const res = await makeRequest(schedule.id, { endDate: null });
+  expect(res.status).toBe(200);
+  expect(res.body.endDate).toBe(null);
+});
