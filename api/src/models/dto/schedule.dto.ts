@@ -6,7 +6,7 @@ export interface CreateScheduleDto {
   description: string;
   startDate: string;
   endDate?: string;
-  frequency?: Frequency;
+  frequency: Frequency;
   interval?: number;
   dayOfWeek?: DayOfWeek;
   dayOfMonth?: number;

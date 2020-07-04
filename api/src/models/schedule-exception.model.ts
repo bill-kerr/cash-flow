@@ -1,15 +1,15 @@
 import mongoose from 'mongoose';
 import { CreateScheduleExceptionDto } from './dto/schedule-exception.dto';
-import { Occurrence } from './occurrence.model';
 
 interface ScheduleExceptionDoc extends mongoose.Document {
+  id: string;
   date: string;
   occurrenceDeleted: boolean;
-  amount: number;
-  description: string;
+  currentDate: string | null;
+  amount: number | null;
+  description: string | null;
   schedule: string;
   userId: string;
-  createOccurrence(scheduleId: string, date: string): Occurrence;
 }
 
 interface ScheduleExceptionModel extends mongoose.Model<ScheduleExceptionDoc> {
@@ -28,16 +28,19 @@ const scheduleExceptionSchema = new mongoose.Schema({
   },
   occurrenceDeleted: {
     type: Boolean,
-    required: true,
     default: false
+  },
+  currentDate: {
+    type: String,
+    default: null
   },
   amount: {
     type: Number,
-    required: true
+    default: null
   },
   description: {
     type: String,
-    required: true
+    default: null
   },
   schedule: {
     type: mongoose.Schema.Types.ObjectId,
@@ -60,16 +63,6 @@ const scheduleExceptionSchema = new mongoose.Schema({
 scheduleExceptionSchema.statics.build = (dto: CreateScheduleExceptionDto) => {
   dto.id = mongoose.Types.ObjectId().toHexString();
   return new ScheduleException(dto);
-}
-
-scheduleExceptionSchema.methods.createOccurrence = function (scheduleId: string, date: string): Occurrence {
-  return {
-    object: 'occurrence',
-    date,
-    amount: this.amount,
-    description: this.description,
-    schedule: scheduleId
-  };
 };
 
 const ScheduleException = mongoose.model<ScheduleExceptionDoc, ScheduleExceptionModel>

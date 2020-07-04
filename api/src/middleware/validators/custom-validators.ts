@@ -3,6 +3,7 @@ import { body } from 'express-validator';
 import { DayOfWeek, Frequency, Month } from '../../types';
 
 export const isValidDate = (dateString: string): boolean => {
+  if (dateString < '1000-01-01') return false;
   return moment(dateString, 'YYYY-MM-DD', true).isValid();
 };
 

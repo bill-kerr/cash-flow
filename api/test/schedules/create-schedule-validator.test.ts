@@ -216,7 +216,7 @@ it('rejects improperly formatted dates', async () => {
 });
 
 it('rejects impossible dates', async () => {
-  const dates = ['2020-02-30', '2020-13-01', '2020-04-31'];
+  const dates = ['2020-02-30', '2020-13-01', '2020-04-31', '0000-01-01', '0100-01-01'];
   dates.forEach(async date => {
     const data = { ...onceData, startDate: date };
     const res = await makeRequest(data);

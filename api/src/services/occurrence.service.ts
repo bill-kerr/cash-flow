@@ -1,121 +1,59 @@
 import { RRule, rrulestr } from 'rrule';
-import { getUTCDateFromString, parseUTCDateList } from '../util';
+import { getUTCDateFromString, parseUTCDateList, buildDateFilter } from '../util';
 import { Frequency, DayOfWeek, Month } from '../types';
-import { CreateScheduleDto, EditScheduleDto } from '../models/dto/schedule.dto';
-import { ScheduleDoc, Schedule } from '../models/schedule.model';
+import { CreateRecurrenceDto } from '../models/dto/recurrence.dto';
+import { scheduleService } from './schedule.service';
 import { Occurrence } from '../models/occurrence.model';
-import { scheduleExceptionService } from './schedule-exception.service';
-
-const WeekDays = {
-  [DayOfWeek.SUNDAY]: RRule.SU,
-  [DayOfWeek.MONDAY]: RRule.MO,
-  [DayOfWeek.TUESDAY]: RRule.MO,
-  [DayOfWeek.WEDNESDAY]: RRule.MO,
-  [DayOfWeek.THURSDAY]: RRule.MO,
-  [DayOfWeek.FRIDAY]: RRule.MO,
-  [DayOfWeek.SATURDAY]: RRule.MO
-};
-
-const Months = {
-  [Month.JANUARY]: 1,
-  [Month.FEBRUARY]: 2,
-  [Month.MARCH]: 3,
-  [Month.APRIL]: 4,
-  [Month.MAY]: 5,
-  [Month.JUNE]: 6,
-  [Month.JULY]: 7,
-  [Month.AUGUST]: 8,
-  [Month.SEPTEMBER]: 9,
-  [Month.OCTOBER]: 10,
-  [Month.NOVEMBER]: 11,
-  [Month.DECEMBER]: 12,
-};
+import { ScheduleDoc } from '../models/schedule.model';
+import { CreateScheduleDto } from '../models/dto/schedule.dto';
+import { scheduleExceptionService } from '../services/schedule-exception.service';
+import { ScheduleExceptionDoc } from '../models/schedule-exception.model';
 
 class OccurrenceService {
-  private generateOnceRecurrenceRule(interval = 1, startDate: string): string {
-    const rule = new RRule({
-      freq: RRule.DAILY,
-      count: 1,
-      interval,
-      dtstart: getUTCDateFromString(startDate),
-      until: null
-    });
 
-    return rule.toString();
-  }
+  private readonly FREQUENCIES = {
+    [Frequency.ONCE]: RRule.DAILY,
+    [Frequency.DAILY]: RRule.DAILY,
+    [Frequency.WEEKLY]: RRule.WEEKLY,
+    [Frequency.MONTHLY]: RRule.MONTHLY,
+    [Frequency.YEARLY]: RRule.YEARLY
+  };
 
-  private generateDailyRecurrenceRule(interval = 1, startDate: string, endDate?: string): string {
-    const rule = new RRule({
-      freq: RRule.DAILY,
-      interval,
-      dtstart: getUTCDateFromString(startDate),
-      until: endDate ? getUTCDateFromString(endDate) : null
-    });
+  private readonly WEEKDAYS = {
+    [DayOfWeek.SUNDAY]: RRule.SU,
+    [DayOfWeek.MONDAY]: RRule.MO,
+    [DayOfWeek.TUESDAY]: RRule.TU,
+    [DayOfWeek.WEDNESDAY]: RRule.WE,
+    [DayOfWeek.THURSDAY]: RRule.TH,
+    [DayOfWeek.FRIDAY]: RRule.FR,
+    [DayOfWeek.SATURDAY]: RRule.SA
+  };
 
-    return rule.toString();
-  }
+  private readonly MONTHS = {
+    [Month.JANUARY]: 1,
+    [Month.FEBRUARY]: 2,
+    [Month.MARCH]: 3,
+    [Month.APRIL]: 4,
+    [Month.MAY]: 5,
+    [Month.JUNE]: 6,
+    [Month.JULY]: 7,
+    [Month.AUGUST]: 8,
+    [Month.SEPTEMBER]: 9,
+    [Month.OCTOBER]: 10,
+    [Month.NOVEMBER]: 11,
+    [Month.DECEMBER]: 12,
+  };
 
-  private generateWeeklyRecurrenceRule(
-    dayOfWeek = DayOfWeek.MONDAY, 
-    interval = 1, 
-    startDate: string, 
-    endDate?: string
-  ): string {
-    const rule = new RRule({
-      freq: RRule.WEEKLY,
-      byweekday: [WeekDays[dayOfWeek]],
-      interval,
-      dtstart: getUTCDateFromString(startDate),
-      until: endDate ? getUTCDateFromString(endDate) : null
-    });
+  private getMonthDayRule(monthDay?: number): { bymonthday?: number[], bysetpos?: number } {
+    if (monthDay === undefined || monthDay === null) {
+      return {};
+    }
 
-    return rule.toString();
-  }
+    if (monthDay === 0) {
+      return { bymonthday: [28, 29, 30, 31], bysetpos: -1 };
+    }
 
-  private generateMonthlyRecurrenceRule(
-    dayOfMonth = 1, 
-    interval = 1, 
-    startDate: string, 
-    endDate?: string
-  ): string {
-    const bymonthday = dayOfMonth === 0 ? [28, 29, 30, 31] : [dayOfMonth];
-    const rule = new RRule({
-      freq: RRule.MONTHLY,
-      interval,
-      dtstart: getUTCDateFromString(startDate),
-      bymonthday,
-      bysetpos: bymonthday.length > 1 ? -1 : null,
-      until: endDate ? getUTCDateFromString(endDate) : null
-    });
-
-    return rule.toString();
-  }
-
-  private generateYearlyRecurrenceRule(
-    month = Month.JANUARY,
-    dayOfMonth = 1, 
-    interval = 1, 
-    startDate: string, 
-    endDate?: string
-  ): string {
-    const bymonthday = dayOfMonth === 0 ? [28, 29, 30, 31] : [dayOfMonth];
-    const rule = new RRule({
-      freq: RRule.YEARLY,
-      interval,
-      dtstart: getUTCDateFromString(startDate),
-      bymonthday,
-      bysetpos: bymonthday.length > 1 ? -1 : null,
-      bymonth: [Months[month]],
-      until: endDate ? getUTCDateFromString(endDate) : null
-    });
-
-    return rule.toString();
-  }
-
-  private getOccurrenceDates(recurrenceRule: string, startDate: string, endDate: string): string[] {
-    const rule = rrulestr(recurrenceRule);
-    const dates = rule.between(getUTCDateFromString(startDate), getUTCDateFromString(endDate), true);
-    return parseUTCDateList(dates);
+    return { bymonthday: [monthDay] };
   }
 
   private rruleHasOccurrencesBetween(rrule: string, startDate: string, endDate: string): boolean {
@@ -124,31 +62,71 @@ class OccurrenceService {
     return occurrences.length > 0;
   }
 
-  public generateRecurrenceRule(dto: CreateScheduleDto | ScheduleDoc) {
-    switch(dto.frequency) {
-      case Frequency.ONCE:
-        return this.generateOnceRecurrenceRule(dto.interval, dto.startDate);
-      case Frequency.DAILY:
-        return this.generateDailyRecurrenceRule(dto.interval, dto.startDate, dto.endDate);
-      case Frequency.WEEKLY:
-        return this.generateWeeklyRecurrenceRule(dto.dayOfWeek, dto.interval, dto.startDate, dto.endDate);
-      case Frequency.MONTHLY:
-        return this.generateMonthlyRecurrenceRule(dto.dayOfMonth, dto.interval, dto.startDate, dto.endDate);
-      case Frequency.YEARLY:
-        return this.generateYearlyRecurrenceRule(dto.month, dto.dayOfMonth, dto.interval, dto.startDate, dto.endDate);
-      default:
-        return '';
-    }
+  private createOccurrence(
+    schedule: ScheduleDoc,
+    date: string,
+    exception?: ScheduleExceptionDoc
+  ): Occurrence {
+    return {
+      object: 'occurrence',
+      date: exception?.currentDate || date,
+      amount: exception?.amount || schedule.amount,
+      description: exception?.description || schedule.description,
+      schedule: schedule.id
+    };
   }
 
-  public async scheduleHasOccurrenceOn(scheduleId: string, date: string): Promise<boolean> {
-    const schedule = await Schedule.findOne({ id: scheduleId });
+  public generateRecurrenceRule(dto: CreateRecurrenceDto): string {
+    const startDate = getUTCDateFromString(dto.startDate);
+    const endDate = dto.endDate ? getUTCDateFromString(dto.endDate) : null;
 
-    if (!schedule) {
-      return false;
-    }
+    const rule = new RRule({
+      freq: this.FREQUENCIES[dto.frequency],
+      count: dto.frequency === Frequency.ONCE ? 1 : null,
+      interval: dto.frequency !== Frequency.ONCE ? dto.interval || 1 : undefined,
+      dtstart: startDate,
+      until: endDate,
+      byweekday: dto.dayOfWeek ? this.WEEKDAYS[dto.dayOfWeek] : null,
+      ...this.getMonthDayRule(dto.dayOfMonth),
+      bymonth: dto.month ? this.MONTHS[dto.month] : null
+    });
 
-    return this.rruleHasOccurrencesBetween(schedule.recurrenceRule, date, date);
+    return rule.toString();
+  }
+
+  public async getOccurrencesByUser(userId: string, startDate: string, endDate: string): Promise<Occurrence[]> {
+    const dateFilter = buildDateFilter(startDate, endDate);
+    const schedules = await scheduleService.getSchedules(userId, dateFilter);
+    const occurrences: Occurrence[] = [];
+
+    schedules.map(async schedule => {
+      const scheduleOccurrences = await this.getOccurrencesBySchedule(schedule, startDate, endDate);
+      occurrences.push(...scheduleOccurrences)
+    });
+
+    occurrences.sort((a, b) => a.date > b.date ? 1 : -1);
+    return occurrences;
+  }
+
+  public async getOccurrencesBySchedule(
+    schedule: ScheduleDoc, 
+    startDate: string, 
+    endDate: string
+  ): Promise<Occurrence[]> {
+    const occurrenceDates = this.getOccurrenceDates(schedule.recurrenceRule, startDate, endDate);
+    const exceptions = await scheduleExceptionService.getScheduleExceptionsBySchedule(schedule.id);
+    const occurrences: Occurrence[] = [];
+
+    occurrenceDates.forEach(date => {
+      const exception = exceptions.find(exception => exception.date === date);
+      if (exception && !exception.occurrenceDeleted) {
+        occurrences.push(this.createOccurrence(schedule, date, exception));
+      } else if (!exception) {
+        occurrences.push(this.createOccurrence(schedule, date));
+      }
+    });
+
+    return occurrences;
   }
 
   public scheduleHasOccurrencesBetween(
@@ -164,38 +142,15 @@ class OccurrenceService {
     return this.rruleHasOccurrencesBetween(rrule, startDate, endDate);
   }
 
-  public async getOccurrencesByUser(userId: string, startDate: string, endDate: string): Promise<Occurrence[]> {
-    const schedules = await Schedule.find({ userId });
-    const occurrences: Occurrence[] = [];
-
-    for (const schedule of schedules) {
-      const scheduleOccurrences = await this.getOccurrencesBySchedule(schedule, startDate, endDate);
-      occurrences.push(...scheduleOccurrences);
-    }
-
-    occurrences.sort((a, b) => a.date > b.date ? 1 : -1);
-    return occurrences;
+  public getOccurrenceDates(recurrenceRule: string, startDate: string, endDate: string): string[] {
+    const rule = rrulestr(recurrenceRule);
+    const dates = rule.between(getUTCDateFromString(startDate), getUTCDateFromString(endDate), true);
+    return parseUTCDateList(dates);
   }
 
-  public async getOccurrencesBySchedule(
-    schedule: ScheduleDoc, 
-    startDate: string, 
-    endDate: string
-  ): Promise<Occurrence[]> {
-    const occurrenceDates = this.getOccurrenceDates(schedule.recurrenceRule, startDate, endDate);
-    const exceptions = await scheduleExceptionService.getScheduleExceptions(schedule.id, startDate, endDate);
-
-    const occurrences: Occurrence[] = [];
-    occurrenceDates.forEach(date => {
-      const exception = exceptions.find(exception => exception.date === date);
-      if (exception && !exception.occurrenceDeleted) {
-        occurrences.push(exception.createOccurrence(schedule.id, date));
-      } else if (!exception) {
-        occurrences.push(schedule.createOccurrence(date)); 
-      }
-    });
-
-    return occurrences;
+  public async scheduleHasOccurrenceOn(scheduleId: string, date: string): Promise<boolean> {
+    const schedule = await scheduleService.getScheduleById(scheduleId);
+    return this.rruleHasOccurrencesBetween(schedule.recurrenceRule, date, date);
   }
 }
 

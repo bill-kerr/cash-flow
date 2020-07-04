@@ -69,31 +69,13 @@ it('recalculates the recurrence rule on recurrence field edits', async () => {
     dayOfMonth: 15
   });
   expect(res.body.recurrenceRule)
-    .toBe('DTSTART:20200501T000000Z\nRRULE:FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=15;UNTIL=20201101T000000Z');
+    .toBe('DTSTART:20200501T000000Z\nRRULE:FREQ=MONTHLY;INTERVAL=1;UNTIL=20201101T000000Z;BYMONTHDAY=15');
 
   res = await makeRequest(schedule.id, {
     endDate: '2020-07-01'
   });
   expect(res.body.recurrenceRule)
-    .toBe('DTSTART:20200501T000000Z\nRRULE:FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=15;UNTIL=20200701T000000Z');
-});
-
-it('removes schedule-exceptions when recurrence properties are changed', async () => {
-  const schedule = await createSchedule();
-  const exception = await scheduleExceptionService.createScheduleException({
-    schedule: schedule.id,
-    id: mongoose.Types.ObjectId().toHexString(),
-    date: '2020-05-04',
-    occurrenceDeleted: true,
-    userId: 'fake-id'
-  });
-  await makeRequest(schedule.id, { frequency: 'MONTHLY', dayOfMonth: 15 });
-
-  const res = await request(app)
-    .get(`/api/v1/schedules/${ schedule.id }/schedule-exceptions`)
-    .set(headers)
-    .send();
-  expect(res.body.data.length).toBe(0);
+    .toBe('DTSTART:20200501T000000Z\nRRULE:FREQ=MONTHLY;INTERVAL=1;UNTIL=20200701T000000Z;BYMONTHDAY=15');
 });
 
 it('rejects edits that move the startDate or endDate to an invalid order', async () => {

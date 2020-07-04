@@ -97,9 +97,7 @@ router.get(
   handleValidationResult,
   async (req: Request, res: Response) => {
     const scheduleId = req.params.id;
-    const { startDate, endDate } = req.query;
-    const exceptions = await scheduleExceptionService
-      .getScheduleExceptions(scheduleId, startDate as string, endDate as string);
+    const exceptions = await scheduleExceptionService.getScheduleExceptionsBySchedule(scheduleId);
     
     const resData = {
       object: 'list',

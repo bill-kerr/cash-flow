@@ -17,9 +17,8 @@ router.get(
   optionalQueryDateRangeValidator,
   handleValidationResult,
   async (req: Request, res: Response) => {
-    const { startDate, endDate } = req.query;
     const exceptions = await scheduleExceptionService
-      .getScheduleExceptionsByUser(req.currentUserId, startDate as string, endDate as string);
+      .getScheduleExceptionsByUser(req.currentUserId);
 
     const resData = {
       object: 'list',

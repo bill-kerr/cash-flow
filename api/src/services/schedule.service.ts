@@ -1,9 +1,8 @@
 import { omit } from 'lodash';
 import { CreateScheduleDto, EditScheduleDto } from '../models/dto/schedule.dto';
 import { Schedule, ScheduleDoc } from '../models/schedule.model';
-import { BadRequestError, NotAuthorizedError, InternalServerError } from '../errors';
+import { BadRequestError, NotAuthorizedError } from '../errors';
 import { occurrenceService } from '../services/occurrence.service';
-import { scheduleExceptionService } from './schedule-exception.service';
 import { Frequency } from '../types';
 
 class ScheduleService {
@@ -82,8 +81,8 @@ class ScheduleService {
     return schedule;
   }
 
-  async getSchedules(userId: string): Promise<ScheduleDoc[]> {
-    return Schedule.find({ userId });
+  async getSchedules(userId: string, filter: {} = {}): Promise<ScheduleDoc[]> {
+    return Schedule.find({ userId, ...filter });
   }
 
   async getScheduleById(scheduleId: string): Promise<ScheduleDoc> {
@@ -113,7 +112,6 @@ class ScheduleService {
 
   async editSchedule(dto: EditScheduleDto): Promise<ScheduleDoc> {
     const schedule = await this.getScheduleById(dto.id);
-    const previousRrule = schedule.recurrenceRule;
 
     if (dto.endDate === '') {
       dto.endDate = null;
@@ -121,12 +119,9 @@ class ScheduleService {
     this.validateDates(dto, schedule);
 
     schedule.set(dto);
-
     this.nullUnnecessaryFields(schedule);
     schedule.set('recurrenceRule', occurrenceService.generateRecurrenceRule(schedule));
-    if (schedule.recurrenceRule !== previousRrule) {
-      await scheduleExceptionService.deleteScheduleExceptionsBySchedule(schedule.id);
-    }
+
     if (!occurrenceService.scheduleHasOccurrencesBetween(schedule, schedule.startDate, schedule.endDate)) {
       throw new BadRequestError('The edited schedule has no occurrences.');
     }
