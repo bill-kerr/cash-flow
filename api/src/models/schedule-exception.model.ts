@@ -6,7 +6,7 @@ interface ScheduleExceptionDoc extends mongoose.Document {
   date: string;
   occurrenceDeleted: boolean;
   currentDate: string | null;
-  amount: string | null;
+  amount: number | null;
   description: string | null;
   schedule: string;
   userId: string;

@@ -1,7 +1,9 @@
+import mongoose from 'mongoose';
 import { occurrenceService } from '../../src/services/occurrence.service';
 import { CreateRecurrenceDto } from '../../src/models/dto/recurrence.dto';
 import { Frequency, DayOfWeek, Month } from '../../src/types';
-import { Weekday } from 'rrule';
+import { ScheduleDoc } from '../../src/models/schedule.model';
+import { scheduleService } from '../../src/services/schedule.service';
 
 it('generates non-empty recurrence rules', () => {
   const data: CreateRecurrenceDto = {
@@ -88,4 +90,17 @@ it('correctly generates the rule when passed 0 for month day', () => {
 
   const result = occurrenceService.generateRecurrenceRule(data);
   expect(result).toEqual('DTSTART:20200709T000000Z\nRRULE:FREQ=YEARLY;INTERVAL=1;BYMONTHDAY=28,29,30,31;BYSETPOS=-1;BYMONTH=4');
+});
+
+it('creates a valid occurrence when passed good data', async () => {
+  const schedule = await scheduleService.createSchedule({
+    amount: 500,
+    description: 'test',
+    frequency: Frequency.DAILY,
+    startDate: '2020-07-04',
+    userId: 'fake-id'
+  });
+
+  const result = await occurrenceService.getOccurrencesBySchedule(schedule, '2020-07-04', '2020-07-09');
+  expect(result.length).toEqual(6);
 });

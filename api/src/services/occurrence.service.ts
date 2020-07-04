@@ -6,6 +6,8 @@ import { scheduleService } from './schedule.service';
 import { Occurrence } from '../models/occurrence.model';
 import { ScheduleDoc } from '../models/schedule.model';
 import { CreateScheduleDto } from '../models/dto/schedule.dto';
+import { scheduleExceptionService } from '../services/schedule-exception.service';
+import { ScheduleExceptionDoc } from '../models/schedule-exception.model';
 
 class OccurrenceService {
 
@@ -60,6 +62,20 @@ class OccurrenceService {
     return occurrences.length > 0;
   }
 
+  private createOccurrence(
+    schedule: ScheduleDoc,
+    date: string,
+    exception?: ScheduleExceptionDoc
+  ): Occurrence {
+    return {
+      object: 'occurrence',
+      date: exception?.currentDate || date,
+      amount: exception?.amount || schedule.amount,
+      description: exception?.description || schedule.description,
+      schedule: schedule.id
+    };
+  }
+
   public generateRecurrenceRule(dto: CreateRecurrenceDto): string {
     const startDate = getUTCDateFromString(dto.startDate);
     const endDate = dto.endDate ? getUTCDateFromString(dto.endDate) : null;
@@ -97,8 +113,20 @@ class OccurrenceService {
     startDate: string, 
     endDate: string
   ): Promise<Occurrence[]> {
-    // TODO: complete this
-    return [];
+    const occurrenceDates = this.getOccurrenceDates(schedule.recurrenceRule, startDate, endDate);
+    const exceptions = await scheduleExceptionService.getScheduleExceptionsBySchedule(schedule.id);
+    const occurrences: Occurrence[] = [];
+
+    occurrenceDates.forEach(date => {
+      const exception = exceptions.find(exception => exception.date === date);
+      if (exception && !exception.occurrenceDeleted) {
+        occurrences.push(this.createOccurrence(schedule, date, exception));
+      } else if (!exception) {
+        occurrences.push(this.createOccurrence(schedule, date));
+      }
+    });
+
+    return occurrences;
   }
 
   public scheduleHasOccurrencesBetween(
@@ -112,6 +140,17 @@ class OccurrenceService {
 
     const rrule = schedule.recurrenceRule || this.generateRecurrenceRule(schedule);
     return this.rruleHasOccurrencesBetween(rrule, startDate, endDate);
+  }
+
+  public getOccurrenceDates(recurrenceRule: string, startDate: string, endDate: string): string[] {
+    const rule = rrulestr(recurrenceRule);
+    const dates = rule.between(getUTCDateFromString(startDate), getUTCDateFromString(endDate), true);
+    return parseUTCDateList(dates);
+  }
+
+  public async scheduleHasOccurrenceOn(scheduleId: string, date: string): Promise<boolean> {
+    const schedule = await scheduleService.getScheduleById(scheduleId);
+    return this.rruleHasOccurrencesBetween(schedule.recurrenceRule, date, date);
   }
 }
 

@@ -1,6 +1,6 @@
 import { CreateScheduleExceptionDto } from '../models/dto/schedule-exception.dto';
 import { ScheduleExceptionDoc, ScheduleException } from '../models/schedule-exception.model';
-import { NotFoundError, BadRequestError, NotAuthorizedError } from '../errors';
+import { BadRequestError, NotAuthorizedError } from '../errors';
 
 class ScheduleExceptionService {
   private async scheduleExceptionExists(scheduleId: string, date: string): Promise<boolean> {

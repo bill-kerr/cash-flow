@@ -1,5 +1,3 @@
-import { BadRequestError } from "./bad-request-error";
-
 export { BadRequestError } from './bad-request-error';
 export { InternalServerError } from './internal-server-error';
 export { MethodNotAllowedError } from './method-not-allowed-error';
