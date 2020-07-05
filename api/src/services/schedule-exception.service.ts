@@ -28,8 +28,8 @@ class ScheduleExceptionService {
   }
 
   public async createScheduleException(dto: CreateScheduleExceptionDto): Promise<ScheduleExceptionDoc> {
-    if (this.scheduleExceptionExists(dto.scheduleId, dto.date)) {
-      throw new BadRequestError(`A schedule-exception already exists on ${ dto.date }.`);
+    if (await this.scheduleExceptionExists(dto.schedule, dto.date)) {
+      throw new BadRequestError(`A schedule-exception already exists for the occurrence on ${ dto.date }.`);
     }
 
     const exception = ScheduleException.build(dto);

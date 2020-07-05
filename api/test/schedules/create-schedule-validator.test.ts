@@ -1,19 +1,13 @@
-import request from 'supertest';
-import { initExpressApp } from '../../src/loaders/express';
+import { 
+  initApp,
+  buildMakeRequest, 
+  badTypeMessage, 
+  shouldNotBeEmptyMessage, 
+  emptyMessage 
+} from '../setup';
 
-const app = initExpressApp();
-const url = '/api/v1/schedules';
-const headers = {
-  'Authorization': 'Bearer sldjflk',
-  'Content-Type': 'application/json'
-};
-
-const makeRequest = async (body: {}) => {
-  return request(app)
-    .post(url)
-    .set(headers)
-    .send(body);
-};
+const app = initApp();
+const { makeRequest } = buildMakeRequest('/api/v1/schedules', app);
 
 const onceData: any = {
   amount: 500,
@@ -52,18 +46,6 @@ const yearlyData: any = {
   month: 'JANUARY',
   description: 'test description',
   startDate: '2020-05-01'
-};
-
-const emptyMessage = (field: string) => {
-  return `The ${ field } field is required and should not be empty.`;
-};
-
-const badTypeMessage = (field: string, contains: string) => {
-  return `The ${ field } field must contain ${ contains }.`;
-};
-
-const shouldNotBeEmptyMessage = (field: string, frequencySetTo: string) => {
-  return `The ${ field } field should not be empty if frequency is set to ${ frequencySetTo }.`;
 };
 
 it('accepts valid month values', async () => {

@@ -98,10 +98,11 @@ class OccurrenceService {
     const dateFilter = buildDateFilter(startDate, endDate);
     const schedules = await scheduleService.getSchedules(userId, dateFilter);
     const occurrences: Occurrence[] = [];
+    console.log(schedules)
 
     schedules.map(async schedule => {
       const scheduleOccurrences = await this.getOccurrencesBySchedule(schedule, startDate, endDate);
-      occurrences.push(...scheduleOccurrences)
+      occurrences.push(...scheduleOccurrences);
     });
 
     occurrences.sort((a, b) => a.date > b.date ? 1 : -1);
