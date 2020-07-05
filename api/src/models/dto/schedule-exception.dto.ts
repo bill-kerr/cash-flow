@@ -4,7 +4,7 @@ export interface CreateScheduleExceptionDto {
   currentDate?: string;
   amount?: number;
   description?: string;
-  id: string;
+  id?: string;
   userId: string;
-  scheduleId: string;
+  schedule: string;
 }

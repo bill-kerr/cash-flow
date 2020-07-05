@@ -1,15 +1,11 @@
 import request from 'supertest';
-import { initExpressApp } from '../../src/loaders/express';
 import mongoose from 'mongoose';
 import { scheduleService } from '../../src/services/schedule.service';
 import { Frequency } from '../../src/types';
+import { initApp, buildMakeRequest } from '../setup';
 
-const app = initExpressApp();
-const url = '/api/v1/schedules';
-const headers = {
-  'Authorization': 'Bearer sldjflk',
-  'Content-Type': 'application/json'
-};
+const app = initApp();
+const { makeRequest, url, headers } = buildMakeRequest('/api/v1/schedules', app);
 
 const fakeData = {
   amount: 500,
@@ -18,13 +14,6 @@ const fakeData = {
   endDate: '2020-05-30',
   frequency: 'DAILY',
   interval: 1
-};
-
-const makeRequest = async (body: {}) => {
-  return request(app)
-    .post(url)
-    .set(headers)
-    .send(body);
 };
 
 it('returns a 201 on successful request', async () => {
