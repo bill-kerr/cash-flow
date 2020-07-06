@@ -1,8 +1,6 @@
 import config from './config';
 import { initializeApplication } from './loaders';
 
-import RRule from 'rrule';
-
 async function startApp() {
   const app = await initializeApplication();
 
@@ -14,5 +12,4 @@ async function startApp() {
 }
 
 const app = startApp();
-
 export { app };

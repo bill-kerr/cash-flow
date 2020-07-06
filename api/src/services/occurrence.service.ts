@@ -95,14 +95,13 @@ class OccurrenceService {
   }
 
   public async getOccurrencesByUser(userId: string, startDate: string, endDate: string): Promise<Occurrence[]> {
-    const dateFilter = buildDateFilter(startDate, endDate);
-    const schedules = await scheduleService.getSchedules(userId, dateFilter);
+    const schedules = await scheduleService.getSchedules(userId);
     const occurrences: Occurrence[] = [];
 
-    schedules.map(async schedule => {
+    for (const schedule of schedules) {
       const scheduleOccurrences = await this.getOccurrencesBySchedule(schedule, startDate, endDate);
       occurrences.push(...scheduleOccurrences);
-    });
+    }
 
     occurrences.sort((a, b) => a.date > b.date ? 1 : -1);
     return occurrences;

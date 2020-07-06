@@ -81,8 +81,8 @@ class ScheduleService {
     return schedule;
   }
 
-  async getSchedules(userId: string, filter: {} = {}): Promise<ScheduleDoc[]> {
-    return Schedule.find({ userId, ...filter });
+  async getSchedules(userId: string): Promise<ScheduleDoc[]> {
+    return Schedule.find({ userId });
   }
 
   async getScheduleById(scheduleId: string): Promise<ScheduleDoc> {
