@@ -10,6 +10,7 @@ interface ScheduleDoc extends mongoose.Document {
   endDate: string;
   frequency: Frequency;
   interval: number;
+  occurrenceCount: number;
   dayOfWeek: DayOfWeek;
   dayOfMonth: number;
   month: Month;
@@ -53,6 +54,11 @@ const scheduleSchema = new mongoose.Schema({
     type: Number,
     required: false,
     default: 1
+  },
+  occurrenceCount: {
+    type: Number,
+    required: false,
+    default: null
   },
   dayOfWeek: {
     type: String,

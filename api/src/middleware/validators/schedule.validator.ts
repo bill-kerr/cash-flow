@@ -17,6 +17,7 @@ export const createScheduleValidator = [
   dateField('endDate').optional(),
   frequencyField('frequency'),
   positiveIntegerField('interval').optional(),
+  positiveIntegerField('occurrenceCount').optional(),
   dayOfWeekField('dayOfWeek'),
   dayOfMonthField('dayOfMonth'),
   monthField('month')
@@ -29,6 +30,7 @@ export const editScheduleValidator = [
   nullableDateField('endDate').optional(),
   frequencyField('frequency').optional(),
   positiveIntegerField('interval').optional(),
+  positiveIntegerField('occurrenceCount').optional(),
   dayOfWeekField('dayOfWeek'),
   dayOfMonthField('dayOfMonth'),
   monthField('month')
