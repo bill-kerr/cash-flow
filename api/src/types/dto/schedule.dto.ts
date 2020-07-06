@@ -8,6 +8,7 @@ export interface CreateScheduleDto {
   endDate?: string;
   frequency: Frequency;
   interval?: number;
+  occurrenceCount?: number;
   dayOfWeek?: DayOfWeek;
   dayOfMonth?: number;
   month?: Month;
@@ -23,6 +24,7 @@ export interface EditScheduleDto {
   endDate?: string | null;
   frequency?: Frequency;
   interval?: number;
+  occurrenceCount?: number;
   dayOfWeek?: DayOfWeek;
   dayOfMonth?: number;
   month?: Month;

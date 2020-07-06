@@ -54,3 +54,18 @@ it('rejects requests without the startDate and endDate query parameters', async 
 
   expect(res.status).toBe(400);
 });
+
+it('limits occurrences to the correct occurrenceCount', async () => {
+  const schedule = await scheduleService.createSchedule({
+    id: mongoose.Types.ObjectId().toHexString(),
+    userId: 'fake-id',
+    amount: 500,
+    description: 'test description',
+    frequency: Frequency.DAILY,
+    occurrenceCount: 3,
+    startDate: '2020-05-01'
+  });
+
+  const res = await makeRequest(schedule.id, '2020-05-01', '2020-07-01');
+  expect(res.body.data.length).toBe(3);
+});

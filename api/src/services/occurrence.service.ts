@@ -94,7 +94,7 @@ class OccurrenceService {
 
     const rule = new RRule({
       freq: this.FREQUENCIES[dto.frequency],
-      count: dto.frequency === Frequency.ONCE ? 1 : null,
+      count: dto.frequency === Frequency.ONCE ? 1 : dto.occurrenceCount,
       interval: dto.frequency !== Frequency.ONCE ? dto.interval || 1 : undefined,
       dtstart: startDate,
       until: endDate,

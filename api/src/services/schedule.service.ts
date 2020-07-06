@@ -7,8 +7,11 @@ import { occurrenceService } from '../services';
 class ScheduleService {
 
   private removeUnnecessaryFields(dto: CreateScheduleDto): CreateScheduleDto {
+    dto = dto.occurrenceCount ? omit(dto, 'endDate') : dto;
+
     switch (dto.frequency) {
       case Frequency.ONCE:
+        dto.occurrenceCount = 1;
         return omit(dto, ['month', 'dayOfWeek', 'dayOfMonth', 'endDate', 'interval']);
       case Frequency.DAILY:
         return omit(dto, ['month', 'dayOfMonth', 'dayOfWeek']);
@@ -26,18 +29,29 @@ class ScheduleService {
   private async nullUnnecessaryFields(schedule: ScheduleDoc) {
     switch (schedule.frequency) {
       case Frequency.ONCE:
-        schedule.set({ interval: 1, month: null, dayOfWeek: null, dayOfMonth: null, endDate: null });
+        schedule.set({ 
+          interval: 1, 
+          month: null, 
+          dayOfWeek: null, 
+          dayOfMonth: null, 
+          endDate: null, 
+          occcurenceCount: 1 
+        });
         return;
       case Frequency.DAILY:
+        if (schedule.occurrenceCount) schedule.set({ endDate: null });
         schedule.set({ month: null, dayOfWeek: null, dayOfMonth: null });
         return;
       case Frequency.WEEKLY:
+        if (schedule.occurrenceCount) schedule.set({ endDate: null });
         schedule.set({ month: null, dayOfMonth: null });
         return;
       case Frequency.MONTHLY:
+        if (schedule.occurrenceCount) schedule.set({ endDate: null });
         schedule.set({ month: null, dayOfWeek: null });
         return;
       case Frequency.YEARLY:
+        if (schedule.occurrenceCount) schedule.set({ endDate: null });
         schedule.set({ dayOfWeek: null });
         return;
     }
@@ -64,8 +78,8 @@ class ScheduleService {
   }
 
   async createSchedule(dto: CreateScheduleDto): Promise<ScheduleDoc> {
-    dto.recurrenceRule = occurrenceService.generateRecurrenceRule(dto);
     dto = this.removeUnnecessaryFields(dto);
+    dto.recurrenceRule = occurrenceService.generateRecurrenceRule(dto);
 
     if (dto.endDate && dto.endDate < dto.startDate) {
       throw new BadRequestError('The end date must occur after the start date.');

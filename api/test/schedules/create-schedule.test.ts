@@ -33,6 +33,7 @@ it('returns a properly formatted object on successful request', async () => {
     frequency: fakeData.frequency,
     recurrenceRule: expect.any(String),
     interval: 1,
+    occurrenceCount: null,
     dayOfWeek: null,
     month: null,
     dayOfMonth: null,
@@ -100,6 +101,7 @@ it('sets unnecessary fields to null on once schedule creation', async () => {
     dayOfWeek: 'SUNDAY',
     month: 'MARCH',
     interval: 2,
+    occurrenceCount: 3,
     dayOfMonth: 15,
     startDate: '2020-05-01',
     endDate: '2020-05-06'
@@ -111,6 +113,7 @@ it('sets unnecessary fields to null on once schedule creation', async () => {
   expect(schedule.dayOfWeek).toBe(null);
   expect(schedule.dayOfMonth).toBe(null);
   expect(schedule.interval).toBe(1);
+  expect(schedule.occurrenceCount).toBe(1);
   expect(schedule.endDate).toBe(null);
 });
 
@@ -180,6 +183,19 @@ it('sets unnecessary fields to null on yearly schedule creation', async () => {
 
   const schedule = res.body;
   expect(schedule.dayOfWeek).toBe(null);
+});
+
+it('sets endDate to null when occurrrenceCount is set', async () => {
+  const data = {
+    amount: 500,
+    description: 'test',
+    frequency: 'DAILY',
+    occurrenceCount: 3,
+    startDate: '2020-05-01',
+    endDate: '2020-05-25'
+  };
+  const res = await makeRequest(data);
+  expect(res.body.endDate).toBe(null);
 });
 
 it('rejects schedules that have no occurrences', async () => {
