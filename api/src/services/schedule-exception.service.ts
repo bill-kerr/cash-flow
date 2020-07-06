@@ -1,4 +1,4 @@
-import { CreateScheduleExceptionDto } from '../models/dto/schedule-exception.dto';
+import { CreateScheduleExceptionDto, EditScheduleExceptionDto } from '../models/dto/schedule-exception.dto';
 import { ScheduleExceptionDoc, ScheduleException } from '../models/schedule-exception.model';
 import { BadRequestError, NotAuthorizedError } from '../errors';
 
@@ -33,6 +33,18 @@ class ScheduleExceptionService {
     }
 
     const exception = ScheduleException.build(dto);
+    await exception.save();
+    return exception;
+  }
+
+  public async editScheduleException(dto: EditScheduleExceptionDto) {
+    const exception = await this.getScheduleExceptionById(dto.id);
+
+    if (dto.date && await this.scheduleExceptionExists(exception.schedule, dto.date)) {
+      throw new BadRequestError(`A schedule-exception already exists for the occurrence on ${ dto.date }.`);
+    }
+    
+    exception.set(dto);
     await exception.save();
     return exception;
   }

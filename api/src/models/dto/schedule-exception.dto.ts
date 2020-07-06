@@ -8,3 +8,12 @@ export interface CreateScheduleExceptionDto {
   userId: string;
   schedule: string;
 }
+
+export interface EditScheduleExceptionDto {
+  id: string;
+  date?: string;
+  occurrenceDeleted?: boolean;
+  currentDate?: string;
+  amount?: number;
+  description?: string;
+}

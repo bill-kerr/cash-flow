@@ -38,7 +38,7 @@ export const floatField = (fieldName: string) => body(fieldName)
   .escape()
   .isFloat()
   .withMessage(`The ${ fieldName } field must contain a number.`)
-  .customSanitizer(val => parseFloat(parseFloat(val).toFixed(2)));
+  .customSanitizer(val => (Math.round(parseFloat(val) * 100) / 100).toFixed(2));
 
 export const booleanField = (fieldName: string) => body(fieldName)
   .notEmpty()
