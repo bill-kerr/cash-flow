@@ -1,5 +1,5 @@
 import { BaseError, SerializedError } from './base-error';
-import { HttpResponse } from '../types/http-response';
+import { HttpResponse } from '../types';
 
 class NotFoundError extends BaseError {
   statusCode = HttpResponse.NOT_FOUND;

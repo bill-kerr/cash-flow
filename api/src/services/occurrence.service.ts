@@ -1,13 +1,8 @@
 import { RRule, rrulestr } from 'rrule';
-import { getUTCDateFromString, parseUTCDateList, buildDateFilter } from '../util';
-import { Frequency, DayOfWeek, Month } from '../types';
-import { CreateRecurrenceDto } from '../models/dto/recurrence.dto';
-import { scheduleService } from './schedule.service';
-import { Occurrence } from '../models/occurrence.model';
-import { ScheduleDoc } from '../models/schedule.model';
-import { CreateScheduleDto } from '../models/dto/schedule.dto';
-import { scheduleExceptionService } from '../services/schedule-exception.service';
-import { ScheduleExceptionDoc } from '../models/schedule-exception.model';
+import { getUTCDateFromString, parseUTCDateList } from '../util';
+import { Frequency, DayOfWeek, Month, CreateRecurrenceDto, CreateScheduleDto } from '../types';
+import { scheduleService, scheduleExceptionService } from './';
+import { Occurrence, ScheduleDoc, ScheduleExceptionDoc } from '../models';
 
 class OccurrenceService {
 
@@ -76,6 +71,23 @@ class OccurrenceService {
     };
   }
 
+  private showOccurrence(
+    scheduleException: ScheduleExceptionDoc | null | undefined, 
+    startDate: string, 
+    endDate: string
+  ): boolean {
+    if (!scheduleException || scheduleException.occurrenceDeleted) {
+      return false;
+    }
+
+    const date = scheduleException.currentDate || scheduleException.date;
+    if (date >= startDate && date <= endDate) {
+      return true;
+    }
+
+    return false;
+  }
+
   public generateRecurrenceRule(dto: CreateRecurrenceDto): string {
     const startDate = getUTCDateFromString(dto.startDate);
     const endDate = dto.endDate ? getUTCDateFromString(dto.endDate) : null;
@@ -114,11 +126,16 @@ class OccurrenceService {
   ): Promise<Occurrence[]> {
     const occurrenceDates = this.getOccurrenceDates(schedule.recurrenceRule, startDate, endDate);
     const exceptions = await scheduleExceptionService.getScheduleExceptionsBySchedule(schedule.id);
+    exceptions.map(exception => {
+      if (!occurrenceDates.includes(exception.date)) {
+        occurrenceDates.push(exception.date);
+      }
+    });
+    
     const occurrences: Occurrence[] = [];
-
     occurrenceDates.forEach(date => {
       const exception = exceptions.find(exception => exception.date === date);
-      if (exception && !exception.occurrenceDeleted) {
+      if (this.showOccurrence(exception, startDate, endDate)) {
         occurrences.push(this.createOccurrence(schedule, date, exception));
       } else if (!exception) {
         occurrences.push(this.createOccurrence(schedule, date));

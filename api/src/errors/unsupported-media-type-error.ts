@@ -1,5 +1,5 @@
 import { BaseError, SerializedError } from './base-error';
-import { HttpResponse } from '../types/http-response';
+import { HttpResponse } from '../types';
 
 class UnsupportedMediaTypeError extends BaseError {
   statusCode = HttpResponse.UNSUPPORTED_MEDIA_TYPE;

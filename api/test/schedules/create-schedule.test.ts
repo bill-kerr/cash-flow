@@ -1,6 +1,6 @@
 import request from 'supertest';
 import mongoose from 'mongoose';
-import { scheduleService } from '../../src/services/schedule.service';
+import { scheduleService } from '../../src/services';
 import { Frequency } from '../../src/types';
 import { initApp, buildMakeRequest } from '../setup';
 

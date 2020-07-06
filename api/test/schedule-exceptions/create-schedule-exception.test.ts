@@ -1,6 +1,6 @@
-import { scheduleService } from '../../src/services/schedule.service';
+import { initApp, buildMakeRequest } from '../setup';
+import { scheduleService } from '../../src/services';
 import { Frequency } from '../../src/types';
-import { initApp, buildMakeRequest, badTypeMessage, emptyMessage } from '../setup';
 
 const app = initApp();
 const { makeRequest } = buildMakeRequest('/api/v1/schedule-exceptions');

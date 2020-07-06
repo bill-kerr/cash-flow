@@ -1,5 +1,5 @@
 import { BaseError, SerializedError } from './base-error';
-import { HttpResponse } from '../types/http-response';
+import { HttpResponse } from '../types';
 import { ValidationError } from 'express-validator';
 
 class RequestValidationError extends BaseError {

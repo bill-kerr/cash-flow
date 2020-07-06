@@ -1,9 +1,8 @@
 import { omit } from 'lodash';
-import { CreateScheduleDto, EditScheduleDto } from '../models/dto/schedule.dto';
-import { Schedule, ScheduleDoc } from '../models/schedule.model';
+import { Frequency, CreateScheduleDto, EditScheduleDto } from '../types';
+import { Schedule, ScheduleDoc } from '../models';
 import { BadRequestError, NotAuthorizedError } from '../errors';
-import { occurrenceService } from '../services/occurrence.service';
-import { Frequency } from '../types';
+import { occurrenceService } from '../services';
 
 class ScheduleService {
 

@@ -1,9 +1,5 @@
-import mongoose from 'mongoose';
-import { occurrenceService } from '../../src/services/occurrence.service';
-import { CreateRecurrenceDto } from '../../src/models/dto/recurrence.dto';
-import { Frequency, DayOfWeek, Month } from '../../src/types';
-import { ScheduleDoc } from '../../src/models/schedule.model';
-import { scheduleService } from '../../src/services/schedule.service';
+import { occurrenceService, scheduleService } from '../../src/services';
+import { Frequency, DayOfWeek, Month, CreateRecurrenceDto } from '../../src/types';
 
 it('generates non-empty recurrence rules', () => {
   const data: CreateRecurrenceDto = {

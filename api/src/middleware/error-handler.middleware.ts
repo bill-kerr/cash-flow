@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { HttpResponse } from '../types/http-response';
+import { HttpResponse } from '../types';
 import { BaseError, ErrorResponse } from '../errors';
 
 const defaultError: ErrorResponse = {

@@ -1,9 +1,9 @@
 import request from 'supertest';
+import mongoose from 'mongoose';
 import { initExpressApp } from '../../src/loaders/express';
 import { Frequency } from '../../src/types';
-import { ScheduleDoc } from '../../src/models/schedule.model';
-import mongoose from 'mongoose';
-import { scheduleService } from '../../src/services/schedule.service';
+import { ScheduleDoc } from '../../src/models';
+import { scheduleService } from '../../src/services';
 
 const app = initExpressApp();
 const headers = {
@@ -32,7 +32,6 @@ const createSchedule = async (): Promise<ScheduleDoc> => {
 
 it('returns a properly formatted list of occurrences on successful request', async () => {
   const schedule = await createSchedule();
-  await schedule.save();
   const res = await makeRequest(schedule.id, '2020-05-01', '2021-05-01');
   expect(res.status).toBe(200);
   expect(res.body.object).toBe('list');
@@ -48,7 +47,6 @@ it('returns a properly formatted list of occurrences on successful request', asy
 
 it('rejects requests without the startDate and endDate query parameters', async () => {
   const schedule = await createSchedule();
-  await schedule.save();
   const res = await request(app)
     .get(`/api/v1/schedules/${ schedule.id }/occurrences`)
     .set(headers)

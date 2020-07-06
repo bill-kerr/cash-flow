@@ -1,9 +1,8 @@
 import request from 'supertest';
-import { initExpressApp } from '../../src/loaders/express';
-import { scheduleService } from '../../src/services/schedule.service';
 import mongoose from 'mongoose';
+import { initExpressApp } from '../../src/loaders/express';
+import { scheduleService } from '../../src/services';
 import { Frequency, DayOfWeek } from '../../src/types';
-import { scheduleExceptionService } from '../../src/services/schedule-exception.service';
 
 const app = initExpressApp();
 const headers = {

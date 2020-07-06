@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
-import { CreateScheduleDto } from './dto/schedule.dto';
-import { Frequency, DayOfWeek, Month } from '../types';
+import { Frequency, DayOfWeek, Month, CreateScheduleDto } from '../types';
 import { Occurrence } from './occurrence.model';
 
 interface ScheduleDoc extends mongoose.Document {

@@ -3,14 +3,9 @@ import { json } from 'body-parser';
 import 'express-async-errors';
 import cors from 'cors';
 import helmet from 'helmet';
-
 import { NotFoundError } from '../errors';
-import { errorHandler } from '../middleware/error-handler.middleware';
-import { verifyJsonMediaType } from '../middleware/verify-json-media-type.middleware';
-import { scheduleRouter } from '../controllers/schedule.controller';
-import { scheduleExceptionRouter } from '../controllers/schedule-exception.controller';
-import { requestMethodChecker } from '../middleware/request-method-checker.middleware';
-import { occurrenceRouter } from '../controllers/occurrence.controller';
+import { errorHandler, verifyJsonMediaType, requestMethodChecker } from '../middleware';
+import { scheduleRouter, scheduleExceptionRouter, occurrenceRouter } from '../controllers';
 
 function init(): Application {
   const app = express();

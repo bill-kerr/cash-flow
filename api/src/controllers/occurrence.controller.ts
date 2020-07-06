@@ -1,9 +1,8 @@
 import express, { Request, Response } from 'express';
-import { HttpResponse } from '../types/http-response';
-import { requireAuth } from '../middleware/require-auth.middleware';
-import { handleValidationResult } from '../middleware/validation-handler.middleware';
-import { queryDateRangeValidator } from '../middleware/validators/date-range.validator';
-import { occurrenceService } from '../services/occurrence.service';
+import { HttpResponse } from '../types';
+import { requireAuth, handleValidationResult } from '../middleware';
+import { queryDateRangeValidator } from '../middleware/validators';
+import { occurrenceService } from '../services';
 
 const router = express.Router();
 

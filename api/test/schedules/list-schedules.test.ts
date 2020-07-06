@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { initExpressApp } from '../../src/loaders/express';
-import { Schedule } from '../../src/models/schedule.model';
-import { scheduleService } from '../../src/services/schedule.service';
+import { Schedule } from '../../src/models';
+import { scheduleService } from '../../src/services';
 import { Frequency } from '../../src/types';
 
 const app = initExpressApp();

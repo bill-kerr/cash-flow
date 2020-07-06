@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { CreateScheduleExceptionDto } from './dto/schedule-exception.dto';
+import { CreateScheduleExceptionDto } from '../types';
 
 interface ScheduleExceptionDoc extends mongoose.Document {
   id: string;

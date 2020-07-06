@@ -1,14 +1,13 @@
 import express, { Request, Response } from 'express';
-import { HttpResponse } from '../types/http-response';
-import { requireAuth } from '../middleware/require-auth.middleware';
-import { scheduleExceptionService } from '../services/schedule-exception.service';
-import { requireOwnership } from '../middleware/require-ownership.middleware';
-import { ScheduleException } from '../models/schedule-exception.model';
-import { createScheduleExceptionValidator, editScheduleExceptionValidator } from '../middleware/validators/schedule-exception.validator';
-import { handleValidationResult } from '../middleware/validation-handler.middleware';
-import { Schedule } from '../models/schedule.model';
-import { optionalQueryDateRangeValidator } from '../middleware/validators/date-range.validator';
-import { EditScheduleExceptionDto, CreateScheduleExceptionDto } from '../models/dto/schedule-exception.dto';
+import { requireAuth, requireOwnership, handleValidationResult } from '../middleware';
+import { scheduleExceptionService } from '../services';
+import { Schedule, ScheduleException } from '../models';
+import { EditScheduleExceptionDto, CreateScheduleExceptionDto, HttpResponse } from '../types';
+import { 
+  createScheduleExceptionValidator, 
+  editScheduleExceptionValidator,
+  optionalQueryDateRangeValidator 
+} from '../middleware/validators';
 
 const router = express.Router();
 
