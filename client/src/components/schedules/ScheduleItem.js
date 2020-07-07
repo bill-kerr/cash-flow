@@ -48,8 +48,7 @@ const ScheduleItem = ({ schedule, deleteSchedule, fetchOccurrences }) => {
   }, [menuOpen]);
 
   const onDeleteSchedule = () => {
-    deleteSchedule(schedule.id);
-    fetchOccurrences();
+    deleteSchedule(schedule.id).then(() => fetchOccurrences());
     setMenuOpen(false);
   };
 

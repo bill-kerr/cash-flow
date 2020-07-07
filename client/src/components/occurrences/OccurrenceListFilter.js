@@ -23,7 +23,7 @@ const OccurrenceListFilter = props => {
   const updateOccurrences = (startDate, endDate) => {
     const fmtStartDate = moment(startDate).format('YYYY-MM-DD');
     const fmtEndDate = moment(endDate).format('YYYY-MM-DD');
-    props.fetchOccurrences(props.user.token, fmtStartDate, fmtEndDate);
+    props.fetchOccurrences(fmtStartDate, fmtEndDate);
   };
 
   const onStartingBalanceBlur = e => {

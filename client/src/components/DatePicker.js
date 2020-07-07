@@ -221,7 +221,7 @@ const DatePicker = ({ selectedDate, setSelectedDate, maxDate, minDate = null }) 
           type="text"
           readOnly
           placeholder="Select date"
-          className={ `w-full pl-4 pr-10 py-3 leading-none rounded shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium transition-shadow duration-100 ${ open ? 'pointer-events-none': '' }` }
+          className={ `w-full pl-4 pr-10 py-3 leading-none rounded shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium transition-shadow duration-100 cursor-pointer ${ open ? 'pointer-events-none': '' }` }
           onClick={ () => setOpen(!open) }
           value={ selectedDate.toDateString() }
         />
