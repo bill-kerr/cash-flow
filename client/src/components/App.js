@@ -1,6 +1,6 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import moment from 'moment';
+import { connect } from 'react-redux';
 import Header from './Header';
 import auth from '../apis/auth';
 import { signIn } from '../actions/auth';
@@ -9,9 +9,10 @@ import { fetchSchedules } from '../actions/schedules';
 import HomePage from '../pages/HomePage';
 import { Router, Route, Switch } from 'react-router-dom';
 import history from '../history';
+import CreateSchedule from './schedules/CreateSchedule';
 
 class App extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     auth.onAuthStateChanged(async user => {
       const token = await auth.getIdToken();
       await this.props.signIn({
@@ -41,6 +42,7 @@ class App extends React.Component {
           <Header />
           <Switch>
             <Route path="/" exact component={ HomePage } />
+            <Route path="/schedules/create" component={ CreateSchedule } />
           </Switch>
         </Router>
       </div>

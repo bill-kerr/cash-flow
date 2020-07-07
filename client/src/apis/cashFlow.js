@@ -6,6 +6,7 @@ export default axios.create({
 
 export const getHeaders = (authToken) => {
   return {
-    'Authorization': `Bearer ${ authToken }`
+    'Authorization': `Bearer ${ authToken }`,
+    'Content-Type': 'application/json'
   };
 };
