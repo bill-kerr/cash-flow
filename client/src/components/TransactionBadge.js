@@ -3,20 +3,8 @@ import { formatCurrency } from '../util';
 import { connect } from 'react-redux';
 
 const symbol = {
-  'positive': (
-    <svg fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" 
-      stroke="currentColor" className="h-3 w-3"
-    >
-      <path d="M12 4v16m8-8H4"></path>
-    </svg>
-  ),
-  'negative': (
-    <svg fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" 
-      stroke="currentColor" className="h-3 w-3"
-    >
-      <path d="M18 12H6"></path>
-    </svg>
-  )
+  'positive': (<path d="M12 4v16m8-8H4"></path>),
+  'negative': (<path d="M18 12H6"></path>)
 };
 
 const symbolStyles = {
@@ -34,7 +22,12 @@ const TransactionBadge = ({
   return (
     <div className="flex items-center font-bold">
       <span className={ styles }>
-        { symbol[type] }
+        <svg fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" viewBox="0 0 24 24" 
+          stroke="currentColor" className="h-3 w-3"
+        >
+         { symbol[type] }
+        </svg>
+        
       </span>
       <span className="ml-1">
         { formatCurrency(amount, currencyCode, true) }

@@ -34,9 +34,9 @@ class OccurrenceList extends React.Component {
 
   render() {
     return (
-      <table className="table-fixed min-w-full shadow rounded bg-gray-200" cellPadding="0" cellSpacing="0">
+      <table className="table-fixed min-w-full shadow rounded bg-gray-700" cellPadding="0" cellSpacing="0">
         <thead className="w-full">
-          <tr className="w-full text-xs text-gray-600 uppercase tracking-wider text-left">
+          <tr className="w-full text-xs text-gray-300 uppercase tracking-wider text-left">
             <th className="w-1/6 py-3 pl-4">Date</th>
             <th className="w-auto py-3 pl-2">Description</th>
             <th className="w-1/5 py-3">Amount</th>

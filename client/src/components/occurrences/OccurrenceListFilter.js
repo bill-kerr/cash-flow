@@ -3,10 +3,12 @@ import { connect } from 'react-redux';
 import DatePicker from '../DatePicker';
 import { setStartDate, setEndDate, fetchOccurrences, setStartingBalance } from '../../actions/occurrences';
 import moment from 'moment';
+import { getCurrencySymbol } from '../../util';
 
 const OccurrenceListFilter = props => {
   const [formEndDate, setFormEndDate] = useState(props.endDate);
   const [formStartDate, setFormStartDate] = useState(props.startDate);
+  const [inputStartingBalance, setInputStartingBalance] = useState(Number(0).toLocaleString());
 
   const updateStartDate = date => {
     setFormStartDate(date);
@@ -31,11 +33,19 @@ const OccurrenceListFilter = props => {
     props.setStartingBalance(balance);
   };
 
+  const onStartingBalanceChange = e => {
+    const value = e.target.value;
+    const floatRegExp = new RegExp('^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$');
+    if ((value === '' || floatRegExp.test(value)) && value.length < 15) {
+      setInputStartingBalance(value);
+    }
+  };
+
   return (
-    <div className="flex p-2 bg-gray-200 shadow rounded">
+    <div className="flex p-4 bg-gray-700 shadow rounded">
       <div className="flex flex-col">
         <label  
-          className="text-xs font-bold text-gray-600 uppercase"
+          className="text-xs font-bold text-gray-300 uppercase"
         >
           Start date
         </label>
@@ -44,7 +54,7 @@ const OccurrenceListFilter = props => {
         </div>
       </div>
       <div className="ml-4 flex flex-col">
-        <label className="text-xs font-bold text-gray-600 uppercase">
+        <label className="text-xs font-bold text-gray-300 uppercase">
           End date
         </label>
         <div className="mt-1">
@@ -52,15 +62,22 @@ const OccurrenceListFilter = props => {
         </div>
       </div>
       <div className="ml-4 flex flex-col">
-        <label className="text-xs font-bold text-gray-600 uppercase">
+        <label className="text-xs font-bold text-gray-300 uppercase">
           Starting balance
         </label>
-        <div className="mt-1 w-40">
+        <div className="relative mt-1 w-40 text-sm">
           <input 
             type="text"
-            className="w-full pl-4 pr-10 py-3 leading-none rounded shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium transition-shadow duration-100"
+            className="w-full form-input pl-6 text-right"
             onBlur={ e => onStartingBalanceBlur(e) }
+            value={ inputStartingBalance }
+            onChange={ e => onStartingBalanceChange(e) }
           />
+          <div 
+            className="absolute px-2 left-0 top-0 bottom-0 flex h-full items-center pointer-events-none text-gray-600"
+          >
+            { getCurrencySymbol(props.currencyCode) }
+          </div>
         </div>
       </div>
     </div>

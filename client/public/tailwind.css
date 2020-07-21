@@ -2,4 +2,12 @@
 
 @tailwind components;
 
+.form-input {
+  @apply p-2 leading-none rounded shadow font-medium transition-shadow duration-200 bg-gray-200
+}
+
+.form-input:focus {
+  @apply outline-none shadow-outline bg-white
+}
+
 @tailwind utilities;

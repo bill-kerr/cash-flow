@@ -221,13 +221,13 @@ const DatePicker = ({ selectedDate, setSelectedDate, maxDate, minDate = null }) 
           type="text"
           readOnly
           placeholder="Select date"
-          className={ `w-full pl-4 pr-10 py-3 leading-none rounded shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium transition-shadow duration-100 cursor-pointer ${ open ? 'pointer-events-none': '' }` }
+          className={ `w-full text-sm form-input pr-10 cursor-pointer ${ open ? 'pointer-events-none': '' }` }
           onClick={ () => setOpen(!open) }
           value={ selectedDate.toDateString() }
         />
-        <div className="absolute top-0 right-0 px-3 py-2 pointer-events-none">
+        <div className="absolute top-0 bottom-0 right-0 px-3 pointer-events-none flex items-center">
           <svg fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24"
-            stroke="currentColor" className="h-6 w-6 text-gray-400"
+            stroke="currentColor" className={ `h-5 w-5 ${ open ? 'text-blue-500' : 'text-gray-500' }` }
           >
             <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
           </svg>

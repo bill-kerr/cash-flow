@@ -56,6 +56,28 @@ export const formatCurrency = (amount, currencyCode, absoluteValue = false) => {
   }).format(amount);
 };
 
+export const getCurrencySymbol = currencyCode => {
+  const currencySymbols = {
+    'usd': '$', // US Dollar
+    'eur': '€', // Euro
+    'crc': '₡', // Costa Rican Colón
+    'gbp': '£', // British Pound Sterling
+    'ils': '₪', // Israeli New Sheqel
+    'inr': '₹', // Indian Rupee
+    'jpy': '¥', // Japanese Yen
+    'krw': '₩', // South Korean Won
+    'ngn': '₦', // Nigerian Naira
+    'php': '₱', // Philippine Peso
+    'pln': 'zł', // Polish Zloty
+    'pyg': '₲', // Paraguayan Guarani
+    'thb': '฿', // Thai Baht
+    'uah': '₴', // Ukrainian Hryvnia
+    'vnd': '₫', // Vietnamese Dong
+  };
+
+  return currencySymbols[currencyCode] || currencyCode;
+};
+
 export const formatDate = (date, format = 'YYYY-MM-DD') => {
   return moment(date).format(format);
 };

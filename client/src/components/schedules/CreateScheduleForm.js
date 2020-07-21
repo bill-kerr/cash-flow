@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { createSchedule } from '../../actions/schedules';
 import { fetchOccurrences } from '../../actions/occurrences';
 
-const CreateScheduleForm = ({ createSchedule }) => {
+const CreateScheduleForm = ({ createSchedule, dismiss }) => {
 
   const initialFormValues = {
     amount: '0.00',
@@ -21,16 +21,18 @@ const CreateScheduleForm = ({ createSchedule }) => {
     return errors;
   };
 
-  const onSubmit = (values, { setSubmitting }) => {
+  const onSubmit = (values, { setSubmitting, resetForm }) => {
     createSchedule(values).then(() => {
       fetchOccurrences();
+      resetForm();
       setSubmitting(false);
+      dismiss();
     });
   };
 
   return (
     <div>
-      <div className="p-4">
+      <div className="p-4 bg-gray-700 text-white rounded">
         <h2 className="font-bold">Create transaction schedule</h2>
       </div>
       <Formik
@@ -38,36 +40,48 @@ const CreateScheduleForm = ({ createSchedule }) => {
         validate={ validate }
         onSubmit={ onSubmit }
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, resetForm }) => (
           <Form className="text-sm">
-            <div className="p-4 bg-gray-100">
+            <div className="p-4">
               <div className="flex items-center">
                 <label className="block w-32 text-right text-gray-800">Amount</label>
                 <Field 
                   type="text" 
                   name="amount"
-                  className="ml-2 px-2 py-1 rounded shadow focus:outline-none focus:shadow-outline font-medium transition-shadow duration-200" 
+                  className="ml-2 form-input" 
                 />
                 <ErrorMessage name="amount" component="div" />
               </div>
               <div className="mt-4 flex items-center">
                 <label className="block w-32 text-right text-gray-800">Description</label>
-                <Field type="text" name="description" className="ml-2 px-2 py-1 rounded shadow" />
+                <Field type="text" name="description" className="ml-2 form-input" />
                 <ErrorMessage name="description" component="div" />
               </div>
               <div className="mt-4 flex items-center">
                 <label className="block w-32 text-right text-gray-800">Frequency</label>
-                <Field type="text" name="frequency" className="ml-2 px-2 py-1 rounded shadow" />
+                <Field type="text" name="frequency" className="ml-2 form-input" />
                 <ErrorMessage name="frequency" component="div" />
               </div>
               <div className="mt-4 flex items-center">
                 <label className="block w-32 text-right text-gray-800">Start Date</label>
-                <Field type="text" name="startDate" className="ml-2 px-2 py-1 rounded shadow" />
+                <Field type="text" name="startDate" className="ml-2 form-input" />
                 <ErrorMessage name="startDate" component="div" />
               </div>
             </div>
-            <div className="p-4 rounded flex justify-end">
-              <button className="px-3 py-2 font-bold rounded bg-blue-100 border border-blue-400 text-blue-900 shadow" type="submit" disabled={ isSubmitting }>
+            <div className="p-4 rounded flex justify-end bg-gray-200">
+              <button 
+                className=""
+                type="button"
+                disabled={ isSubmitting }
+                onClick={ () => resetForm() }
+              >
+                Cancel
+              </button>
+              <button 
+                className="px-3 py-2 text-white font-bold rounded bg-blue-700 shadow" 
+                type="submit" 
+                disabled={ isSubmitting }
+              >
                 Submit
               </button>
             </div>

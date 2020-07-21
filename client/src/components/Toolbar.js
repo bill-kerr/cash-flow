@@ -28,7 +28,7 @@ const Toolbar = () => {
         show={ createModalOpen } 
         dismiss={ () => setCreateModalOpen(false) }
       >
-        <CreateScheduleForm />
+        <CreateScheduleForm dismiss={ () => setCreateModalOpen(false) } />
       </Modal>
     </div>
   );

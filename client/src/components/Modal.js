@@ -16,7 +16,7 @@ const Modal = props => {
   const renderModal = () => {
     return (
       <div 
-        className="p-6 absolute flex items-center justify-center bg-gray-900 top-0 bottom-0 left-0 right-0 transition-all duration-300 ease-in-out bg-opacity-25"
+        className="p-6 absolute flex items-center justify-center bg-gray-900 top-0 bottom-0 left-0 right-0 transition-all duration-300 ease-in-out bg-opacity-25 overflow-hidden"
         onClick={ onDismiss }
         style={{ 
           pointerEvents: props.show ? 'auto' : 'none',
