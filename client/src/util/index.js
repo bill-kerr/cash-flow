@@ -11,8 +11,15 @@ export const getFrequencyDescription = schedule => {
       if (schedule.interval === 1) return `every week on ${ capitalCase(schedule.dayOfWeek) }`;
       return `every ${ schedule.interval } weeks on ${ capitalCase(schedule.dayOfWeek) }`;
     case 'MONTHLY':
-      if (schedule.interval === 1) return `every month on the ${ addMonthDateSuffix(schedule.dayOfMonth) }`;
-      return `every ${ schedule.interval } months on the ${ addMonthDateSuffix(schedule.dayOfMonth) }`;
+      let dayOfMonth;
+      if (schedule.dayOfMonth === 0) {
+        dayOfMonth = 'last day of the month';
+      } else {
+        dayOfMonth = addMonthDateSuffix(schedule.dayOfMonth);
+      }
+
+      if (schedule.interval === 1) return `every month on the ${ dayOfMonth }`;
+      return `every ${ schedule.interval } months on the ${ dayOfMonth }`;
     case 'YEARLY':
       if (schedule.interval === 1) return `every year in ${ schedule.month } on the ${ addMonthDateSuffix(schedule.dayOfMonth) }`;
       return `every ${ schedule.interval } years in ${ schedule.month } on the ${ addMonthDateSuffix(schedule.dayOfMonth) }`;

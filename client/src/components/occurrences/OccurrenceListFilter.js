@@ -41,7 +41,7 @@ const OccurrenceListFilter = props => {
   };
 
   return (
-    <div className="flex p-4 bg-gray-700 shadow rounded">
+    <div className="flex p-4 bg-gray-700 shadow rounded-t">
       <div className="flex flex-col">
         <label  
           className="text-xs font-bold text-gray-300 uppercase"

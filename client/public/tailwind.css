@@ -10,4 +10,16 @@
   @apply outline-none shadow-outline bg-white
 }
 
+.tooltip {
+  @apply relative
+}
+
+.tooltip .tooltip-text {
+  @apply invisible absolute z-50 inline-block font-normal text-xs
+}
+
+.tooltip:hover .tooltip-text {
+  @apply visible
+}
+
 @tailwind utilities;

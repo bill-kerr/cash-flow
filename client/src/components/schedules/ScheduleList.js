@@ -16,7 +16,8 @@ class ScheduleList extends React.Component {
   }
 
   renderScheduleItems() {
-    return this.props.schedules.map(schedule => {
+    const schedules = this.props.schedules.slice(0, 5);
+    return schedules.map(schedule => {
       return (
         <ScheduleItem key={ schedule.id } schedule={ schedule } />
       );

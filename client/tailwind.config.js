@@ -4,9 +4,14 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ["Inter", "sans-serif"],
+      },
+      margin: {
+        '-1/2': '-50%'
       }
     },
   },
-  variants: {},
+  variants: {
+    backgroundColor: ['hover', 'focus', 'even']
+  },
   plugins: [],
 }

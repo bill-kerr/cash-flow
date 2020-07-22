@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { formatCurrency } from '../../util';
 import { createScheduleException } from '../../actions/schedule-exceptions';
 import { deleteOccurrence } from '../../actions/occurrences';
+import TransactionBadge from '../TransactionBadge';
+import Tooltip from '../Tooltip';
 
 const OccurrenceItem = ({ 
   occurrence, 
@@ -32,8 +34,27 @@ const OccurrenceItem = ({
     return (
       <div className="flex items-center justify-between">
 
+        {/* MOVE DATE UP */}
+        <span className="tooltip text-gray-600 hover:text-gray-800 cursor-pointer">
+          <Tooltip content="test with a long tooltip" />
+          <svg fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" viewBox="0 0 24 24" 
+            stroke="currentColor" className="w-4 h-4"
+          >
+            <path d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+          </svg>
+        </span>
+
+        {/* MOVE DATE DOWN */}
+        <span className="ml-2 text-gray-600 hover:text-gray-800 cursor-pointer">
+          <svg fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" viewBox="0 0 24 24" 
+            stroke="currentColor" className="w-4 h-4"
+          >
+            <path d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+          </svg>
+        </span>
+
         {/* EDIT OCCURRENCE */}
-        <span className="flex items-center text-gray-600 hover:text-gray-800">
+        <span className="ml-5 text-gray-600 hover:text-gray-800 cursor-pointer">
           <svg fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" 
             stroke="currentColor" className="w-5 h-5"
           >
@@ -44,7 +65,7 @@ const OccurrenceItem = ({
 
         {/* DELETE OCCURRENCE */}
         <span 
-          className="ml-2 text-red-500 hover:text-red-700"
+          className="ml-2 text-red-500 hover:text-red-700 cursor-pointer"
           onClick={ onClickDelete }
         >
           <svg fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
@@ -61,13 +82,26 @@ const OccurrenceItem = ({
 
   return (
     <tr 
-      className={ `text-sm cursor-pointer ${ isActive ? 'bg-blue-100' : '' }` }
+      className={ 
+        `text-sm
+        ${ isActive ? 'bg-gray-300' : 'even:bg-gray-200' }
+        ${ balance < 0 ? 'text-red-800 font-bold' : '' }
+        ` 
+      }
       onMouseOver={ () => setIsActive(true) }
       onMouseLeave={ () => setIsActive(false) }
     >
       <td className="py-2 pl-4 whitespace-no-wrap">{ occurrence.date }</td>
       <td className="py-2 pl-2 whitespace-no-wrap">{ occurrence.description }</td>
-      <td className="py-2 pl-2 whitespace-no-wrap text-right">{ formatCurrency(occurrence.amount, currencyCode) }</td>
+      <td className="py-2 pl-2 whitespace-no-wrap text-right">
+        <TransactionBadge 
+          amount={ occurrence.amount } 
+          currencyCode={ currencyCode }
+          bold={ false }
+          positiveTextStyle="text-green-800"
+          negativeTextStyle="text-red-800"
+        />
+      </td>
       <td className="py-2 pl-2 whitespace-no-wrap text-right">{ formatCurrency(balance, currencyCode) }</td>
       <td className="py-2 pl-2 pr-4 my-auto whitespace-no-wrap text-right flex items-center justify-end">
         { renderActions() }

@@ -22,7 +22,7 @@ const styles = {
   }
 };
 
-const ScheduleItem = ({ schedule, deleteSchedule, fetchOccurrences }) => {
+const ScheduleItem = ({ schedule, deleteSchedule, fetchOccurrences, currencyCode }) => {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const node = useRef();
@@ -80,7 +80,10 @@ const ScheduleItem = ({ schedule, deleteSchedule, fetchOccurrences }) => {
     >
       <div className={ `p-2 rounded-t ${ styles[currentStyle].upperDiv }` }>
         <div className="relative flex justify-between items-center">
-          <TransactionBadge amount={ schedule.amount } />
+          <TransactionBadge 
+            amount={ schedule.amount }
+            currencyCode={ currencyCode }
+          />
           <span 
             className={ `cursor-pointer rounded-full p-1 ${ styles[currentStyle].menu }` }
             onClick={ () => setMenuOpen(true) }
@@ -106,7 +109,13 @@ const ScheduleItem = ({ schedule, deleteSchedule, fetchOccurrences }) => {
   );
 };
 
+const mapStateToProps = state => {
+  return {
+    currencyCode: state.settings.currencyCode
+  };
+};
+
 export default connect(
-  null,
+  mapStateToProps,
   { deleteSchedule, fetchOccurrences }
 )(ScheduleItem);
