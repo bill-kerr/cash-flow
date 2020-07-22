@@ -37,13 +37,13 @@ const ScheduleItem = ({ schedule, deleteSchedule, fetchOccurrences }) => {
   
   useEffect(() => {
     if (menuOpen) {
-      document.addEventListener("mousedown", onClickOutside);
+      document.addEventListener('mousedown', onClickOutside);
     } else {
-      document.removeEventListener("mousedown", onClickOutside);
+      document.removeEventListener('mousedown', onClickOutside);
     }
     
     return () => {
-      document.removeEventListener("mousedown", onClickOutside);
+      document.removeEventListener('mousedown', onClickOutside);
     };
   }, [menuOpen]);
 

@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import DatePicker from '../DatePicker';
 import { setStartDate, setEndDate, fetchOccurrences, setStartingBalance } from '../../actions/occurrences';
-import moment from 'moment';
-import { getCurrencySymbol } from '../../util';
+import { getCurrencySymbol, formatDate } from '../../util';
 
 const OccurrenceListFilter = props => {
   const [formEndDate, setFormEndDate] = useState(props.endDate);
@@ -23,8 +22,8 @@ const OccurrenceListFilter = props => {
   };
 
   const updateOccurrences = (startDate, endDate) => {
-    const fmtStartDate = moment(startDate).format('YYYY-MM-DD');
-    const fmtEndDate = moment(endDate).format('YYYY-MM-DD');
+    const fmtStartDate = formatDate(startDate);
+    const fmtEndDate = formatDate(endDate);
     props.fetchOccurrences(fmtStartDate, fmtEndDate);
   };
 

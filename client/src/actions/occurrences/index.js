@@ -3,6 +3,7 @@ import { formatDate } from '../../util';
 
 import {
   FETCH_OCCURRENCES,
+  DELETE_OCCURRENCE,
   SET_STARTING_BALANCE,
   SET_START_DATE,
   SET_END_DATE,
@@ -37,4 +38,8 @@ export const fetchOccurrences = (startDate, endDate) => async (dispatch, getStat
   });
 
   dispatch({ type: FETCH_OCCURRENCES, payload: response.data.data });
+};
+
+export const deleteOccurrence = (schedule, date) => {
+  return { type: DELETE_OCCURRENCE, payload: { schedule, date } }
 };

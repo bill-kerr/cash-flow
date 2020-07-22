@@ -1,5 +1,4 @@
 import React from 'react';
-import moment from 'moment';
 import { connect } from 'react-redux';
 import Header from './Header';
 import auth from '../apis/auth';
@@ -10,6 +9,7 @@ import HomePage from '../pages/HomePage';
 import { Router, Route, Switch } from 'react-router-dom';
 import history from '../history';
 import CreateSchedule from './schedules/CreateSchedule';
+import { formatDate } from '../util';
 
 class App extends React.Component {
   componentDidMount() {
@@ -30,8 +30,8 @@ class App extends React.Component {
   fetchData() {
     const { token } = this.props.user;
     this.props.fetchSchedules(token);
-    const startDate = moment(this.props.occurrenceList.startDate).format('YYYY-MM-DD');
-    const endDate = moment(this.props.occurrenceList.endDate).format('YYYY-MM-DD');
+    const startDate = formatDate(this.props.occurrenceList.startDate);
+    const endDate = formatDate(this.props.occurrenceList.endDate);
     this.props.fetchOccurrences(startDate, endDate);
   }
 
