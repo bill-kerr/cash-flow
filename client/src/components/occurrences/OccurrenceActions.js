@@ -2,7 +2,7 @@ import React from 'react';
 import Tooltip from '../Tooltip';
 import { calcNextDay } from '../../util';
 
-const OccurrenceActions = ({ date, onDelete, onMoveDate }) => {
+const OccurrenceActions = ({ date, onDelete, onMoveDate, onEdit }) => {
   const nextDay = calcNextDay(date, 1);
   const prevDay = calcNextDay(date, -1);
 
@@ -36,7 +36,10 @@ const OccurrenceActions = ({ date, onDelete, onMoveDate }) => {
       </span>
 
       {/* EDIT OCCURRENCE */}
-      <span className="tooltip ml-5 text-gray-600 hover:text-gray-800 cursor-pointer">
+      <span 
+        className="tooltip ml-5 text-gray-600 hover:text-gray-800 cursor-pointer"
+        onClick={ onEdit }
+      >
         <Tooltip content="Edit occurrence" />
         <svg fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" 
           stroke="currentColor" className="w-5 h-5"

@@ -6,6 +6,7 @@ import { fetchOccurrences } from '../../actions/occurrences';
 import TransactionBadge from '../TransactionBadge';
 import OccurrenceActions from './OccurrenceActions';
 import OccurrenceActionStatus from './OccurrenceActionStatus';
+import OccurrenceEditPanel from './OccurrenceEditPanel';
 
 const OccurrenceItem = ({ 
   occurrence, 
@@ -55,11 +56,16 @@ const OccurrenceItem = ({
     });
   };
 
+  const onEdit = () => {
+    setStatus(status === 'edit' ? 'default' : 'edit');
+  };
+
   const renderActions = () => {
     return isActive ? 
       <OccurrenceActions 
         onDelete={ onDelete }
         onMoveDate={ onMoveDate }
+        onEdit={ onEdit }
         date={ occurrence.date }
       /> 
       : null;
@@ -74,7 +80,7 @@ const OccurrenceItem = ({
   return (
     <div 
       className={ 
-        `relative text-sm flex
+        `
         ${ isActive ? 'bg-gray-300' : 'even:bg-gray-200' }
         ${ balance < 0 ? 'text-red-800 font-bold' : '' }
         ` 
@@ -82,30 +88,33 @@ const OccurrenceItem = ({
       onMouseOver={ () => setIsActive(true) }
       onMouseLeave={ () => setIsActive(false) }
     >
-      <div className={ `w-1/6 ${ spacing } pl-4 whitespace-no-wrap` }>
-        { occurrence.date }
+      <div className="relative flex text-sm">
+        <div className={ `w-1/6 ${ spacing } pl-4 whitespace-no-wrap` }>
+          { occurrence.date }
+        </div>
+        <div className={ `flex-grow ${ spacing } pl-2 whitespace-no-wrap` }>
+          { occurrence.description }
+        </div>
+        <div className={ `w-1/12 ${ spacing } pl-2 whitespace-no-wrap flex justify-end` }>
+          <TransactionBadge 
+            amount={ occurrence.amount } 
+            currencyCode={ currencyCode }
+            bold={ false }
+            positiveTextStyle="text-green-800"
+            negativeTextStyle="text-red-800"
+          />
+        </div>
+        <div className={ `w-1/12 ${ spacing } pl-2 whitespace-no-wrap text-right` }>
+          { formatCurrency(balance, currencyCode) }
+        </div>
+        <div 
+          className={ `w-1/5 ${ spacing } pl-2 pr-4 my-auto whitespace-no-wrap text-right flex items-center justify-end` }
+        >
+          { renderActions() }
+        </div>
+        { status !== 'default' && status !== 'edit' ? <OccurrenceActionStatus status={ status } /> : null }
       </div>
-      <div className={ `flex-grow ${ spacing } pl-2 whitespace-no-wrap` }>
-        { occurrence.description }
-      </div>
-      <div className={ `w-1/12 ${ spacing } pl-2 whitespace-no-wrap flex justify-end` }>
-        <TransactionBadge 
-          amount={ occurrence.amount } 
-          currencyCode={ currencyCode }
-          bold={ false }
-          positiveTextStyle="text-green-800"
-          negativeTextStyle="text-red-800"
-        />
-      </div>
-      <div className={ `w-1/12 ${ spacing } pl-2 whitespace-no-wrap text-right` }>
-        { formatCurrency(balance, currencyCode) }
-      </div>
-      <div 
-        className={ `w-1/5 ${ spacing } pl-2 pr-4 my-auto whitespace-no-wrap text-right flex items-center justify-end` }
-      >
-        { renderActions() }
-      </div>
-      { status !== 'default' ? <OccurrenceActionStatus status={ status } /> : null }
+      <OccurrenceEditPanel showPanel={ status === 'edit' } />
     </div>
   );
 };

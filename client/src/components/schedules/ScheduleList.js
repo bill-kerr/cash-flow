@@ -29,7 +29,7 @@ class ScheduleList extends React.Component {
 
     return (
       <div 
-        className="flex flex-col w-full rounded text-blue-900 mx-2 border-2 border-blue-500 border-dashed p-2 hover:bg-blue-100 cursor-pointer text-center" 
+        className="flex flex-col w-full rounded text-blue-900 mx-2 border-2 border-blue-500 border-dashed p-2 hover:bg-blue-100 cursor-pointer text-center justify-center" 
         style={{ maxWidth: '16rem' }}
       >
         <div className="bg-blue-200 rounded-full p-3 self-center mt-2">
