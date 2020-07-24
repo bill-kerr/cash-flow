@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { connect } from 'react-redux';
 import { createSchedule } from '../../actions/schedules';
 import { fetchOccurrences } from '../../actions/occurrences';
+import DatePicker from '../DatePicker';
 
 const CreateScheduleForm = ({ createSchedule, dismiss }) => {
 
@@ -32,7 +33,7 @@ const CreateScheduleForm = ({ createSchedule, dismiss }) => {
 
   return (
     <div>
-      <div className="p-4 bg-gray-700 text-white rounded">
+      <div className="p-4 bg-gray-700 text-white rounded-t">
         <h2 className="font-bold">Create transaction schedule</h2>
       </div>
       <Formik
@@ -64,21 +65,26 @@ const CreateScheduleForm = ({ createSchedule, dismiss }) => {
               </div>
               <div className="mt-4 flex items-center">
                 <label className="block w-32 text-right text-gray-800">Start Date</label>
-                <Field type="text" name="startDate" className="ml-2 form-input" />
+                <Field type="text" name="startDate" className="ml-2 form-input">
+                  { () => <DatePicker /> }
+                </Field>
                 <ErrorMessage name="startDate" component="div" />
               </div>
             </div>
             <div className="p-4 rounded flex justify-end bg-gray-200">
               <button 
-                className=""
+                className="btn bg-gray-300"
                 type="button"
                 disabled={ isSubmitting }
-                onClick={ () => resetForm() }
+                onClick={ () => {
+                  resetForm();
+                  dismiss();
+                } }
               >
                 Cancel
               </button>
               <button 
-                className="px-3 py-2 text-white font-bold rounded bg-blue-700 shadow" 
+                className="ml-4 btn btn-blue" 
                 type="submit" 
                 disabled={ isSubmitting }
               >

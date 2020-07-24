@@ -5,7 +5,7 @@ module.exports = {
       fontFamily: {
         sans: ["Inter", "sans-serif"],
       },
-      margin: {
+      inset: {
         '-1/2': '-50%'
       }
     },

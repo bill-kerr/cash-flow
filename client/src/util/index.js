@@ -88,3 +88,7 @@ export const getCurrencySymbol = currencyCode => {
 export const formatDate = (date, format = 'YYYY-MM-DD') => {
   return moment(date).format(format);
 };
+
+export const calcNextDay = (date, daysToAdd, inFormat = 'YYYY-MM-DD', outFormat = 'YYYY-MM-DD') => {
+  return moment(date, inFormat).add(daysToAdd, 'days').format(outFormat);
+};

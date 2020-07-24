@@ -27,8 +27,8 @@ const DatePicker = ({ selectedDate, setSelectedDate, maxDate, minDate = null }) 
   const node = useRef();
   const [open, setOpen] = useState(false);
   const [currentDate, setCurrentDate] = useDate({
-    month: selectedDate.getMonth(), 
-    year: selectedDate.getFullYear()
+    month: selectedDate ? selectedDate.getMonth() : new Date().getMonth(), 
+    year: selectedDate ? selectedDate.getFullYear() : new Date().getFullYear()
   });
 
   const monthStrings = {
@@ -223,7 +223,7 @@ const DatePicker = ({ selectedDate, setSelectedDate, maxDate, minDate = null }) 
           placeholder="Select date"
           className={ `w-full text-sm form-input pr-10 cursor-pointer ${ open ? 'pointer-events-none': '' }` }
           onClick={ () => setOpen(!open) }
-          value={ selectedDate.toDateString() }
+          value={ selectedDate ? selectedDate.toDateString() : '' }
         />
         <div className="absolute top-0 bottom-0 right-0 px-3 pointer-events-none flex items-center">
           <svg fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24"

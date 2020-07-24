@@ -21,8 +21,9 @@ export default (state = INITIAL_STATE, action) => {
       const { schedule, date } = action.payload;
       const occurrences = state.occurrences.filter(occurrence => {
         if (occurrence.schedule !== schedule || occurrence.date !== date) {
-          return occurrence;
+          return true;
         }
+        return false;
       });
       return { ...state, occurrences };
     case SET_START_DATE:
