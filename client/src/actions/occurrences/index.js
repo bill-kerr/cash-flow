@@ -3,7 +3,6 @@ import { formatDate } from '../../util';
 
 import {
   FETCH_OCCURRENCES,
-  DELETE_OCCURRENCE,
   SET_STARTING_BALANCE,
   SET_START_DATE,
   SET_END_DATE,
@@ -30,16 +29,15 @@ export const fetchOccurrences = (startDate, endDate) => async (dispatch, getStat
     endDate = formatDate(getState().occurrenceList.endDate);
   }
 
-  const response = await cashFlow.get('/occurrences', {
+  return cashFlow.get('/occurrences', {
     headers: {
       'Authorization': `Bearer ${ getState().auth.user.token }`
     },
     params: { startDate, endDate }
+  }).then(res => {
+    dispatch({ type: FETCH_OCCURRENCES, payload: res.data.data });
+    return res.data;
+  }).catch(error => {
+    return error.response.data;
   });
-
-  dispatch({ type: FETCH_OCCURRENCES, payload: response.data.data });
-};
-
-export const deleteOccurrence = (schedule, date) => {
-  return { type: DELETE_OCCURRENCE, payload: { schedule, date } }
 };

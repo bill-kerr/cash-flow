@@ -37,33 +37,25 @@ class OccurrenceList extends React.Component {
     return (
       <div>
         <OccurrenceListFilter />
-        <table 
-          className="table-fixed min-w-full shadow rounded-b bg-gray-700" 
-          cellPadding="0" 
-          cellSpacing="0"
-        >
-          <thead className="w-full">
-            <tr className="w-full text-xs text-gray-300 uppercase tracking-wider text-left">
-              <th className="w-1/6 py-3 pl-4">Date</th>
-              <th className="w-auto py-3 pl-2">Description</th>
-              <th className="w-1/12 py-3 pl-2 text-right">Amount</th>
-              <th className="w-1/12 py-3 pl-2 text-right">Balance</th>
-              <th className="w-1/5 py-3 pl-2 pr-4 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white">
-            <tr className="text-sm font-bold">
-              <td className="py-2 pl-4 whitespace-no-wrap">{ formatDate(this.props.startDate) }</td>
-              <td className="py-2 pl-2 whitespace-no-wrap"></td>
-              <td className="py-2 pl-2 whitespace-no-wrap text-right"></td>
-              <td className="py-2 pl-2 whitespace-no-wrap text-right">
-                { formatCurrency(this.props.startingBalance, this.props.currencyCode) }
-              </td>
-              <td className="py-2 pl-2 whitespace-no-wrap text-right"></td>
-            </tr>
-            { this.renderList() }
-          </tbody>
-        </table>
+        <div className="flex text-xs bg-gray-700 text-gray-300 uppercase tracking-wider text-left">
+          <div className="w-1/6 py-3 pl-4 whitespace-no-wrap flex-shrink-0">Date</div>
+          <div className="flex-grow py-3 pl-2 whitespace-no-wrap flex-shrink-0">Description</div>
+          <div className="w-1/12 py-3 pl-2 whitespace-no-wrap text-right flex-shrink-0">Amount</div>
+          <div className="w-1/12 py-3 pl-2 whitespace-no-wrap text-right flex-shrink-0">Balance</div>
+          <div className="w-1/5 py-3 pl-2 whitespace-no-wrap pr-4 text-right flex-shrink-0">Actions</div>
+        </div>
+        <div className="flex text-sm font-bold bg-white">
+          <div className="w-1/6 py-2 pl-4 whitespace-no-wrap flex-shrink-0">
+            { formatDate(this.props.startDate) }
+          </div>
+          <div className="py-2 pl-2 flex-grow whitespace-no-wrap flex-shrink-0"></div>
+          <div className="w-1/12 py-2 pl-2 whitespace-no-wrap text-right flex-shrink-0"></div>
+          <div className="w-1/12 py-2 pl-2 whitespace-no-wrap text-right flex-shrink-0">
+            { formatCurrency(this.props.startingBalance, this.props.currencyCode) }
+          </div>
+          <div className="w-1/5 py-2 pl-2 whitespace-no-wrap text-right flex-shrink-0"></div>
+        </div>
+        { this.renderList() }
       </div>
     );
   }

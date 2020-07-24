@@ -109,7 +109,7 @@ const ScheduleItem = ({ schedule, deleteSchedule, fetchOccurrences, currencyCode
         { menuOpen && renderMenu() }
       </div>
       <div className={ `p-4 rounded-b ${ styles[currentStyle].upperDiv }` }>
-        <div className="mt-1">
+        <div className="mt-1 font-bold">
           <TransactionBadge
             amount={ schedule.amount }
             currencyCode={ currencyCode }
