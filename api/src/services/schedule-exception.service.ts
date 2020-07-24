@@ -3,9 +3,12 @@ import { ScheduleExceptionDoc, ScheduleException } from '../models';
 import { BadRequestError, NotAuthorizedError } from '../errors';
 
 class ScheduleExceptionService {
-  private async scheduleExceptionExists(scheduleId: string, date: string): Promise<boolean> {
+  private async scheduleExceptionExists(
+    scheduleId: string, 
+    date: string
+  ): Promise<ScheduleExceptionDoc | null> {
     const exception = await ScheduleException.findOne({ schedule: scheduleId, date });
-    return !!exception;
+    return exception;
   }
 
   public async getScheduleExceptionById(id: string): Promise<ScheduleExceptionDoc> {
@@ -28,8 +31,9 @@ class ScheduleExceptionService {
   }
 
   public async createScheduleException(dto: CreateScheduleExceptionDto): Promise<ScheduleExceptionDoc> {
-    if (await this.scheduleExceptionExists(dto.schedule, dto.date)) {
-      throw new BadRequestError(`A schedule-exception already exists for the occurrence on ${ dto.date }.`);
+    const oldException = await this.scheduleExceptionExists(dto.schedule, dto.date);
+    if (oldException) {
+      await oldException.remove();
     }
 
     const exception = ScheduleException.build(dto);

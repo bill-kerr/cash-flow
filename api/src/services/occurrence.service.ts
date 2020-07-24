@@ -67,7 +67,8 @@ class OccurrenceService {
       date: exception?.currentDate || date,
       amount: exception?.amount || schedule.amount,
       description: exception?.description || schedule.description,
-      schedule: schedule.id
+      schedule: schedule.id,
+      originalDate: date
     };
   }
 

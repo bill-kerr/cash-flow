@@ -4,4 +4,5 @@ export interface Occurrence {
   amount: number;
   description: string;
   schedule: string;
+  originalDate: string;
 }
