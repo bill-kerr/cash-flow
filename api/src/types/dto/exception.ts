@@ -6,10 +6,10 @@ export interface CreateExceptionDto {
   description?: string;
   id?: string;
   userId: string;
-  schedule: string;
+  scheduleId: string;
 }
 
-export interface EditExceptionDto {
+export interface UpdateExceptionDto {
   id: string;
   date?: string;
   occurrenceDeleted?: boolean;

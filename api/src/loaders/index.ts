@@ -1,11 +1,11 @@
 import { initExpressApp } from "./express";
-import { initMongoose } from "./mongoose";
+import { initTypeOrm } from "./typeorm";
 import { initFirebase } from "./firebase";
 
-async function initializeApplication() {
+async function initializeApp() {
   initFirebase();
-  await initMongoose();
+  await initTypeOrm();
   return initExpressApp();
 }
 
-export { initializeApplication };
+export { initializeApp };

@@ -2,7 +2,7 @@ import request from "supertest";
 import mongoose from "mongoose";
 import { initExpressApp } from "../../src/loaders/express";
 import { Frequency } from "../../src/types";
-import { ScheduleDoc } from "../../src/models";
+import { ScheduleDoc } from "../../src/entities";
 import { scheduleService } from "../../src/services";
 
 const app = initExpressApp();

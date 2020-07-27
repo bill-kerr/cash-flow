@@ -10,7 +10,7 @@ export const createExceptionByScheduleValidator = [
 
 export const createExceptionValidator = [...createExceptionByScheduleValidator, stringField("schedule")];
 
-export const editExceptionValidator = [
+export const updateExceptionValidator = [
   dateField("date").optional(),
   dateField("currentDate").optional(),
   booleanField("occurrenceDeleted").optional(),

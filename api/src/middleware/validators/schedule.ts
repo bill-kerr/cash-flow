@@ -23,7 +23,7 @@ export const createScheduleValidator = [
   monthField("month"),
 ];
 
-export const editScheduleValidator = [
+export const updateScheduleValidator = [
   floatField("amount").optional(),
   stringField("description").optional(),
   dateField("startDate").optional(),

@@ -1,11 +1,11 @@
 import express, { Request, Response } from "express";
 import { requireAuth, requireOwnership, handleValidationResult } from "../middleware";
 import { exceptionService } from "../services";
-import { Schedule, Exception } from "../models";
-import { EditExceptionDto, CreateExceptionDto, HttpResponse } from "../types";
+import { Schedule, Exception } from "../entities";
+import { UpdateExceptionDto, CreateExceptionDto, HttpResponse } from "../types";
 import {
   createExceptionValidator,
-  editExceptionValidator,
+  updateExceptionValidator,
   optionalQueryDateRangeValidator,
 } from "../middleware/validators";
 
@@ -52,11 +52,11 @@ router.put(
   "/:id",
   requireAuth,
   requireOwnership(Exception, "params", "id"),
-  editExceptionValidator,
+  updateExceptionValidator,
   handleValidationResult,
   async (req: Request, res: Response) => {
-    const data: EditExceptionDto = { ...req.body, id: req.params.id };
-    const exception = await exceptionService.editException(data);
+    const data: UpdateExceptionDto = { ...req.body, id: req.params.id };
+    const exception = await exceptionService.updateException(data);
     res.status(HttpResponse.OK).send(exception);
   }
 );

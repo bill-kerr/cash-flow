@@ -26,3 +26,7 @@ export function buildDateFilter(startDate?: string, endDate?: string): { date: {
 
   return { date: filter };
 }
+
+export function getUnixTime() {
+  return Math.round(moment().unix() / 1000);
+}
