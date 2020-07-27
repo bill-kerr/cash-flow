@@ -1,97 +1,98 @@
-import request from 'supertest';
-import mongoose from 'mongoose';
-import { initExpressApp } from '../../src/loaders/express';
-import { scheduleService } from '../../src/services';
-import { Frequency, DayOfWeek } from '../../src/types';
+import request from "supertest";
+import mongoose from "mongoose";
+import { initExpressApp } from "../../src/loaders/express";
+import { scheduleService } from "../../src/services";
+import { Frequency, DayOfWeek } from "../../src/types";
 
 const app = initExpressApp();
 const headers = {
-  'Authorization': 'Bearer sldjflk',
-  'Content-Type': 'application/json'
+  Authorization: "Bearer sldjflk",
+  "Content-Type": "application/json",
 };
 
 const makeRequest = async (scheduleId: string, body: {}) => {
-  return request(app)
-    .put(`/api/v1/schedules/${ scheduleId }`)
-    .set(headers)
-    .send(body);
+  return request(app).put(`/api/v1/schedules/${scheduleId}`).set(headers).send(body);
 };
 
 const testSchedule = {
   amount: 500,
-  description: 'test',
+  description: "test",
   frequency: Frequency.WEEKLY,
   dayOfWeek: DayOfWeek.MONDAY,
-  startDate: '2020-05-01',
-  endDate: '2020-11-01'
+  startDate: "2020-05-01",
+  endDate: "2020-11-01",
 };
 
-const createSchedule = async (schedule = { 
-  ...testSchedule, 
-  id: mongoose.Types.ObjectId().toHexString(),
-  userId: 'fake-id'
-}) => scheduleService.createSchedule(schedule);
+const createSchedule = async (
+  schedule = {
+    ...testSchedule,
+    id: mongoose.Types.ObjectId().toHexString(),
+    userId: "fake-id",
+  }
+) => scheduleService.createSchedule(schedule);
 
-it('returns a 200 on successful request', async () => {
+it("returns a 200 on successful request", async () => {
   const schedule = await createSchedule();
-  const res = await makeRequest(schedule.id, { startDate: '2020-05-02' });
+  const res = await makeRequest(schedule.id, { startDate: "2020-05-02" });
   expect(res.status).toBe(200);
 });
 
-it('returns the edited schedule on successful request', async () => {
-  const schedule = await createSchedule();
-  const res = await makeRequest(schedule.id, { 
-    startDate: '2020-05-02',
-    endDate: '2020-12-01',
-    description: 'edited',
-    amount: 333
-  });
-  expect(res.body.startDate).toBe('2020-05-02');
-  expect(res.body.description).toBe('edited');
-  expect(res.body.amount).toBe(333);
-  expect(res.body.endDate).toBe('2020-12-01');
-});
-
-it('nulls correct properties on frequency change', async () => {
+it("returns the edited schedule on successful request", async () => {
   const schedule = await createSchedule();
   const res = await makeRequest(schedule.id, {
-    frequency: 'MONTHLY',
-    dayOfMonth: 15
+    startDate: "2020-05-02",
+    endDate: "2020-12-01",
+    description: "edited",
+    amount: 333,
+  });
+  expect(res.body.startDate).toBe("2020-05-02");
+  expect(res.body.description).toBe("edited");
+  expect(res.body.amount).toBe(333);
+  expect(res.body.endDate).toBe("2020-12-01");
+});
+
+it("nulls correct properties on frequency change", async () => {
+  const schedule = await createSchedule();
+  const res = await makeRequest(schedule.id, {
+    frequency: "MONTHLY",
+    dayOfMonth: 15,
   });
   expect(res.body.dayOfWeek).toBe(null);
 });
 
-it('recalculates the recurrence rule on recurrence field edits', async () => {
+it("recalculates the recurrence rule on recurrence field edits", async () => {
   const schedule = await createSchedule();
   let res = await makeRequest(schedule.id, {
-    frequency: 'MONTHLY',
-    dayOfMonth: 15
+    frequency: "MONTHLY",
+    dayOfMonth: 15,
   });
-  expect(res.body.recurrenceRule)
-    .toBe('DTSTART:20200501T000000Z\nRRULE:FREQ=MONTHLY;INTERVAL=1;UNTIL=20201101T000000Z;BYMONTHDAY=15');
+  expect(res.body.recurrenceRule).toBe(
+    "DTSTART:20200501T000000Z\nRRULE:FREQ=MONTHLY;INTERVAL=1;UNTIL=20201101T000000Z;BYMONTHDAY=15"
+  );
 
   res = await makeRequest(schedule.id, {
-    endDate: '2020-07-01'
+    endDate: "2020-07-01",
   });
-  expect(res.body.recurrenceRule)
-    .toBe('DTSTART:20200501T000000Z\nRRULE:FREQ=MONTHLY;INTERVAL=1;UNTIL=20200701T000000Z;BYMONTHDAY=15');
+  expect(res.body.recurrenceRule).toBe(
+    "DTSTART:20200501T000000Z\nRRULE:FREQ=MONTHLY;INTERVAL=1;UNTIL=20200701T000000Z;BYMONTHDAY=15"
+  );
 });
 
-it('rejects edits that move the startDate or endDate to an invalid order', async () => {
+it("rejects edits that move the startDate or endDate to an invalid order", async () => {
   const schedule = await createSchedule();
-  let res = await makeRequest(schedule.id, { startDate: '2020-12-01' });
+  let res = await makeRequest(schedule.id, { startDate: "2020-12-01" });
   expect(res.status).toBe(400);
 
-  res = await makeRequest(schedule.id, { startDate: '2020-06-01', endDate: '2020-05-25' });
+  res = await makeRequest(schedule.id, { startDate: "2020-06-01", endDate: "2020-05-25" });
   expect(res.status).toBe(400);
 
-  res = await makeRequest(schedule.id, { endDate: '2020-04-25' });
+  res = await makeRequest(schedule.id, { endDate: "2020-04-25" });
   expect(res.status).toBe(400);
 });
 
-it('allows endDates to be removed by passing null', async () => {
+it("allows endDates to be removed by passing null", async () => {
   const schedule = await createSchedule();
-  schedule.set('endDate', '2020-12-31');
+  schedule.set("endDate", "2020-12-31");
   await schedule.save();
 
   const res = await makeRequest(schedule.id, { endDate: null });
@@ -99,10 +100,10 @@ it('allows endDates to be removed by passing null', async () => {
   expect(res.body.endDate).toBe(null);
 });
 
-it('rejects edits that result in a schedule with no occurrences', async () => {
+it("rejects edits that result in a schedule with no occurrences", async () => {
   const schedule = await createSchedule();
 
-  const res = await makeRequest(schedule.id, { endDate: '2020-05-03' });
+  const res = await makeRequest(schedule.id, { endDate: "2020-05-03" });
   expect(res.status).toBe(400);
-  expect(res.body.errors[0].detail).toBe('The edited schedule has no occurrences.');
+  expect(res.body.errors[0].detail).toBe("The edited schedule has no occurrences.");
 });

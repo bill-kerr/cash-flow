@@ -1,17 +1,19 @@
-import { Request, Response, NextFunction } from 'express';
-import { authService } from '../services';
-import { NotAuthorizedError } from '../errors';
+import { Request, Response, NextFunction } from "express";
+import { authService } from "../services";
+import { NotAuthorizedError } from "../errors";
 
-async function requireAuth(req: Request, res: Response, next: NextFunction) {
+async function requireAuth(req: Request, _res: Response, next: NextFunction) {
   if (!req.headers.authorization) {
     throw new NotAuthorizedError();
   }
 
-  const authHeader = req.headers.authorization.split(' ');
+  const authHeader = req.headers.authorization.split(" ");
   const bearer = authHeader[0];
 
-  if (bearer !== 'Bearer') {
-    throw new NotAuthorizedError('The Authorization header must be formatted as \'Bearer <token>\' where <token> is a valid auth key.')
+  if (bearer !== "Bearer") {
+    throw new NotAuthorizedError(
+      "The Authorization header must be formatted as 'Bearer <token>' where <token> is a valid auth key."
+    );
   }
 
   const authToken = authHeader[1];

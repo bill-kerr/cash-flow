@@ -1,12 +1,12 @@
-import { BaseError, SerializedError } from './base-error';
-import { HttpResponse } from '../types';
+import { BaseError, SerializedError } from "./base-error";
+import { HttpResponse } from "../types";
 
 class BadRequestError extends BaseError {
   statusCode = HttpResponse.BAD_REQUEST;
   error: SerializedError = {
-    object: 'error-detail',
-    title: 'Bad request',
-    detail: ''
+    object: "error-detail",
+    title: "Bad request",
+    detail: "",
   };
 
   constructor(message: string) {
@@ -16,7 +16,7 @@ class BadRequestError extends BaseError {
   }
 
   serializeErrors() {
-    return [ this.error ];
+    return [this.error];
   }
 }
 

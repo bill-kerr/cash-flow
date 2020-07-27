@@ -1,9 +1,9 @@
-import { HttpResponse } from '../types';
+import { HttpResponse } from "../types";
 
 export interface SerializedError {
-  object: 'error-detail',
-  title: string,
-  detail: string
+  object: "error-detail";
+  title: string;
+  detail: string;
 }
 
 export abstract class BaseError extends Error {
@@ -14,5 +14,5 @@ export abstract class BaseError extends Error {
     Object.setPrototypeOf(this, BaseError.prototype);
   }
 
-  abstract serializeErrors(): SerializedError[]
+  abstract serializeErrors(): SerializedError[];
 }

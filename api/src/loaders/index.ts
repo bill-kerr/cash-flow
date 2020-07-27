@@ -1,6 +1,6 @@
-import { initExpressApp } from './express';
-import { initMongoose } from './mongoose';
-import { initFirebase } from './firebase';
+import { initExpressApp } from "./express";
+import { initMongoose } from "./mongoose";
+import { initFirebase } from "./firebase";
 
 async function initializeApplication() {
   initFirebase();

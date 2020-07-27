@@ -1,22 +1,22 @@
-import { BaseError, SerializedError } from './base-error';
-import { HttpResponse } from '../types';
+import { BaseError, SerializedError } from "./base-error";
+import { HttpResponse } from "../types";
 
 class NotAuthorizedError extends BaseError {
   statusCode = HttpResponse.UNAUTHORIZED;
   error: SerializedError = {
-    object: 'error-detail',
-    title: 'Not authorized',
-    detail: ''
+    object: "error-detail",
+    title: "Not authorized",
+    detail: "",
   };
 
-  constructor(message = 'User is not authorized to access this resource.') {
+  constructor(message = "User is not authorized to access this resource.") {
     super(message);
     this.error.detail = message;
     Object.setPrototypeOf(this, NotAuthorizedError.prototype);
   }
 
   serializeErrors() {
-    return [ this.error ];
+    return [this.error];
   }
 }
 

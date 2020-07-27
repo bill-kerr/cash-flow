@@ -1,4 +1,4 @@
-import { Frequency, DayOfWeek, Month } from '..';
+import { Frequency, DayOfWeek, Month } from "..";
 
 export interface CreateRecurrenceDto {
   frequency: Frequency;

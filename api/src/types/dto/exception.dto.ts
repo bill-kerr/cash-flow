@@ -1,4 +1,4 @@
-export interface CreateScheduleExceptionDto {
+export interface CreateExceptionDto {
   date: string;
   occurrenceDeleted?: boolean;
   currentDate?: string;
@@ -9,7 +9,7 @@ export interface CreateScheduleExceptionDto {
   schedule: string;
 }
 
-export interface EditScheduleExceptionDto {
+export interface EditExceptionDto {
   id: string;
   date?: string;
   occurrenceDeleted?: boolean;

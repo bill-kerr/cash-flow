@@ -1,12 +1,8 @@
-import { Request, Response, NextFunction } from 'express';
-import { validationResult, matchedData, ValidationError } from 'express-validator';
-import { RequestValidationError } from '../errors';
+import { Request, Response, NextFunction } from "express";
+import { validationResult, matchedData, ValidationError } from "express-validator";
+import { RequestValidationError } from "../errors";
 
-export const handleValidationResult = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const handleValidationResult = (req: Request, _res: Response, next: NextFunction) => {
   const errors = getValidationResult(req);
 
   if (errors.length > 0) {
@@ -14,7 +10,7 @@ export const handleValidationResult = (
   }
 
   next();
-}
+};
 
 function getValidationResult(req: Request): ValidationError[] {
   const validationErrors = validationResult(req).array();
@@ -25,19 +21,19 @@ function getValidationResult(req: Request): ValidationError[] {
 
 function generateUnknownFieldErrors(req: Request): ValidationError[] {
   const unknownFields = getUnknownFields(req);
-  return unknownFields.map(field => {
+  return unknownFields.map((field) => {
     return {
-      location: 'body',
+      location: "body",
       param: field[0],
       value: field[1],
-      msg: `Unknown property '${ field[0] }' with value '${ field[1] }'.`
-    }
+      msg: `Unknown property '${field[0]}' with value '${field[1]}'.`,
+    };
   });
 }
 
 function getUnknownFields(req: Request): [string, any][] {
   const validKeys = Object.keys(matchedData(req, { onlyValidData: false }));
   const requestFields = [...Object.entries(req.body), ...Object.entries(req.query)];
-  const unknownFields = requestFields.filter(field => !validKeys.includes(field[0]));
+  const unknownFields = requestFields.filter((field) => !validKeys.includes(field[0]));
   return unknownFields;
 }

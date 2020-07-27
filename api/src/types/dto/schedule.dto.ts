@@ -1,4 +1,4 @@
-import { Frequency, DayOfWeek, Month } from '..';
+import { Frequency, DayOfWeek, Month } from "..";
 
 export interface CreateScheduleDto {
   id?: string;

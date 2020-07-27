@@ -1,5 +1,5 @@
 export interface Occurrence {
-  object: 'occurrence';
+  object: "occurrence";
   date: string;
   amount: number;
   description: string;
