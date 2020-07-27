@@ -1,9 +1,9 @@
-import { Request, Response, NextFunction } from 'express';
-import { NotAuthorizedError } from '../errors';
+import { Request, Response, NextFunction } from "express";
+import { NotAuthorizedError } from "../errors";
 
 const requireOwnership = (
-  model: any, 
-  location: 'params' | 'body' | 'query', 
+  model: any,
+  location: "params" | "body" | "query",
   paramKey: string,
   modelKeyName = paramKey
 ) => {
@@ -16,7 +16,7 @@ const requireOwnership = (
     }
 
     next();
-  }
+  };
 };
 
 export { requireOwnership };

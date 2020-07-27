@@ -1,7 +1,7 @@
-import mongoose from 'mongoose';
-import { CreateScheduleExceptionDto } from '../types';
+import mongoose from "mongoose";
+import { CreateExceptionDto } from "../types";
 
-interface ScheduleExceptionDoc extends mongoose.Document {
+interface ExceptionDoc extends mongoose.Document {
   id: string;
   date: string;
   occurrenceDeleted: boolean;
@@ -12,60 +12,62 @@ interface ScheduleExceptionDoc extends mongoose.Document {
   userId: string;
 }
 
-interface ScheduleExceptionModel extends mongoose.Model<ScheduleExceptionDoc> {
-  build(dto: CreateScheduleExceptionDto): ScheduleExceptionDoc;
+interface ExceptionModel extends mongoose.Model<ExceptionDoc> {
+  build(dto: CreateExceptionDto): ExceptionDoc;
 }
 
-const scheduleExceptionSchema = new mongoose.Schema({
-  id: {
-    type: String,
-    unique: true,
-    required: true
+const exceptionSchema = new mongoose.Schema(
+  {
+    id: {
+      type: String,
+      unique: true,
+      required: true,
+    },
+    date: {
+      type: String,
+      required: true,
+    },
+    occurrenceDeleted: {
+      type: Boolean,
+      default: false,
+    },
+    currentDate: {
+      type: String,
+      default: null,
+    },
+    amount: {
+      type: Number,
+      default: null,
+    },
+    description: {
+      type: String,
+      default: null,
+    },
+    schedule: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Schedule",
+    },
+    userId: {
+      type: String,
+      required: true,
+    },
   },
-  date: {
-    type: String,
-    required: true
-  },
-  occurrenceDeleted: {
-    type: Boolean,
-    default: false
-  },
-  currentDate: {
-    type: String,
-    default: null
-  },
-  amount: {
-    type: Number,
-    default: null
-  },
-  description: {
-    type: String,
-    default: null
-  },
-  schedule: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Schedule'
-  },
-  userId: {
-    type: String,
-    required: true
+  {
+    toJSON: {
+      transform(doc: any, ret: any) {
+        delete ret._id;
+        delete ret.__v;
+        return { object: "exception", id: ret.id, ...ret };
+      },
+    },
   }
-}, {
-  toJSON: {
-    transform(doc: any, ret: any) {
-      delete ret._id;
-      delete ret.__v;
-      return { object: 'schedule-exception', id: ret.id, ...ret };
-    }
-  }
-});
+);
 
-scheduleExceptionSchema.statics.build = (dto: CreateScheduleExceptionDto) => {
+exceptionSchema.statics.build = (dto: CreateExceptionDto) => {
   dto.id = mongoose.Types.ObjectId().toHexString();
-  return new ScheduleException(dto);
+  return new Exception(dto);
 };
 
-const ScheduleException = mongoose.model<ScheduleExceptionDoc, ScheduleExceptionModel>
-  ('ScheduleException', scheduleExceptionSchema);
+const Exception = mongoose.model<ExceptionDoc, ExceptionModel>("Exception", exceptionSchema);
 
-export { ScheduleException, ScheduleExceptionDoc };
+export { Exception, ExceptionDoc };

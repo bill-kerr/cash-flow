@@ -1,7 +1,7 @@
-import moment from 'moment';
+import moment from "moment";
 
 export function getUTCDateFromString(dateString: string): Date {
-  const dateValues = dateString.split('-');
+  const dateValues = dateString.split("-");
   const year = parseInt(dateValues[0]);
   const month = parseInt(dateValues[1]);
   const day = parseInt(dateValues[2]);
@@ -10,14 +10,11 @@ export function getUTCDateFromString(dateString: string): Date {
 
 export function parseUTCDateList(dates: Date[]): string[] {
   return dates.map((date: Date) => {
-    return moment(date).utc().format('YYYY-MM-DD');
+    return moment(date).utc().format("YYYY-MM-DD");
   });
 }
 
-export function buildDateFilter(
-  startDate?: string, 
-  endDate?: string
-): { date: { $gte?: string, $lte?: string } } {
+export function buildDateFilter(startDate?: string, endDate?: string): { date: { $gte?: string; $lte?: string } } {
   const filter: any = {};
 
   if (startDate) {

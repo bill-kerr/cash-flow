@@ -1,11 +1,9 @@
-import * as admin from 'firebase-admin';
+import * as admin from "firebase-admin";
 
 class AuthService {
-
   getUserFromToken(token: string) {
     return admin.auth().verifyIdToken(token);
   }
-
 }
 
 const authService = new AuthService();

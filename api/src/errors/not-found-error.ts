@@ -1,12 +1,12 @@
-import { BaseError, SerializedError } from './base-error';
-import { HttpResponse } from '../types';
+import { BaseError, SerializedError } from "./base-error";
+import { HttpResponse } from "../types";
 
 class NotFoundError extends BaseError {
   statusCode = HttpResponse.NOT_FOUND;
   error: SerializedError = {
-    object: 'error-detail',
-    title: 'Not found',
-    detail: ''
+    object: "error-detail",
+    title: "Not found",
+    detail: "",
   };
 
   constructor(message: string) {
@@ -16,7 +16,7 @@ class NotFoundError extends BaseError {
   }
 
   serializeErrors() {
-    return [ this.error ];
+    return [this.error];
   }
 }
 
