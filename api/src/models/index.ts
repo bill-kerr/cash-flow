@@ -1,3 +1,3 @@
-export { Occurrence } from "./occurrence.model";
-export { Exception, ExceptionDoc } from "./exception.model";
-export { ScheduleDoc, Schedule } from "./schedule.model";
+export { Occurrence } from "./occurrence";
+export { Exception, ExceptionDoc } from "./exception";
+export { ScheduleDoc, Schedule } from "./schedule";

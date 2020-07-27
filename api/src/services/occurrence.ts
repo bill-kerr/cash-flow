@@ -1,7 +1,7 @@
 import { RRule, rrulestr } from "rrule";
 import { getUTCDateFromString, parseUTCDateList } from "../util";
 import { Frequency, DayOfWeek, Month, CreateRecurrenceDto, CreateScheduleDto } from "../types";
-import { scheduleService, exceptionService } from "./";
+import { scheduleService, exceptionService } from ".";
 import { Occurrence, ScheduleDoc, ExceptionDoc } from "../models";
 
 class OccurrenceService {

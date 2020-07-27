@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { Frequency, DayOfWeek, Month, CreateScheduleDto } from "../types";
-import { Occurrence } from "./occurrence.model";
+import { Occurrence } from "./occurrence";
 
 interface ScheduleDoc extends mongoose.Document {
   id: string;

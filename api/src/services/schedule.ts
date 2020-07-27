@@ -2,7 +2,7 @@ import { omit } from "lodash";
 import { Frequency, CreateScheduleDto, EditScheduleDto } from "../types";
 import { Schedule, ScheduleDoc } from "../models";
 import { BadRequestError, NotAuthorizedError } from "../errors";
-import { occurrenceService } from "../services";
+import { occurrenceService } from ".";
 
 class ScheduleService {
   private removeUnnecessaryFields(dto: CreateScheduleDto): CreateScheduleDto {

@@ -6,6 +6,7 @@ jest.mock("firebase-admin");
 
 let mongo: MongoMemoryServer;
 beforeAll(async () => {
+  console.clear();
   mongo = new MongoMemoryServer();
   const mongoUri = await mongo.getUri();
 
