@@ -14,7 +14,7 @@ const defaultError: ErrorResponse = {
   ],
 };
 
-function errorHandler(err: Error, req: Request, res: Response, next: NextFunction) {
+function errorHandler(err: Error, _req: Request, res: Response, _next: NextFunction) {
   if (err instanceof BaseError) {
     const errorResponse: ErrorResponse = {
       object: "list",
@@ -42,7 +42,7 @@ function errorHandler(err: Error, req: Request, res: Response, next: NextFunctio
   }
 
   console.error(err);
-  res.status(HttpResponse.INTERNAL_SERVER_ERROR).send(defaultError);
+  return res.status(HttpResponse.INTERNAL_SERVER_ERROR).send(defaultError);
 }
 
 export { errorHandler };

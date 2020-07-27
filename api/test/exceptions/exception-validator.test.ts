@@ -2,7 +2,7 @@ import { scheduleService } from "../../src/services";
 import { Frequency } from "../../src/types";
 import { initApp, buildMakeRequest, badTypeMessage, emptyMessage } from "../setup";
 
-const app = initApp();
+initApp();
 const { makeRequest } = buildMakeRequest("/api/v1/exceptions");
 
 const getTestData = async (
@@ -25,11 +25,11 @@ const getTestData = async (
 };
 
 it("allows requests with valid data", async () => {
-  const { dto, schedule } = await getTestData();
+  const { dto } = await getTestData();
   let res = await makeRequest(dto);
   expect(res.status).toBe(201);
 
-  const { dto: dto2, schedule: schedule2 } = await getTestData({
+  const { dto: dto2 } = await getTestData({
     date: "2020-07-10",
     amount: 333,
     description: "edited",

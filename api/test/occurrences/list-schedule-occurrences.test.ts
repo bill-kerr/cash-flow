@@ -32,13 +32,15 @@ const createSchedule = async (): Promise<ScheduleDoc> => {
 
 it("returns a properly formatted list of occurrences on successful request", async () => {
   const schedule = await createSchedule();
-  const res = await makeRequest(schedule.id, "2020-05-01", "2021-05-01");
+  const startDate = "2020-05-01";
+  const res = await makeRequest(schedule.id, startDate, "2021-05-01");
   expect(res.status).toBe(200);
   expect(res.body.object).toBe("list");
   expect(res.body.data.length).toBe(366);
   expect(res.body.data[0]).toStrictEqual({
     object: "occurrence",
     date: schedule.startDate,
+    originalDate: startDate,
     amount: schedule.amount,
     description: schedule.description,
     schedule: schedule.id,

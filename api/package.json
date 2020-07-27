@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev --poll src/app.ts",
+    "dev": "nodemon --exec ts-node --files src/app.ts",
     "test": "jest --runInBand --watchAll --no-cache"
   },
   "jest": {
@@ -41,9 +41,10 @@
     "axios": "^0.19.2",
     "jest": "^26.0.1",
     "mongodb-memory-server": "^6.6.0",
+    "nodemon": "^2.0.4",
     "supertest": "^4.0.2",
     "ts-jest": "^26.0.0",
-    "ts-node-dev": "^1.0.0-pre.44",
+    "ts-node": "^8.10.2",
     "typescript": "^3.9.2"
   }
 }

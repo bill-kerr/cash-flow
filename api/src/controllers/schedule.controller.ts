@@ -44,7 +44,7 @@ router.get(
   async (req: Request, res: Response) => {
     const { id } = req.params;
     const { startDate, endDate } = req.query;
-    const occurrences = await scheduleService.getScheduleOccurrences(id, startDate.toString(), endDate.toString());
+    const occurrences = await scheduleService.getScheduleOccurrences(id, startDate!.toString(), endDate!.toString());
 
     const resData = {
       object: "list",

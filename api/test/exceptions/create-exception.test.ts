@@ -2,7 +2,7 @@ import { initApp, buildMakeRequest } from "../setup";
 import { scheduleService } from "../../src/services";
 import { Frequency } from "../../src/types";
 
-const app = initApp();
+initApp();
 const { makeRequest } = buildMakeRequest("/api/v1/exceptions");
 
 const getTestData = async (
@@ -62,15 +62,25 @@ it("creates a correct exception with valid data", async () => {
   });
 });
 
-it("rejects a second exception on a single date", async () => {
+it("overwrites an exception on a given date", async () => {
   const { dto, schedule } = await getTestData();
   let res = await makeRequest(dto);
 
   const dto2 = { schedule: schedule.id, date: "2020-07-09" };
   res = await makeRequest(dto2);
 
-  expect(res.status).toBe(400);
-  expect(res.body.errors[0].detail).toBe("An exception already exists for the occurrence on 2020-07-09.");
+  expect(res.status).toBe(201);
+  expect(res.body).toStrictEqual({
+    object: "exception",
+    id: expect.any(String),
+    amount: null,
+    currentDate: null,
+    occurrenceDeleted: false,
+    description: null,
+    date: dto2.date,
+    userId: "fake-id",
+    schedule: schedule.id,
+  });
 });
 
 it("disallows requests with an unowned schedule", async () => {

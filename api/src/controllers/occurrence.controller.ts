@@ -8,10 +8,11 @@ const router = express.Router();
 
 router.get("/", requireAuth, queryDateRangeValidator, handleValidationResult, async (req: Request, res: Response) => {
   const { startDate, endDate } = req.query;
+
   const occurrences = await occurrenceService.getOccurrencesByUser(
     req.currentUserId,
-    startDate.toString(),
-    endDate.toString()
+    startDate!.toString(),
+    endDate!.toString()
   );
 
   const resData = {

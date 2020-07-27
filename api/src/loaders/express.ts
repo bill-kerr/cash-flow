@@ -1,4 +1,4 @@
-import express, { Application, Request, Response } from "express";
+import express, { Application } from "express";
 import { json } from "body-parser";
 import "express-async-errors";
 import cors from "cors";
@@ -20,7 +20,7 @@ function init(): Application {
   app.use("/api/v1/exceptions", exceptionRouter);
   app.use("/api/v1/occurrences", occurrenceRouter);
 
-  app.all("*", (req: Request, res: Response) => {
+  app.all("*", () => {
     throw new NotFoundError("The specified endpoint does not exist.");
   });
 

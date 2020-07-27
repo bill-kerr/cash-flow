@@ -42,7 +42,7 @@ it("returns a properly formatted object on successful request", async () => {
 });
 
 it("rejects a request with improperly formatted data", async () => {
-  const res = await request(app)
+  await request(app)
     .post(url)
     .set(headers)
     .send({

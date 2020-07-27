@@ -1,6 +1,5 @@
 import request from "supertest";
 import { initExpressApp } from "../../src/loaders/express";
-import { Schedule } from "../../src/models";
 import { scheduleService } from "../../src/services";
 import { Frequency } from "../../src/types";
 
@@ -23,8 +22,8 @@ const makeRequest = async () => {
 };
 
 it("retrieves a list of schedules", async () => {
-  await Schedule.create({ ...fakeData, userId: "fake-id", id: "schedule1" });
-  await Schedule.create({ ...fakeData, userId: "fake-id", id: "schedule2" });
+  await scheduleService.createSchedule({ ...fakeData, userId: "fake-id", id: "schedule1" });
+  await scheduleService.createSchedule({ ...fakeData, userId: "fake-id", id: "schedule2" });
 
   const res = await makeRequest();
   expect(res.status).toBe(200);

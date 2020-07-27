@@ -89,7 +89,7 @@ const scheduleSchema = new mongoose.Schema(
   },
   {
     toJSON: {
-      transform(doc: any, ret: any) {
+      transform(_doc: any, ret: any) {
         delete ret._id;
         delete ret.__v;
         return { object: "schedule", id: ret.id, ...ret };
@@ -101,16 +101,6 @@ const scheduleSchema = new mongoose.Schema(
 scheduleSchema.statics.build = (dto: CreateScheduleDto) => {
   dto.id = mongoose.Types.ObjectId().toHexString();
   return new Schedule(dto);
-};
-
-scheduleSchema.methods.createOccurrence = function (date: string): Occurrence {
-  return {
-    object: "occurrence",
-    date,
-    amount: this.amount,
-    description: this.description,
-    schedule: this.id,
-  };
 };
 
 const Schedule = mongoose.model<ScheduleDoc, ScheduleModel>("Schedule", scheduleSchema);

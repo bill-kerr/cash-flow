@@ -7,7 +7,7 @@ const requireOwnership = (
   paramKey: string,
   modelKeyName = paramKey
 ) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (req: Request, _res: Response, next: NextFunction) => {
     const paramValue = req[location][paramKey];
     const resource = await model.findOne({ userId: req.currentUserId, [modelKeyName]: paramValue });
 
