@@ -1,6 +1,7 @@
 import moment from "moment";
 import { body } from "express-validator";
 import { DayOfWeek, Frequency, Month } from "../../types";
+import { round } from "../../util";
 
 export const isValidDate = (dateString: string): boolean => {
   if (dateString < "1000-01-01") return false;
@@ -40,7 +41,7 @@ export const floatField = (fieldName: string) =>
     .escape()
     .isFloat()
     .withMessage(`The ${fieldName} field must contain a number.`)
-    .customSanitizer((val) => (Math.round(parseFloat(val) * 100) / 100).toFixed(2));
+    .customSanitizer((val) => round(val));
 
 export const booleanField = (fieldName: string) =>
   body(fieldName)

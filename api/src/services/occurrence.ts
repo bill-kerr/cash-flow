@@ -2,7 +2,7 @@ import { RRule, rrulestr } from "rrule";
 import { getUTCDateFromString, parseUTCDateList } from "../util";
 import { Frequency, DayOfWeek, Month, CreateRecurrenceDto, CreateScheduleDto } from "../types";
 import { scheduleService, exceptionService } from ".";
-import { Occurrence, ScheduleDoc, ExceptionDoc } from "../models";
+import { Occurrence, Schedule, Exception } from "../entities";
 
 class OccurrenceService {
   private readonly FREQUENCIES = {
@@ -38,7 +38,7 @@ class OccurrenceService {
     [Month.DECEMBER]: 12,
   };
 
-  private getMonthDayRule(monthDay?: number): { bymonthday?: number[]; bysetpos?: number } {
+  private getMonthDayRule(monthDay?: number | null): { bymonthday?: number[]; bysetpos?: number } {
     if (monthDay === undefined || monthDay === null) {
       return {};
     }
@@ -56,7 +56,7 @@ class OccurrenceService {
     return occurrences.length > 0;
   }
 
-  private createOccurrence(schedule: ScheduleDoc, date: string, exception?: ExceptionDoc): Occurrence {
+  private createOccurrence(schedule: Schedule, date: string, exception?: Exception): Occurrence {
     return {
       object: "occurrence",
       date: exception?.currentDate || date,
@@ -67,7 +67,7 @@ class OccurrenceService {
     };
   }
 
-  private showOccurrence(exception: ExceptionDoc | null | undefined, startDate: string, endDate: string): boolean {
+  private showOccurrence(exception: Exception | null | undefined, startDate: string, endDate: string): boolean {
     if (!exception || exception.occurrenceDeleted) {
       return false;
     }
@@ -111,13 +111,9 @@ class OccurrenceService {
     return occurrences;
   }
 
-  public async getOccurrencesBySchedule(
-    schedule: ScheduleDoc,
-    startDate: string,
-    endDate: string
-  ): Promise<Occurrence[]> {
+  public async getOccurrencesBySchedule(schedule: Schedule, startDate: string, endDate: string): Promise<Occurrence[]> {
     const occurrenceDates = this.getOccurrenceDates(schedule.recurrenceRule, startDate, endDate);
-    const exceptions = await exceptionService.getExceptionsBySchedule(schedule.id);
+    const exceptions = await exceptionService.getExceptionsByScheduleId(schedule.id);
     exceptions.map((exception) => {
       if (!occurrenceDates.includes(exception.date)) {
         occurrenceDates.push(exception.date);
@@ -138,7 +134,7 @@ class OccurrenceService {
   }
 
   public scheduleHasOccurrencesBetween(
-    schedule: ScheduleDoc | CreateScheduleDto,
+    schedule: Schedule | CreateScheduleDto,
     startDate: string,
     endDate: string | null
   ): boolean {

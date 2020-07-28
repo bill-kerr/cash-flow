@@ -1,5 +1,4 @@
 import request from "supertest";
-import mongoose from "mongoose";
 import { initExpressApp } from "../../src/loaders/express";
 import { scheduleService } from "../../src/services";
 import { Frequency, DayOfWeek } from "../../src/types";
@@ -26,7 +25,6 @@ const testSchedule = {
 const createSchedule = async (
   schedule = {
     ...testSchedule,
-    id: mongoose.Types.ObjectId().toHexString(),
     userId: "fake-id",
   }
 ) => scheduleService.createSchedule(schedule);
@@ -37,16 +35,16 @@ it("returns a 200 on successful request", async () => {
   expect(res.status).toBe(200);
 });
 
-it("returns the edited schedule on successful request", async () => {
+it("returns the updated schedule on successful request", async () => {
   const schedule = await createSchedule();
   const res = await makeRequest(schedule.id, {
     startDate: "2020-05-02",
     endDate: "2020-12-01",
-    description: "edited",
+    description: "updated",
     amount: 333,
   });
   expect(res.body.startDate).toBe("2020-05-02");
-  expect(res.body.description).toBe("edited");
+  expect(res.body.description).toBe("updated");
   expect(res.body.amount).toBe(333);
   expect(res.body.endDate).toBe("2020-12-01");
 });
@@ -60,7 +58,7 @@ it("nulls correct properties on frequency change", async () => {
   expect(res.body.dayOfWeek).toBe(null);
 });
 
-it("recalculates the recurrence rule on recurrence field edits", async () => {
+it("recalculates the recurrence rule on recurrence field updates", async () => {
   const schedule = await createSchedule();
   let res = await makeRequest(schedule.id, {
     frequency: "MONTHLY",
@@ -78,7 +76,7 @@ it("recalculates the recurrence rule on recurrence field edits", async () => {
   );
 });
 
-it("rejects edits that move the startDate or endDate to an invalid order", async () => {
+it("rejects updates that move the startDate or endDate to an invalid order", async () => {
   const schedule = await createSchedule();
   let res = await makeRequest(schedule.id, { startDate: "2020-12-01" });
   expect(res.status).toBe(400);
@@ -92,7 +90,7 @@ it("rejects edits that move the startDate or endDate to an invalid order", async
 
 it("allows endDates to be removed by passing null", async () => {
   const schedule = await createSchedule();
-  schedule.set("endDate", "2020-12-31");
+  schedule.endDate = "2020-12-31";
   await schedule.save();
 
   const res = await makeRequest(schedule.id, { endDate: null });
@@ -100,10 +98,10 @@ it("allows endDates to be removed by passing null", async () => {
   expect(res.body.endDate).toBe(null);
 });
 
-it("rejects edits that result in a schedule with no occurrences", async () => {
+it("rejects updates that result in a schedule with no occurrences", async () => {
   const schedule = await createSchedule();
 
   const res = await makeRequest(schedule.id, { endDate: "2020-05-03" });
   expect(res.status).toBe(400);
-  expect(res.body.errors[0].detail).toBe("The edited schedule has no occurrences.");
+  expect(res.body.errors[0].detail).toBe("The updated schedule has no occurrences.");
 });

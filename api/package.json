@@ -18,6 +18,7 @@
   "author": "Bill Kerr",
   "license": "ISC",
   "dependencies": {
+    "class-transformer": "^0.2.3",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
@@ -27,8 +28,12 @@
     "helmet": "^3.22.0",
     "lodash": "^4.17.15",
     "moment": "^2.26.0",
-    "mongoose": "^5.9.14",
-    "rrule": "^2.6.4"
+    "pg": "^8.3.0",
+    "reflect-metadata": "^0.1.13",
+    "round-to": "^4.1.0",
+    "rrule": "^2.6.4",
+    "short-uuid": "^3.1.1",
+    "typeorm": "^0.2.25"
   },
   "devDependencies": {
     "@types/cors": "^2.8.6",
@@ -36,12 +41,11 @@
     "@types/helmet": "0.0.47",
     "@types/jest": "^25.2.2",
     "@types/lodash": "^4.14.157",
-    "@types/mongoose": "^5.7.20",
     "@types/supertest": "^2.0.9",
     "axios": "^0.19.2",
     "jest": "^26.0.1",
-    "mongodb-memory-server": "^6.6.0",
     "nodemon": "^2.0.4",
+    "sqlite3": "^5.0.0",
     "supertest": "^4.0.2",
     "ts-jest": "^26.0.0",
     "ts-node": "^8.10.2",

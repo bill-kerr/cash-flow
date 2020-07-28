@@ -8,9 +8,9 @@ export const createExceptionByScheduleValidator = [
   stringField("description").optional(),
 ];
 
-export const createExceptionValidator = [...createExceptionByScheduleValidator, stringField("schedule")];
+export const createExceptionValidator = [...createExceptionByScheduleValidator, stringField("scheduleId")];
 
-export const editExceptionValidator = [
+export const updateExceptionValidator = [
   dateField("date").optional(),
   dateField("currentDate").optional(),
   booleanField("occurrenceDeleted").optional(),

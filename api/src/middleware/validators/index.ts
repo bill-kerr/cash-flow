@@ -1,3 +1,3 @@
 export { queryDateRangeValidator, optionalQueryDateRangeValidator } from "./date-range";
-export { createExceptionByScheduleValidator, createExceptionValidator, editExceptionValidator } from "./exception";
-export { createScheduleValidator, editScheduleValidator } from "./schedule";
+export { createExceptionByScheduleValidator, createExceptionValidator, updateExceptionValidator } from "./exception";
+export { createScheduleValidator, updateScheduleValidator } from "./schedule";

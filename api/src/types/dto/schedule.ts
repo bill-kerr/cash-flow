@@ -16,17 +16,17 @@ export interface CreateScheduleDto {
   userId: string;
 }
 
-export interface EditScheduleDto {
-  id: string;
+export interface UpdateScheduleDto {
+  id?: string;
   amount?: number;
   description?: string;
   startDate?: string;
   endDate?: string | null;
   frequency?: Frequency;
   interval?: number;
-  occurrenceCount?: number;
-  dayOfWeek?: DayOfWeek;
-  dayOfMonth?: number;
-  month?: Month;
+  occurrenceCount?: number | null;
+  dayOfWeek?: DayOfWeek | null;
+  dayOfMonth?: number | null;
+  month?: Month | null;
   recurrenceRule?: string;
 }

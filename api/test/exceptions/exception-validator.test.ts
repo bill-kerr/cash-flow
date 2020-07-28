@@ -18,7 +18,7 @@ const getTestData = async (
   const schedule = await scheduleService.createSchedule(scheduleData);
   const dto: any = {
     ...dtoData,
-    schedule: schedule.id,
+    scheduleId: schedule.id,
   };
 
   return { dto, schedule };
@@ -32,7 +32,7 @@ it("allows requests with valid data", async () => {
   const { dto: dto2 } = await getTestData({
     date: "2020-07-10",
     amount: 333,
-    description: "edited",
+    description: "updated",
     currentDate: "2020-07-11",
     occurrenceDeleted: true,
   });

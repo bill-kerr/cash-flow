@@ -1,8 +1,7 @@
 import request from "supertest";
-import mongoose from "mongoose";
 import { initExpressApp } from "../../src/loaders/express";
 import { Frequency } from "../../src/types";
-import { ScheduleDoc } from "../../src/models";
+import { Schedule } from "../../src/entities";
 import { scheduleService } from "../../src/services";
 
 const app = initExpressApp();
@@ -19,9 +18,8 @@ const makeRequest = async (scheduleId: string, startDate: string, endDate: strin
     .send();
 };
 
-const createSchedule = async (): Promise<ScheduleDoc> => {
+const createSchedule = async (): Promise<Schedule> => {
   return scheduleService.createSchedule({
-    id: mongoose.Types.ObjectId().toHexString(),
     userId: "fake-id",
     amount: 500,
     description: "test description",
@@ -56,7 +54,6 @@ it("rejects requests without the startDate and endDate query parameters", async 
 
 it("limits occurrences to the correct occurrenceCount", async () => {
   const schedule = await scheduleService.createSchedule({
-    id: mongoose.Types.ObjectId().toHexString(),
     userId: "fake-id",
     amount: 500,
     description: "test description",
