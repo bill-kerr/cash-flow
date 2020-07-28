@@ -1,12 +1,10 @@
 import { Entity, Column, BeforeInsert, PrimaryColumn, BaseEntity, OneToMany, BeforeUpdate } from "typeorm";
-import { Expose } from "class-transformer";
 import { Frequency, DayOfWeek, Month, UpdateScheduleDto } from "../types";
 import { id, getUnixTime, merge } from "../util";
 import { Exception } from "./exception";
 
 @Entity()
 export class Schedule extends BaseEntity {
-  @Expose()
   object = "schedule";
 
   @PrimaryColumn()

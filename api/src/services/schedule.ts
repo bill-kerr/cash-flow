@@ -25,7 +25,6 @@ class ScheduleService {
   }
 
   private nullUnnecessaryFields(schedule: Schedule) {
-    console.log(schedule);
     switch (schedule.frequency) {
       case Frequency.ONCE:
         return schedule.update({
