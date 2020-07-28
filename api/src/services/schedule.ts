@@ -3,8 +3,11 @@ import { Frequency, CreateScheduleDto, UpdateScheduleDto } from "../types";
 import { Schedule } from "../entities";
 import { BadRequestError, NotAuthorizedError } from "../errors";
 import { occurrenceService } from ".";
+import { Repository, getRepository } from "typeorm";
 
 class ScheduleService {
+  constructor(private repository: Repository<Schedule>) {}
+
   private removeUnnecessaryFields(dto: CreateScheduleDto): CreateScheduleDto {
     dto = dto.occurrenceCount ? omit(dto, "endDate") : dto;
 
@@ -103,8 +106,9 @@ class ScheduleService {
     return Schedule.find({ userId });
   }
 
-  async getScheduleById(scheduleId: string): Promise<Schedule> {
-    const schedule = await Schedule.findOne({ id: scheduleId });
+  async getScheduleById(scheduleId: string, loadExceptions = false): Promise<Schedule> {
+    const relations = loadExceptions ? ["exceptions"] : [];
+    const schedule = await this.repository.findOne({ id: scheduleId }, { relations });
 
     if (!schedule) {
       throw new NotAuthorizedError();
@@ -149,6 +153,6 @@ class ScheduleService {
   }
 }
 
-const scheduleService = new ScheduleService();
+const scheduleService = new ScheduleService(getRepository(Schedule));
 Object.freeze(scheduleService);
 export { scheduleService };

@@ -1,8 +1,9 @@
 import { initApp, buildMakeRequest } from "../setup";
 import { scheduleService } from "../../src/services";
 import { Frequency } from "../../src/types";
+import request from "supertest";
 
-initApp();
+const app = initApp();
 const { makeRequest } = buildMakeRequest("/api/v1/exceptions");
 
 const getTestData = async (
@@ -87,6 +88,12 @@ it("overwrites an exception on a given date", async () => {
     createdAt: expect.any(Number),
     updatedAt: expect.any(Number),
   });
+
+  res = await request(app)
+    .get("/api/v1/exceptions")
+    .set({ Authorization: "Bearer sldjflk", "Content-Type": "application/json" })
+    .send();
+  expect(res.body.data.length).toBe(1);
 });
 
 it("disallows requests with an unowned schedule", async () => {

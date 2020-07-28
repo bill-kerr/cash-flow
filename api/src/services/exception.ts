@@ -15,6 +15,7 @@ class ExceptionService {
 
   public async getExceptionByScheduleAndDate(scheduleId: string, date: string): Promise<Exception | undefined> {
     const schedule = await scheduleService.getScheduleById(scheduleId);
+    console.log(scheduleId, schedule.exceptions);
 
     if (!schedule.exceptions) {
       return;
@@ -35,6 +36,7 @@ class ExceptionService {
 
   public async createException(dto: CreateExceptionDto): Promise<Exception> {
     const oldException = await this.getExceptionByScheduleAndDate(dto.scheduleId, dto.date);
+    console.log(oldException);
     if (oldException) {
       await oldException.remove();
     }
