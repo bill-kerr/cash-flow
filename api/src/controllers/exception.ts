@@ -35,7 +35,7 @@ router.get("/:id", requireAuth, requireOwnership(Exception, "params", "id"), asy
 router.post(
   "/",
   requireAuth,
-  requireOwnership(Schedule, "body", "schedule", "id"),
+  requireOwnership(Schedule, "body", "scheduleId", "id"),
   createExceptionValidator,
   handleValidationResult,
   async (req: Request, res: Response) => {

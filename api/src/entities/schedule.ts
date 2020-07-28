@@ -1,7 +1,7 @@
 import { Entity, Column, BeforeInsert, PrimaryColumn, BaseEntity, OneToMany, BeforeUpdate } from "typeorm";
 import { Expose } from "class-transformer";
-import { Frequency, DayOfWeek, Month } from "../types";
-import { id, getUnixTime } from "../util";
+import { Frequency, DayOfWeek, Month, UpdateScheduleDto } from "../types";
+import { id, getUnixTime, merge } from "../util";
 import { Exception } from "./exception";
 
 @Entity()
@@ -12,16 +12,16 @@ export class Schedule extends BaseEntity {
   @PrimaryColumn()
   id: string;
 
-  @Column({ default: 0, type: "decimal", precision: 2, nullable: false })
+  @Column({ default: 0, type: "float", nullable: false })
   amount: number;
 
   @Column({ nullable: false })
   description: string;
 
-  @Column({ name: "start_date", nullable: false })
+  @Column({ nullable: false })
   startDate: string;
 
-  @Column({ name: "end_date", default: null })
+  @Column({ default: null, type: "varchar" })
   endDate: string | null;
 
   @Column({ nullable: false })
@@ -30,31 +30,31 @@ export class Schedule extends BaseEntity {
   @Column({ default: 1, nullable: false })
   interval: number;
 
-  @Column({ name: "occurrence_count", default: null })
+  @Column({ default: null, type: "int" })
   occurrenceCount: number | null;
 
-  @Column({ name: "day_of_week", default: null })
+  @Column({ default: null, type: "varchar" })
   dayOfWeek: DayOfWeek | null;
 
-  @Column({ name: "day_of_month", default: null })
+  @Column({ default: null, type: "varchar" })
   dayOfMonth: number | null;
 
-  @Column({ default: null })
+  @Column({ default: null, type: "varchar" })
   month: Month | null;
 
-  @Column({ name: "recurrence_rule", nullable: false })
+  @Column({ nullable: false })
   recurrenceRule: string;
 
-  @Column({ name: "user_id", nullable: false })
+  @Column({ nullable: false })
   userId: string;
 
   @OneToMany(() => Exception, (exception) => exception.schedule)
   exceptions: Exception[];
 
-  @Column({ name: "created_at" })
+  @Column()
   createdAt: number;
 
-  @Column({ name: "updated_at" })
+  @Column()
   updatedAt: number;
 
   @BeforeInsert()
@@ -71,5 +71,9 @@ export class Schedule extends BaseEntity {
   @BeforeInsert()
   updateUpdatedTimestamp() {
     this.updatedAt = getUnixTime();
+  }
+
+  update(dto: UpdateScheduleDto) {
+    return merge(this, dto);
   }
 }

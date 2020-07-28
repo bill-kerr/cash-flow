@@ -18,7 +18,7 @@ const getTestData = async (
   const schedule = await scheduleService.createSchedule(scheduleData);
   const dto: any = {
     ...dtoData,
-    schedule: schedule.id,
+    scheduleId: schedule.id,
   };
 
   return { dto, schedule };
@@ -37,7 +37,9 @@ it("creates a correct exception with valid data", async () => {
     description: null,
     date: dto.date,
     userId: "fake-id",
-    schedule: schedule.id,
+    scheduleId: schedule.id,
+    createdAt: expect.any(Number),
+    updatedAt: expect.any(Number),
   });
 
   const { dto: dto2, schedule: schedule2 } = await getTestData({
@@ -58,7 +60,9 @@ it("creates a correct exception with valid data", async () => {
     description: dto2.description,
     date: dto2.date,
     userId: "fake-id",
-    schedule: schedule2.id,
+    scheduleId: schedule2.id,
+    createdAt: expect.any(Number),
+    updatedAt: expect.any(Number),
   });
 });
 
@@ -66,7 +70,7 @@ it("overwrites an exception on a given date", async () => {
   const { dto, schedule } = await getTestData();
   let res = await makeRequest(dto);
 
-  const dto2 = { schedule: schedule.id, date: "2020-07-09" };
+  const dto2 = { scheduleId: schedule.id, date: "2020-07-09" };
   res = await makeRequest(dto2);
 
   expect(res.status).toBe(201);
@@ -79,7 +83,9 @@ it("overwrites an exception on a given date", async () => {
     description: null,
     date: dto2.date,
     userId: "fake-id",
-    schedule: schedule.id,
+    scheduleId: schedule.id,
+    createdAt: expect.any(Number),
+    updatedAt: expect.any(Number),
   });
 });
 

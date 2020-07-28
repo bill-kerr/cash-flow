@@ -10,8 +10,7 @@ class ScheduleService {
 
     switch (dto.frequency) {
       case Frequency.ONCE:
-        dto.occurrenceCount = 1;
-        return omit(dto, ["month", "dayOfWeek", "dayOfMonth", "endDate", "interval"]);
+        return omit(dto, ["month", "dayOfWeek", "dayOfMonth", "endDate", "interval", "occurrenceCount"]);
       case Frequency.DAILY:
         return omit(dto, ["month", "dayOfMonth", "dayOfWeek"]);
       case Frequency.WEEKLY:
@@ -25,46 +24,42 @@ class ScheduleService {
     }
   }
 
-  private async nullUnnecessaryFields(schedule: Schedule) {
+  private nullUnnecessaryFields(schedule: Schedule) {
+    console.log(schedule);
     switch (schedule.frequency) {
       case Frequency.ONCE:
-        await Schedule.update(schedule, {
+        return schedule.update({
           interval: 1,
+          occurrenceCount: null,
           month: null,
           dayOfWeek: null,
           dayOfMonth: null,
           endDate: null,
-          occurrenceCount: 1,
         });
-        return;
       case Frequency.DAILY:
-        await Schedule.update(schedule, {
+        return schedule.update({
           month: null,
           dayOfWeek: null,
           dayOfMonth: null,
           endDate: schedule.occurrenceCount ? null : schedule.endDate,
         });
-        return;
       case Frequency.WEEKLY:
-        await Schedule.update(schedule, {
+        return schedule.update({
           month: null,
           dayOfMonth: null,
           endDate: schedule.occurrenceCount ? null : schedule.endDate,
         });
-        return;
       case Frequency.MONTHLY:
-        await Schedule.update(schedule, {
+        return schedule.update({
           month: null,
           dayOfWeek: null,
           endDate: schedule.occurrenceCount ? null : schedule.endDate,
         });
-        return;
       case Frequency.YEARLY:
-        await Schedule.update(schedule, {
+        return schedule.update({
           dayOfWeek: null,
           endDate: schedule.occurrenceCount ? null : schedule.endDate,
         });
-        return;
     }
   }
 
@@ -100,7 +95,7 @@ class ScheduleService {
       throw new BadRequestError("The provided schedule has no occurrences.");
     }
 
-    const schedule = new Schedule();
+    const schedule = Schedule.create(dto);
     await schedule.save();
     return schedule;
   }
@@ -136,16 +131,15 @@ class ScheduleService {
     }
     const schedule = await this.getScheduleById(dto.id);
 
+    if (dto.endDate === "") {
+      dto.endDate = null;
+    }
+
     this.validateDates(dto, schedule);
 
-    const recurrenceRule = occurrenceService.generateRecurrenceRule({
-      ...dto,
-      startDate: dto.startDate || schedule.startDate,
-      frequency: dto.frequency || schedule.frequency,
-    });
-
-    await Schedule.update(schedule, { ...dto, recurrenceRule });
+    schedule.update({ ...dto });
     this.nullUnnecessaryFields(schedule);
+    schedule.recurrenceRule = occurrenceService.generateRecurrenceRule({ ...schedule });
 
     if (!occurrenceService.scheduleHasOccurrencesBetween(schedule, schedule.startDate, schedule.endDate)) {
       throw new BadRequestError("The updated schedule has no occurrences.");

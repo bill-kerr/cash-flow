@@ -1,34 +1,36 @@
-import { MongoMemoryServer } from "mongodb-memory-server";
-import mongoose from "mongoose";
 import { initExpressApp } from "../src/loaders/express";
 import request from "supertest";
+import { createConnection } from "typeorm";
+import { Schedule, Exception } from "../src/entities";
 jest.mock("firebase-admin");
 
-let mongo: MongoMemoryServer;
 beforeAll(async () => {
   console.clear();
-  mongo = new MongoMemoryServer();
-  const mongoUri = await mongo.getUri();
+  try {
+    const connection = await createConnection({
+      type: "sqlite",
+      database: ":memory:",
+      dropSchema: true,
+      entities: [Schedule, Exception],
+      synchronize: true,
+      logging: false,
+    });
 
-  await mongoose.connect(mongoUri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
-  });
-});
-
-beforeEach(async () => {
-  const collections = await mongoose.connection.db.collections();
-
-  for (let collection of collections) {
-    await collection.deleteMany({});
+    return connection;
+  } catch (error) {
+    console.error(error);
+    console.log("Server shutting down.");
+    process.exit();
   }
 });
 
+beforeEach(async () => {
+  await Schedule.delete({});
+  await Exception.delete({});
+});
+
 afterAll(async () => {
-  await mongo.stop();
-  await mongoose.connection.close();
+  //await getConnection().close();
 });
 
 export const initApp = () => {

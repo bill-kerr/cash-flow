@@ -18,7 +18,7 @@ const getTestData = async (
   const schedule = await scheduleService.createSchedule(scheduleData);
   const dto: any = {
     ...dtoData,
-    schedule: schedule.id,
+    scheduleId: schedule.id,
   };
 
   return { dto, schedule };

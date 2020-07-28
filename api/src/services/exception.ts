@@ -1,6 +1,7 @@
 import { CreateExceptionDto, UpdateExceptionDto } from "../types";
 import { Exception } from "../entities";
 import { BadRequestError, NotAuthorizedError } from "../errors";
+import { scheduleService } from "./schedule";
 
 class ExceptionService {
   public async getExceptionById(id: string): Promise<Exception> {
@@ -12,17 +13,24 @@ class ExceptionService {
     return exception;
   }
 
-  public getExceptionByScheduleAndDate(scheduleId: string, date: string): Promise<Exception | undefined> {
-    return Exception.findOne({ scheduleId, date });
+  public async getExceptionByScheduleAndDate(scheduleId: string, date: string): Promise<Exception | undefined> {
+    const schedule = await scheduleService.getScheduleById(scheduleId);
+
+    if (!schedule.exceptions) {
+      return;
+    }
+
+    return schedule.exceptions.find((exception) => exception.date === date);
   }
 
-  public getExceptionsBySchedule(scheduleId: string): Promise<Exception[]> {
-    return Exception.find({ scheduleId });
+  public async getExceptionsByScheduleId(scheduleId: string): Promise<Exception[]> {
+    const schedule = await scheduleService.getScheduleById(scheduleId);
+    return schedule.exceptions ? schedule.exceptions : [];
   }
 
   public async getExceptionsByUser(userId: string): Promise<Exception[]> {
     const exceptions = await Exception.find({ userId });
-    return exceptions;
+    return exceptions ? exceptions : [];
   }
 
   public async createException(dto: CreateExceptionDto): Promise<Exception> {
@@ -39,11 +47,12 @@ class ExceptionService {
   public async updateException(dto: UpdateExceptionDto) {
     const exception = await this.getExceptionById(dto.id);
 
-    if (dto.date && (await this.getExceptionByScheduleAndDate(exception.scheduleId, dto.date))) {
+    if (dto.date && (await this.getExceptionByScheduleAndDate(exception.schedule.id, dto.date))) {
       throw new BadRequestError(`An exception already exists for the occurrence on ${dto.date}.`);
     }
 
-    await Exception.update(exception, dto);
+    exception.update(dto);
+    await exception.save();
     return exception;
   }
 

@@ -1,11 +1,10 @@
-import { Entity, Column, BeforeInsert, PrimaryColumn, BaseEntity, ManyToOne, BeforeUpdate, RelationId } from "typeorm";
-import { Expose } from "class-transformer";
-import { id, getUnixTime } from "../util";
+import { Entity, Column, BeforeInsert, PrimaryColumn, BaseEntity, ManyToOne, BeforeUpdate, JoinColumn } from "typeorm";
+import { id, getUnixTime, merge } from "../util";
 import { Schedule } from "./schedule";
+import { UpdateExceptionDto } from "../types";
 
 @Entity()
 export class Exception extends BaseEntity {
-  @Expose()
   object = "exception";
 
   @PrimaryColumn()
@@ -14,32 +13,32 @@ export class Exception extends BaseEntity {
   @Column({ nullable: false })
   date: string;
 
-  @Column({ name: "occurrence_deleted", default: false, nullable: false })
+  @Column({ default: false, nullable: false })
   occurrenceDeleted: boolean;
 
-  @Column({ name: "current_date", default: null })
+  @Column({ default: null })
   currentDate: string;
 
-  @Column({ type: "decimal", default: null })
+  @Column({ type: "float", default: null })
   amount: number;
 
   @Column({ default: null })
   description: string;
 
-  @Column({ name: "user_id", nullable: false })
+  @Column({ nullable: false })
   userId: string;
 
-  @Expose({ name: "schedule" })
-  @RelationId("schedule")
-  scheduleId: string;
-
   @ManyToOne(() => Schedule, (schedule) => schedule.exceptions, { onDelete: "CASCADE" })
+  @JoinColumn({ name: "schedule" })
   schedule: Schedule;
 
-  @Column({ name: "created_at" })
+  @Column()
+  scheduleId: string;
+
+  @Column()
   createdAt: number;
 
-  @Column({ name: "updated_at" })
+  @Column()
   updatedAt: number;
 
   @BeforeInsert()
@@ -56,5 +55,9 @@ export class Exception extends BaseEntity {
   @BeforeInsert()
   updateUpdatedTimestamp() {
     this.updatedAt = getUnixTime();
+  }
+
+  update(dto: UpdateExceptionDto) {
+    return merge(this, dto);
   }
 }

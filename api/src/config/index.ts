@@ -6,10 +6,10 @@ export function initConfig() {
   try {
     if (
       !process.env.JWT_KEY ||
-      !process.env.PG_USERNAME ||
-      !process.env.PG_PASSWORD ||
-      !process.env.PG_DB_NAME ||
-      !process.env.PG_PORT ||
+      !process.env.DB_USERNAME ||
+      !process.env.DB_PASSWORD ||
+      !process.env.DB_NAME ||
+      !process.env.DB_PORT ||
       !process.env.FIREBASE_DB_URL
     ) {
       throw new Error(
@@ -31,10 +31,10 @@ const config = {
 
   jwtSecretKey: process.env.JWT_KEY,
 
-  pgUsername: process.env.PG_USERNAME,
-  pgPassword: process.env.PG_PASSWORD,
-  pgPort: parseInt(process.env.PG_PORT!),
-  pgDbName: process.env.PG_DB_NAME,
+  dbUsername: process.env.DB_USERNAME,
+  dbPassword: process.env.DB_PASSWORD,
+  dbPort: parseInt(process.env.DB_PORT!),
+  dbName: process.env.DB_NAME,
 
   firebaseDatabaseUrl: process.env.FIREBASE_DB_URL,
 };

@@ -61,11 +61,11 @@ router.post(
   createExceptionByScheduleValidator,
   handleValidationResult,
   async (req: Request, res: Response) => {
-    const schedule = req.params.id;
+    const scheduleId = req.params.id;
     const exception = await exceptionService.createException({
       ...req.body,
       userId: req.currentUserId,
-      schedule,
+      scheduleId,
     });
     res.status(HttpResponse.CREATED).send(exception);
   }
@@ -79,7 +79,7 @@ router.get(
   handleValidationResult,
   async (req: Request, res: Response) => {
     const scheduleId = req.params.id;
-    const exceptions = await exceptionService.getExceptionsBySchedule(scheduleId);
+    const exceptions = await exceptionService.getExceptionsByScheduleId(scheduleId);
 
     const resData = {
       object: "list",

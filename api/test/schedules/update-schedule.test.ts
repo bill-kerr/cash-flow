@@ -1,5 +1,4 @@
 import request from "supertest";
-import mongoose from "mongoose";
 import { initExpressApp } from "../../src/loaders/express";
 import { scheduleService } from "../../src/services";
 import { Frequency, DayOfWeek } from "../../src/types";
@@ -26,7 +25,6 @@ const testSchedule = {
 const createSchedule = async (
   schedule = {
     ...testSchedule,
-    id: mongoose.Types.ObjectId().toHexString(),
     userId: "fake-id",
   }
 ) => scheduleService.createSchedule(schedule);
@@ -92,7 +90,7 @@ it("rejects updates that move the startDate or endDate to an invalid order", asy
 
 it("allows endDates to be removed by passing null", async () => {
   const schedule = await createSchedule();
-  schedule.set("endDate", "2020-12-31");
+  schedule.endDate = "2020-12-31";
   await schedule.save();
 
   const res = await makeRequest(schedule.id, { endDate: null });

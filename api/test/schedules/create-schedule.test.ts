@@ -1,5 +1,4 @@
 import request from "supertest";
-import mongoose from "mongoose";
 import { scheduleService } from "../../src/services";
 import { Frequency } from "../../src/types";
 import { initApp, buildMakeRequest } from "../setup";
@@ -38,6 +37,8 @@ it("returns a properly formatted object on successful request", async () => {
     month: null,
     dayOfMonth: null,
     userId: expect.any(String),
+    createdAt: expect.any(Number),
+    updatedAt: expect.any(Number),
   });
 });
 
@@ -71,7 +72,6 @@ it("rejects a request when endDate is before startDate", async () => {
 it("creates a schedule with occurrences on the last day of the month when dayOfMonth is set to 0", async () => {
   const data = {
     userId: "fake-id",
-    id: mongoose.Types.ObjectId().toHexString(),
     amount: 500,
     description: "test",
     frequency: Frequency.MONTHLY,
@@ -113,7 +113,7 @@ it("sets unnecessary fields to null on once schedule creation", async () => {
   expect(schedule.dayOfWeek).toBe(null);
   expect(schedule.dayOfMonth).toBe(null);
   expect(schedule.interval).toBe(1);
-  expect(schedule.occurrenceCount).toBe(1);
+  expect(schedule.occurrenceCount).toBe(null);
   expect(schedule.endDate).toBe(null);
 });
 

@@ -113,7 +113,7 @@ class OccurrenceService {
 
   public async getOccurrencesBySchedule(schedule: Schedule, startDate: string, endDate: string): Promise<Occurrence[]> {
     const occurrenceDates = this.getOccurrenceDates(schedule.recurrenceRule, startDate, endDate);
-    const exceptions = await exceptionService.getExceptionsBySchedule(schedule.id);
+    const exceptions = await exceptionService.getExceptionsByScheduleId(schedule.id);
     exceptions.map((exception) => {
       if (!occurrenceDates.includes(exception.date)) {
         occurrenceDates.push(exception.date);
