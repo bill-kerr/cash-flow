@@ -8,13 +8,13 @@ import { OccurrenceService, ScheduleService } from "../services";
 export class OccurrenceController implements Controller {
   constructor(private scheduleService: ScheduleService, private occurrenceService: OccurrenceService) {}
 
-  private configureRouter(router: Router) {
+  private configureRouter = (router: Router) => {
     router.use(requireAuth);
 
     router.get("/", queryDateRangeValidator, handleValidationResult, this.getOccurrences);
-  }
+  };
 
-  private async getOccurrences(req: Request, res: Response) {
+  private getOccurrences = async (req: Request, res: Response) => {
     const schedules = await this.scheduleService.getSchedules(req.currentUserId);
     const { startDate, endDate } = req.query;
     const occurrences = await this.occurrenceService.getOccurrencesBySchedules(
@@ -28,11 +28,11 @@ export class OccurrenceController implements Controller {
       data: occurrences,
     };
     res.status(HttpResponse.OK).send(resData);
-  }
+  };
 
-  public router(): Router {
+  public router = (): Router => {
     const router = express.Router();
     this.configureRouter(router);
     return router;
-  }
+  };
 }

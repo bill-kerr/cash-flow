@@ -6,7 +6,7 @@ import { ExceptionService } from "./exception";
 export class OccurrenceService {
   constructor(private exceptionService: ExceptionService) {}
 
-  private createOccurrence(schedule: Schedule, date: string, exception?: Exception): Occurrence {
+  private createOccurrence(schedule: Schedule, date: string, exception?: Exception | null): Occurrence {
     return {
       object: "occurrence",
       date: exception?.currentDate || date,
@@ -66,6 +66,26 @@ export class OccurrenceService {
       }
     });
 
+    return occurrences;
+  }
+
+  // TODO: test this
+  public async getOccurrences(schedule: Schedule, startDate: string, endDate: string): Promise<Occurrence[]> {
+    const occurrenceDates: { [key: string]: Exception | null } = {};
+    this.getOccurrenceDates(schedule.recurrenceRule, startDate, endDate).map((date) => (occurrenceDates[date] = null));
+
+    const exceptions = await this.exceptionService.getExceptionsByScheduleId(schedule.id);
+    exceptions.map((exception) => (occurrenceDates[exception.date] = exception));
+
+    const occurrences: Occurrence[] = [];
+    Object.keys(occurrenceDates).map((date) => {
+      const exception = occurrenceDates[date];
+      if (this.showOccurrence(exception, startDate, endDate)) {
+        occurrences.push(this.createOccurrence(schedule, date, exception));
+      } else if (!exception) {
+        occurrences.push(this.createOccurrence(schedule, date));
+      }
+    });
     return occurrences;
   }
 
