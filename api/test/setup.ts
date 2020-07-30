@@ -2,7 +2,10 @@ import { initExpressApp } from "../src/loaders/express";
 import request from "supertest";
 import { createConnection } from "typeorm";
 import { Schedule, Exception } from "../src/entities";
+import { initTypeOrm } from "../src/loaders/typeorm";
 jest.mock("firebase-admin");
+
+initTypeOrm = jest.mock();
 
 beforeAll(async () => {
   console.clear();

@@ -1,7 +1,9 @@
 import request from "supertest";
-import { scheduleService } from "../../src/services";
+import { ScheduleService } from "../../src/services";
 import { Frequency } from "../../src/types";
 import { initApp, buildMakeRequest } from "../setup";
+import { getRepository } from "typeorm";
+import { Schedule } from "../../src/entities";
 
 const app = initApp();
 const { makeRequest, url, headers } = buildMakeRequest("/api/v1/schedules", app);
@@ -70,6 +72,7 @@ it("rejects a request when endDate is before startDate", async () => {
 });
 
 it("creates a schedule with occurrences on the last day of the month when dayOfMonth is set to 0", async () => {
+  const scheduleService = new ScheduleService(getRepository(Schedule));
   const data = {
     userId: "fake-id",
     amount: 500,

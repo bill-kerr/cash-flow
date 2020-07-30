@@ -1,6 +1,10 @@
-import { scheduleService } from "../../src/services";
 import { Frequency } from "../../src/types";
 import { initApp, buildMakeRequest, badTypeMessage, emptyMessage } from "../setup";
+import { ScheduleService } from "../../src/services";
+import { getRepository } from "typeorm";
+import { Schedule } from "../../src/entities";
+
+const scheduleService = new ScheduleService(getRepository(Schedule));
 
 initApp();
 const { makeRequest } = buildMakeRequest("/api/v1/exceptions");

@@ -1,7 +1,11 @@
 import { initApp, buildMakeRequest } from "../setup";
-import { scheduleService } from "../../src/services";
+import { ScheduleService } from "../../src/services";
 import { Frequency } from "../../src/types";
 import request from "supertest";
+import { getRepository } from "typeorm";
+import { Schedule } from "../../src/entities";
+
+const scheduleService = new ScheduleService(getRepository(Schedule));
 
 const app = initApp();
 const { makeRequest } = buildMakeRequest("/api/v1/exceptions");

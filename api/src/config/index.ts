@@ -37,6 +37,8 @@ const config = {
   dbName: process.env.DB_NAME,
 
   firebaseDatabaseUrl: process.env.FIREBASE_DB_URL,
+
+  maxYears: process.env.MAX_YEARS || 25,
 };
 
 export default config;

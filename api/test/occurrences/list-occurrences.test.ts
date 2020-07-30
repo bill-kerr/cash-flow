@@ -2,7 +2,10 @@ import request from "supertest";
 import { initExpressApp } from "../../src/loaders/express";
 import { Frequency } from "../../src/types";
 import { Schedule } from "../../src/entities";
-import { scheduleService } from "../../src/services";
+import { ScheduleService } from "../../src/services";
+import { getRepository } from "typeorm";
+
+const scheduleService = new ScheduleService(getRepository(Schedule));
 
 const app = initExpressApp();
 const headers = {

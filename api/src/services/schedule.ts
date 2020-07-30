@@ -2,10 +2,10 @@ import { omit } from "lodash";
 import { Frequency, CreateScheduleDto, UpdateScheduleDto } from "../types";
 import { Schedule } from "../entities";
 import { BadRequestError, NotAuthorizedError } from "../errors";
-import { occurrenceService } from ".";
-import { Repository, getRepository } from "typeorm";
+import { Repository } from "typeorm";
+import { recurrenceRule, hasOccurrences } from "../util/recurrence";
 
-class ScheduleService {
+export class ScheduleService {
   constructor(private repository: Repository<Schedule>) {}
 
   private removeUnnecessaryFields(dto: CreateScheduleDto): CreateScheduleDto {
@@ -87,13 +87,13 @@ class ScheduleService {
 
   async createSchedule(dto: CreateScheduleDto): Promise<Schedule> {
     dto = this.removeUnnecessaryFields(dto);
-    dto.recurrenceRule = occurrenceService.generateRecurrenceRule(dto);
+    dto.recurrenceRule = recurrenceRule(dto);
 
     if (dto.endDate && dto.endDate < dto.startDate) {
       throw new BadRequestError("The end date must occur after the start date.");
     }
 
-    if (dto.endDate && !occurrenceService.scheduleHasOccurrencesBetween(dto, dto.startDate, dto.endDate)) {
+    if (dto.endDate && !hasOccurrences(recurrenceRule(dto), dto.startDate, dto.endDate)) {
       throw new BadRequestError("The provided schedule has no occurrences.");
     }
 
@@ -117,11 +117,6 @@ class ScheduleService {
     return schedule;
   }
 
-  async getScheduleOccurrences(scheduleId: string, startDate: string, endDate: string) {
-    const schedule = await this.getScheduleById(scheduleId);
-    return occurrenceService.getOccurrencesBySchedule(schedule, startDate, endDate);
-  }
-
   async deleteSchedule(scheduleId: string): Promise<Schedule> {
     const schedule = await this.getScheduleById(scheduleId);
     await schedule.remove();
@@ -142,9 +137,9 @@ class ScheduleService {
 
     schedule.update({ ...dto });
     this.nullUnnecessaryFields(schedule);
-    schedule.recurrenceRule = occurrenceService.generateRecurrenceRule({ ...schedule });
+    schedule.recurrenceRule = recurrenceRule({ ...schedule });
 
-    if (!occurrenceService.scheduleHasOccurrencesBetween(schedule, schedule.startDate, schedule.endDate)) {
+    if (!hasOccurrences(schedule.recurrenceRule, schedule.startDate, schedule.endDate)) {
       throw new BadRequestError("The updated schedule has no occurrences.");
     }
 
@@ -152,7 +147,3 @@ class ScheduleService {
     return schedule;
   }
 }
-
-const scheduleService = new ScheduleService(getRepository(Schedule));
-Object.freeze(scheduleService);
-export { scheduleService };

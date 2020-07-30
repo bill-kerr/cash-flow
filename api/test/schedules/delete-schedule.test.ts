@@ -1,7 +1,9 @@
 import request from "supertest";
 import { initExpressApp } from "../../src/loaders/express";
-import { scheduleService } from "../../src/services";
+import { ScheduleService } from "../../src/services";
 import { Frequency, DayOfWeek } from "../../src/types";
+import { getRepository } from "typeorm";
+import { Schedule } from "../../src/entities";
 
 const app = initExpressApp();
 const headers = {
@@ -27,7 +29,10 @@ const createSchedule = async (
     ...testSchedule,
     userId: "fake-id",
   }
-) => scheduleService.createSchedule(schedule);
+) => {
+  const scheduleService = new ScheduleService(getRepository(Schedule));
+  scheduleService.createSchedule(schedule);
+};
 
 it("deletes a schedule on successful request", async () => {
   const schedule = await createSchedule();

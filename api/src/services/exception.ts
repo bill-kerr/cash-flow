@@ -1,9 +1,12 @@
 import { CreateExceptionDto, UpdateExceptionDto } from "../types";
 import { Exception } from "../entities";
 import { BadRequestError, NotAuthorizedError } from "../errors";
-import { scheduleService } from "./schedule";
+import { Repository } from "typeorm";
+import { ScheduleService } from "./schedule";
 
-class ExceptionService {
+export class ExceptionService {
+  constructor(private scheduleService: ScheduleService, private repository: Repository<Exception>) {}
+
   public async getExceptionById(id: string): Promise<Exception> {
     const exception = await Exception.findOne({ id });
     if (!exception) {
@@ -14,7 +17,7 @@ class ExceptionService {
   }
 
   public async getExceptionByScheduleAndDate(scheduleId: string, date: string): Promise<Exception | undefined> {
-    const schedule = await scheduleService.getScheduleById(scheduleId);
+    const schedule = await this.scheduleService.getScheduleById(scheduleId);
     console.log(scheduleId, schedule.exceptions);
 
     if (!schedule.exceptions) {
@@ -25,7 +28,7 @@ class ExceptionService {
   }
 
   public async getExceptionsByScheduleId(scheduleId: string): Promise<Exception[]> {
-    const schedule = await scheduleService.getScheduleById(scheduleId);
+    const schedule = await this.scheduleService.getScheduleById(scheduleId);
     return schedule.exceptions ? schedule.exceptions : [];
   }
 
@@ -61,10 +64,10 @@ class ExceptionService {
   public async deleteException(id: string): Promise<Exception> {
     const exception = await this.getExceptionById(id);
     await exception.remove();
+
+    // TODO: delete this
+    this.repository.count();
+
     return exception;
   }
 }
-
-const exceptionService = new ExceptionService();
-Object.freeze(exceptionService);
-export { exceptionService };

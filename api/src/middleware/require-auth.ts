@@ -1,10 +1,10 @@
+import * as admin from "firebase-admin";
 import { Request, Response, NextFunction } from "express";
-import { authService } from "../services";
 import { NotAuthorizedError } from "../errors";
 
 async function requireAuth(req: Request, _res: Response, next: NextFunction) {
   if (!req.headers.authorization) {
-    throw new NotAuthorizedError();
+    throw new NotAuthorizedError("The Authorization header must be set.");
   }
 
   const authHeader = req.headers.authorization.split(" ");
@@ -19,7 +19,7 @@ async function requireAuth(req: Request, _res: Response, next: NextFunction) {
   const authToken = authHeader[1];
   let user;
   try {
-    user = await authService.getUserFromToken(authToken);
+    user = await admin.auth().verifyIdToken(authToken);
   } catch (err) {
     throw new NotAuthorizedError(err.errorInfo.message);
   }

@@ -1,7 +1,9 @@
 import request from "supertest";
 import { initExpressApp } from "../../src/loaders/express";
-import { scheduleService } from "../../src/services";
+import { ScheduleService } from "../../src/services";
 import { Frequency } from "../../src/types";
+import { getRepository } from "typeorm";
+import { Schedule } from "../../src/entities";
 
 const app = initExpressApp();
 const url = "/api/v1/schedules";
@@ -22,6 +24,7 @@ const makeRequest = async () => {
 };
 
 it("retrieves a list of schedules", async () => {
+  const scheduleService = new ScheduleService(getRepository(Schedule));
   await scheduleService.createSchedule({ ...fakeData, userId: "fake-id", id: "schedule1" });
   await scheduleService.createSchedule({ ...fakeData, userId: "fake-id", id: "schedule2" });
 
@@ -33,6 +36,7 @@ it("retrieves a list of schedules", async () => {
 });
 
 it("only retrieves schedules for the current user", async () => {
+  const scheduleService = new ScheduleService(getRepository(Schedule));
   await scheduleService.createSchedule({ ...fakeData, userId: "fake-id" });
   await scheduleService.createSchedule({ ...fakeData, userId: "fake-id" });
   await scheduleService.createSchedule({ ...fakeData, userId: "user-two" });
