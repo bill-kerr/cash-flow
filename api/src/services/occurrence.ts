@@ -47,35 +47,37 @@ export class OccurrenceService {
   }
 
   // TODO: refactor this
-  public async getOccurrencesBySchedule(schedule: Schedule, startDate: string, endDate: string): Promise<Occurrence[]> {
-    const occurrenceDates = this.getOccurrenceDates(schedule.recurrenceRule, startDate, endDate);
-    const exceptions = await this.exceptionService.getExceptionsByScheduleId(schedule.id);
-    exceptions.map((exception) => {
-      if (!occurrenceDates.includes(exception.date)) {
-        occurrenceDates.push(exception.date);
-      }
-    });
+  // public async getOccurrencesBySchedule(schedule: Schedule, startDate: string, endDate: string): Promise<Occurrence[]> {
+  //   const occurrenceDates = this.getOccurrenceDates(schedule.recurrenceRule, startDate, endDate);
+  //   const exceptions = await this.exceptionService.getExceptionsByScheduleId(schedule.id);
+  //   exceptions.map((exception) => {
+  //     if (!occurrenceDates.includes(exception.date)) {
+  //       occurrenceDates.push(exception.date);
+  //     }
+  //   });
 
-    const occurrences: Occurrence[] = [];
-    occurrenceDates.forEach((date) => {
-      const exception = exceptions.find((exception) => exception.date === date);
-      if (this.showOccurrence(exception, startDate, endDate)) {
-        occurrences.push(this.createOccurrence(schedule, date, exception));
-      } else if (!exception) {
-        occurrences.push(this.createOccurrence(schedule, date));
-      }
-    });
+  //   const occurrences: Occurrence[] = [];
+  //   occurrenceDates.forEach((date) => {
+  //     const exception = exceptions.find((exception) => exception.date === date);
+  //     if (this.showOccurrence(exception, startDate, endDate)) {
+  //       occurrences.push(this.createOccurrence(schedule, date, exception));
+  //     } else if (!exception) {
+  //       occurrences.push(this.createOccurrence(schedule, date));
+  //     }
+  //   });
 
-    return occurrences;
-  }
+  //   return occurrences;
+  // }
 
   // TODO: test this
-  public async getOccurrences(schedule: Schedule, startDate: string, endDate: string): Promise<Occurrence[]> {
+  public async getOccurrencesBySchedule(schedule: Schedule, startDate: string, endDate: string): Promise<Occurrence[]> {
     const occurrenceDates: { [key: string]: Exception | null } = {};
     this.getOccurrenceDates(schedule.recurrenceRule, startDate, endDate).map((date) => (occurrenceDates[date] = null));
 
-    const exceptions = await this.exceptionService.getExceptionsByScheduleId(schedule.id);
+    const exceptions = await this.exceptionService.getExceptionsBySchedule(schedule);
     exceptions.map((exception) => (occurrenceDates[exception.date] = exception));
+
+    console.log(exceptions);
 
     const occurrences: Occurrence[] = [];
     Object.keys(occurrenceDates).map((date) => {

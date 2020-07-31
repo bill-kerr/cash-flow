@@ -28,7 +28,7 @@ async function requireAuth(req: Request, _res: Response, next: NextFunction) {
     throw new NotAuthorizedError();
   }
 
-  req.currentUserId = user.uid;
+  req.userId = user.uid;
   next();
 }
 

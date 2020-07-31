@@ -15,7 +15,7 @@ export class OccurrenceController implements Controller {
   };
 
   private getOccurrences = async (req: Request, res: Response) => {
-    const schedules = await this.scheduleService.getSchedules(req.currentUserId);
+    const schedules = await this.scheduleService.getSchedules(req.userId);
     const { startDate, endDate } = req.query;
     const occurrences = await this.occurrenceService.getOccurrencesBySchedules(
       schedules,

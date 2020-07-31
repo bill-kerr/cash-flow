@@ -1,6 +1,6 @@
 import { Entity, Column, BeforeInsert, PrimaryColumn, BaseEntity, OneToMany, BeforeUpdate } from "typeorm";
-import { Frequency, DayOfWeek, Month, UpdateScheduleDto } from "../types";
-import { id, getUnixTime, merge } from "../util";
+import { Frequency, DayOfWeek, Month } from "../types";
+import { id, getUnixTime } from "../util";
 import { Exception } from "./exception";
 
 @Entity()
@@ -46,7 +46,7 @@ export class Schedule extends BaseEntity {
   @Column({ nullable: false })
   userId: string;
 
-  @OneToMany(() => Exception, (exception) => exception.schedule)
+  @OneToMany(() => Exception, (exception) => exception.schedule, { onDelete: "CASCADE" })
   exceptions: Exception[];
 
   @Column()
@@ -69,9 +69,5 @@ export class Schedule extends BaseEntity {
   @BeforeInsert()
   updateUpdatedTimestamp() {
     this.updatedAt = getUnixTime();
-  }
-
-  update(dto: UpdateScheduleDto) {
-    return merge(this, dto);
   }
 }
