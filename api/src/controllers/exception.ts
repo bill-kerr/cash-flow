@@ -3,9 +3,8 @@ import { requireAuth, handleValidationResult } from "../middleware";
 import { ExceptionService } from "../services";
 import { UpdateExceptionDto, CreateExceptionDto, HttpResponse } from "../types";
 import { createExceptionValidator, updateExceptionValidator } from "../middleware/validators";
-import { Controller } from ".";
 
-export class ExceptionController implements Controller {
+export class ExceptionController {
   constructor(private exceptionService: ExceptionService) {}
 
   private configureRouter = (router: Router) => {

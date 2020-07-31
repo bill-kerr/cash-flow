@@ -27,7 +27,7 @@ export class Exception extends BaseEntity {
   @Column({ nullable: false })
   userId: string;
 
-  @ManyToOne(() => Schedule, (schedule) => schedule.exceptions, { onDelete: "CASCADE", eager: false })
+  @ManyToOne(() => Schedule, (schedule) => schedule.exceptions, { eager: false })
   @JoinColumn()
   schedule: Schedule;
 

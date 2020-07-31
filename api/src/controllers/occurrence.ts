@@ -2,10 +2,9 @@ import express, { Request, Response, Router } from "express";
 import { HttpResponse } from "../types";
 import { requireAuth, handleValidationResult } from "../middleware";
 import { queryDateRangeValidator } from "../middleware/validators";
-import { Controller } from ".";
 import { OccurrenceService, ScheduleService } from "../services";
 
-export class OccurrenceController implements Controller {
+export class OccurrenceController {
   constructor(private scheduleService: ScheduleService, private occurrenceService: OccurrenceService) {}
 
   private configureRouter = (router: Router) => {

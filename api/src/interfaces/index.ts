@@ -1,0 +1,1 @@
+export { IScheduleController } from "./controllers";

@@ -35,17 +35,18 @@ export class ExceptionService {
   }
 
   public async createException(dto: CreateExceptionDto): Promise<Exception> {
-    const schedule = await this.scheduleService.getScheduleById(dto.scheduleId, dto.userId);
+    const schedule = await this.scheduleService.getScheduleById(dto.schedule, dto.userId);
     const oldException = await this.repository.findOne({ date: dto.date, schedule });
     if (oldException) {
       await oldException.remove();
     }
 
-    return this.repository.create(dto).save();
+    return this.repository.create({ ...dto, schedule }).save();
   }
 
   public async updateException(dto: UpdateExceptionDto): Promise<Exception> {
     const exception = await this.getExceptionById(dto.id, dto.userId, true);
+    console.log(exception);
 
     if (dto.date && (await this.getExceptionByScheduleAndDate(exception.schedule, dto.date))) {
       throw new BadRequestError(`An exception already exists for the occurrence on ${dto.date}.`);

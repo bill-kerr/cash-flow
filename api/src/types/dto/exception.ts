@@ -6,7 +6,7 @@ export interface CreateExceptionDto {
   description?: string;
   id?: string;
   userId: string;
-  scheduleId: string;
+  schedule: string;
 }
 
 export interface UpdateExceptionDto {

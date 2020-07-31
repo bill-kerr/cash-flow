@@ -5,13 +5,10 @@ import cors from "cors";
 import helmet from "helmet";
 import { NotFoundError } from "../errors";
 import { errorHandler, verifyJsonMediaType, requestMethodChecker } from "../middleware";
-import { ScheduleController } from "../controllers/schedule";
-import { ScheduleService } from "../services/schedule";
 import { getRepository } from "typeorm";
 import { Schedule, Exception } from "../entities";
-import { ExceptionService, OccurrenceService } from "../services";
-import { ExceptionController } from "../controllers/exception";
-import { OccurrenceController } from "../controllers/occurrence";
+import { ExceptionService, OccurrenceService, ScheduleService } from "../services";
+import { ExceptionController, ScheduleController, OccurrenceController } from "../controllers";
 
 function init(): Application {
   const app = express();

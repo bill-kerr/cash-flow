@@ -8,9 +8,9 @@ import {
   queryDateRangeValidator,
   createExceptionByScheduleValidator,
 } from "../middleware/validators";
-import { Controller } from ".";
+import { httpWrapper, HttpRequest } from "../interfaces/http";
 
-export class ScheduleController implements Controller {
+export class ScheduleController {
   constructor(
     private scheduleService: ScheduleService,
     private exceptionService: ExceptionService,
@@ -20,7 +20,7 @@ export class ScheduleController implements Controller {
   private configureRouter = (router: Router) => {
     router.use(requireAuth);
 
-    router.get("/", this.getSchedules);
+    router.get("/", httpWrapper(this.getSchedules));
     router.get("/:id", this.getSchedule);
     router.get("/:id/occurrences", queryDateRangeValidator, handleValidationResult, this.getOccurrences);
     router.get("/:id/exceptions", this.getExceptions);
@@ -33,7 +33,7 @@ export class ScheduleController implements Controller {
     router.delete("/:id", this.deleteSchedule);
   };
 
-  private getSchedules = async (req: Request, res: Response) => {
+  private getSchedules = async (req: HttpRequest) => {
     const schedules = await this.scheduleService.getSchedules(req.userId);
 
     const resData = {
@@ -87,7 +87,7 @@ export class ScheduleController implements Controller {
     const exception = await this.exceptionService.createException({
       ...req.body,
       userId: req.userId,
-      scheduleId: schedule.id,
+      schedule: schedule.id,
     });
     res.status(HttpResponse.CREATED).send(exception);
   };
