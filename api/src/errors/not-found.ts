@@ -9,7 +9,7 @@ class NotFoundError extends BaseError {
     detail: "",
   };
 
-  constructor(message: string) {
+  constructor(message = "The requested resource was not found.") {
     super(message);
     Object.setPrototypeOf(this, NotFoundError.prototype);
     this.error.detail = message;
