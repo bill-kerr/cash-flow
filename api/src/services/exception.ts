@@ -1,6 +1,6 @@
 import { CreateExceptionDto, UpdateExceptionDto } from "../types";
 import { Exception, Schedule } from "../entities";
-import { BadRequestError, NotFoundError } from "../errors";
+import { BadRequestError, NotAuthorizedError } from "../errors";
 import { Repository } from "typeorm";
 import { ScheduleService } from "./schedule";
 
@@ -11,7 +11,7 @@ export class ExceptionService {
     const relations = loadSchedule ? ["schedule"] : [];
     const exception = await this.repository.findOne({ where: { id, userId }, relations });
     if (!exception) {
-      throw new NotFoundError();
+      throw new NotAuthorizedError();
     }
 
     return exception;
@@ -20,7 +20,7 @@ export class ExceptionService {
   public async getExceptionByScheduleAndDate(schedule: Schedule, date: string): Promise<Exception | undefined> {
     const exception = await this.repository.findOne({ schedule, date });
     if (!exception) {
-      throw new NotFoundError();
+      throw new NotAuthorizedError();
     }
 
     return exception;

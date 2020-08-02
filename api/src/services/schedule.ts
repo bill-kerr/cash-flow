@@ -1,7 +1,7 @@
 import { omit } from "lodash";
 import { Frequency, CreateScheduleDto, UpdateScheduleDto } from "../types";
 import { Schedule } from "../entities";
-import { BadRequestError, NotFoundError } from "../errors";
+import { BadRequestError, NotAuthorizedError } from "../errors";
 import { Repository } from "typeorm";
 import { recurrenceRule, hasOccurrences } from "../util/recurrence";
 
@@ -109,7 +109,7 @@ export class ScheduleService {
     const schedule = await this.repository.findOne({ id: scheduleId, userId }, { relations });
 
     if (!schedule) {
-      throw new NotFoundError();
+      throw new NotAuthorizedError();
     }
     return schedule;
   }
