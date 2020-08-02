@@ -1,4 +1,4 @@
-import { HttpResponse } from "../interfaces";
+import { HttpResponseCode } from "../interfaces";
 
 export interface SerializedError {
   object: "error-detail";
@@ -7,7 +7,7 @@ export interface SerializedError {
 }
 
 export abstract class BaseError extends Error {
-  abstract statusCode: HttpResponse;
+  abstract statusCode: HttpResponseCode;
 
   constructor(message: string) {
     super(message);

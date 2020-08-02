@@ -1,30 +1,32 @@
 import { Router } from "express";
-import { HttpRequest, ListResponse } from "./http";
-import { Occurrence, Exception, Schedule } from "../entities";
+import { HttpRequest, HttpResponse } from "./http";
+import { Schedule, Occurrence, Exception } from "../entities";
 
 interface Controller {
   router(): Router;
 }
 
+export type RequestHandler<T> = (req: HttpRequest) => Promise<HttpResponse<T>>;
+
 export interface IScheduleController extends Controller {
-  getSchedules(req: HttpRequest): Promise<ListResponse<Schedule>>;
-  getSchedule(req: HttpRequest): Promise<Schedule>;
-  getOccurrences(req: HttpRequest): Promise<ListResponse<Occurrence>>;
-  getExceptions(req: HttpRequest): Promise<ListResponse<Exception>>;
-  createSchedule(req: HttpRequest): Promise<Schedule>;
-  createException(req: HttpRequest): Promise<Exception>;
-  updateSchedule(req: HttpRequest): Promise<Schedule>;
-  deleteSchedule(req: HttpRequest): Promise<Schedule>;
+  getSchedules: RequestHandler<Schedule[]>;
+  getSchedule: RequestHandler<Schedule>;
+  getOccurrences: RequestHandler<Schedule>;
+  getExceptions: RequestHandler<Exception[]>;
+  createSchedule: RequestHandler<Schedule>;
+  createException: RequestHandler<Exception>;
+  updateSchedule: RequestHandler<Schedule>;
+  deleteSchedule: RequestHandler<Schedule>;
 }
 
 export interface IExceptionController extends Controller {
-  getException(req: HttpRequest): Promise<Exception>;
-  getExceptions(req: HttpRequest): Promise<ListResponse<Exception>>;
-  createException(req: HttpRequest): Promise<Exception>;
-  updateException(req: HttpRequest): Promise<Exception>;
-  deleteException(req: HttpRequest): Promise<Exception>;
+  getException: RequestHandler<Exception>;
+  getExceptions: RequestHandler<Exception[]>;
+  createException: RequestHandler<Exception>;
+  updateException: RequestHandler<Exception>;
+  deleteException: RequestHandler<Exception>;
 }
 
 export interface IOccurrenceController extends Controller {
-  getOccurrences(req: HttpRequest): Promise<ListResponse<Occurrence>>;
+  getOccurrences: RequestHandler<Occurrence[]>;
 }

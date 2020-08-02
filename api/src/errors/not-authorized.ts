@@ -1,8 +1,8 @@
 import { BaseError, SerializedError } from "./base-error";
-import { HttpResponse } from "../interfaces";
+import { HttpResponseCode } from "../interfaces";
 
 class NotAuthorizedError extends BaseError {
-  statusCode = HttpResponse.UNAUTHORIZED;
+  statusCode = HttpResponseCode.UNAUTHORIZED;
   error: SerializedError = {
     object: "error-detail",
     title: "Not authorized",

@@ -7,11 +7,10 @@ import {
   queryDateRangeValidator,
   createExceptionByScheduleValidator,
 } from "../middleware/validators";
-import { HttpRequest, ListResponse, HttpResponse } from "../interfaces";
+import { HttpResponseCode, IScheduleController, HttpRequest, HttpResponse } from "../interfaces";
 import { Schedule } from "../entities";
-import { Get } from "../decorators";
 
-export class ScheduleController {
+export class ScheduleController implements IScheduleController {
   constructor(
     private scheduleService: ScheduleService,
     private exceptionService: ExceptionService,
@@ -21,7 +20,7 @@ export class ScheduleController {
   private configureRouter = (router: Router) => {
     router.use(requireAuth);
 
-    //router.get("/", httpWrapper(this.getSchedules));
+    router.get("/", this.getSchedules);
     router.get("/:id", this.getSchedule);
     router.get("/:id/occurrences", queryDateRangeValidator, handleValidationResult, this.getOccurrences);
     router.get("/:id/exceptions", this.getExceptions);
@@ -34,31 +33,14 @@ export class ScheduleController {
     router.delete("/:id", this.deleteSchedule);
   };
 
-  @Get("/")
-  public async testMethod(req: HttpRequest): Promise<any> {
-    console.log(this);
-    await this.scheduleService.getScheduleById("lsdfjlksd", req.userId);
-    return { test: "slfjlsdj" };
-  }
-
-  @Get("/dsad")
-  public async testMethod2(req: HttpRequest): Promise<any> {
-    console.log(req);
-    return "lsdjflsd";
-  }
-
-  public getSchedules = async (req: HttpRequest): Promise<ListResponse<Schedule>> => {
+  public getSchedules = async (req: HttpRequest): Promise<HttpResponse<Schedule[]>> => {
     const schedules = await this.scheduleService.getSchedules(req.userId);
-
-    return {
-      object: "list",
-      data: schedules,
-    };
+    return { status: 200, data: schedules };
   };
 
   private getSchedule = async (req: Request, res: Response) => {
     const schedule = await this.scheduleService.getScheduleById(req.params.id, req.userId);
-    res.status(HttpResponse.OK).send(schedule);
+    res.status(HttpResponseCode.OK).send(schedule);
   };
 
   private getOccurrences = async (req: Request, res: Response) => {
@@ -70,11 +52,10 @@ export class ScheduleController {
       endDate!.toString()
     );
 
-    const resData = {
+    res.status(HttpResponseCode.OK).send({
       object: "list",
       data: occurrences,
-    };
-    res.status(HttpResponse.OK).send(resData);
+    });
   };
 
   private getExceptions = async (req: Request, res: Response) => {
@@ -85,13 +66,13 @@ export class ScheduleController {
       object: "list",
       data: exceptions,
     };
-    res.status(HttpResponse.OK).send(resData);
+    res.status(HttpResponseCode.OK).send(resData);
   };
 
   private createSchedule = async (req: Request, res: Response) => {
     const data = { ...req.body, userId: req.userId };
     const schedule = await this.scheduleService.createSchedule(data);
-    res.status(HttpResponse.CREATED).send(schedule);
+    res.status(HttpResponseCode.CREATED).send(schedule);
   };
 
   private createException = async (req: Request, res: Response) => {
@@ -101,18 +82,18 @@ export class ScheduleController {
       userId: req.userId,
       schedule: schedule.id,
     });
-    res.status(HttpResponse.CREATED).send(exception);
+    res.status(HttpResponseCode.CREATED).send(exception);
   };
 
   private updateSchedule = async (req: Request, res: Response) => {
     const data = { ...req.body, id: req.params.id };
     const schedule = await this.scheduleService.updateSchedule(data);
-    res.status(HttpResponse.OK).send(schedule);
+    res.status(HttpResponseCode.OK).send(schedule);
   };
 
   private deleteSchedule = async (req: Request, res: Response) => {
     const schedule = await this.scheduleService.deleteSchedule(req.params.id, req.userId);
-    res.status(HttpResponse.OK).send(schedule);
+    res.status(HttpResponseCode.OK).send(schedule);
   };
 
   public router = (): Router => {

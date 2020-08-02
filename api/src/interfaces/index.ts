@@ -1,2 +1,2 @@
-export { IScheduleController } from "./controllers";
-export { HttpRequest, ListResponse, HttpResponse, RequestMethod, RouteConfig } from "./http";
+export { IScheduleController, IOccurrenceController, IExceptionController, RequestHandler } from "./controllers";
+export { HttpResponseCode, HttpRequest, RequestMethod, HttpResponse } from "./http";

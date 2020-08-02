@@ -2,7 +2,7 @@ import express, { Request, Response, Router } from "express";
 import { requireAuth, handleValidationResult } from "../middleware";
 import { ExceptionService } from "../services";
 import { UpdateExceptionDto, CreateExceptionDto } from "../types";
-import { HttpResponse } from "../interfaces";
+import { HttpResponseCode } from "../interfaces";
 import { createExceptionValidator, updateExceptionValidator } from "../middleware/validators";
 
 export class ExceptionController {
@@ -27,12 +27,12 @@ export class ExceptionController {
       object: "list",
       data: exceptions,
     };
-    res.status(HttpResponse.OK).send(resData);
+    res.status(HttpResponseCode.OK).send(resData);
   };
 
   private getException = async (req: Request, res: Response) => {
     const exception = await this.exceptionService.getExceptionById(req.params.id, req.userId);
-    res.status(HttpResponse.OK).send(exception);
+    res.status(HttpResponseCode.OK).send(exception);
   };
 
   private createException = async (req: Request, res: Response) => {
@@ -42,18 +42,18 @@ export class ExceptionController {
     };
 
     const exception = await this.exceptionService.createException(data);
-    res.status(HttpResponse.CREATED).send(exception);
+    res.status(HttpResponseCode.CREATED).send(exception);
   };
 
   private updateException = async (req: Request, res: Response) => {
     const data: UpdateExceptionDto = { ...req.body, id: req.params.id };
     const exception = await this.exceptionService.updateException(data);
-    res.status(HttpResponse.OK).send(exception);
+    res.status(HttpResponseCode.OK).send(exception);
   };
 
   private deleteException = async (req: Request, res: Response) => {
     const exception = await this.exceptionService.deleteException(req.params.id, req.userId);
-    res.status(HttpResponse.OK).send(exception);
+    res.status(HttpResponseCode.OK).send(exception);
   };
 
   public router = () => {

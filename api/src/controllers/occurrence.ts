@@ -1,5 +1,5 @@
 import express, { Request, Response, Router } from "express";
-import { HttpResponse } from "../interfaces";
+import { HttpResponseCode } from "../interfaces";
 import { requireAuth, handleValidationResult } from "../middleware";
 import { queryDateRangeValidator } from "../middleware/validators";
 import { OccurrenceService, ScheduleService } from "../services";
@@ -26,7 +26,7 @@ export class OccurrenceController {
       object: "list",
       data: occurrences,
     };
-    res.status(HttpResponse.OK).send(resData);
+    res.status(HttpResponseCode.OK).send(resData);
   };
 
   public router = (): Router => {

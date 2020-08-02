@@ -1,9 +1,9 @@
 import { BaseError, SerializedError } from "./base-error";
-import { HttpResponse } from "../interfaces";
+import { HttpResponseCode } from "../interfaces";
 import { ValidationError } from "express-validator";
 
 class RequestValidationError extends BaseError {
-  statusCode = HttpResponse.BAD_REQUEST;
+  statusCode = HttpResponseCode.BAD_REQUEST;
 
   constructor(private errors: ValidationError[]) {
     super("Request validation error");

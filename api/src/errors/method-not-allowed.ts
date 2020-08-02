@@ -1,8 +1,8 @@
 import { BaseError, SerializedError } from "./base-error";
-import { HttpResponse } from "../interfaces";
+import { HttpResponseCode } from "../interfaces";
 
 class MethodNotAllowedError extends BaseError {
-  statusCode = HttpResponse.METHOD_NOT_ALLOWED;
+  statusCode = HttpResponseCode.METHOD_NOT_ALLOWED;
   error: SerializedError = {
     object: "error-detail",
     title: "Method not allowed",

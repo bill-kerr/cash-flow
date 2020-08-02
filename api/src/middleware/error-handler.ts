@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import { HttpResponse } from "../interfaces";
+import { HttpResponseCode } from "../interfaces";
 import { BaseError, ErrorResponse } from "../errors";
 
 const defaultError: ErrorResponse = {
   object: "list",
-  statusCode: HttpResponse.INTERNAL_SERVER_ERROR,
+  statusCode: HttpResponseCode.INTERNAL_SERVER_ERROR,
   errors: [
     {
       object: "error-detail",
@@ -28,7 +28,7 @@ function errorHandler(err: Error, _req: Request, res: Response, _next: NextFunct
   if (err instanceof SyntaxError) {
     const errorResponse: ErrorResponse = {
       object: "list",
-      statusCode: HttpResponse.BAD_REQUEST,
+      statusCode: HttpResponseCode.BAD_REQUEST,
       errors: [
         {
           object: "error-detail",
@@ -38,11 +38,11 @@ function errorHandler(err: Error, _req: Request, res: Response, _next: NextFunct
       ],
     };
 
-    return res.status(HttpResponse.BAD_REQUEST).send(errorResponse);
+    return res.status(HttpResponseCode.BAD_REQUEST).send(errorResponse);
   }
 
   console.error(err);
-  return res.status(HttpResponse.INTERNAL_SERVER_ERROR).send(defaultError);
+  return res.status(HttpResponseCode.INTERNAL_SERVER_ERROR).send(defaultError);
 }
 
 export { errorHandler };

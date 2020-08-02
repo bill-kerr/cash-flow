@@ -1,8 +1,8 @@
 import { BaseError, SerializedError } from "./base-error";
-import { HttpResponse } from "../interfaces";
+import { HttpResponseCode } from "../interfaces";
 
 class BadRequestError extends BaseError {
-  statusCode = HttpResponse.BAD_REQUEST;
+  statusCode = HttpResponseCode.BAD_REQUEST;
   error: SerializedError = {
     object: "error-detail",
     title: "Bad request",

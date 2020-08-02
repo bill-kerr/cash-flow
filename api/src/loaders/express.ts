@@ -1,4 +1,4 @@
-import express, { Application, Router } from "express";
+import express, { Application, Request, Response } from "express";
 import { json } from "body-parser";
 import "express-async-errors";
 import cors from "cors";
@@ -9,7 +9,7 @@ import { getRepository } from "typeorm";
 import { Schedule, Exception } from "../entities";
 import { ExceptionService, OccurrenceService, ScheduleService } from "../services";
 import { ExceptionController, ScheduleController, OccurrenceController } from "../controllers";
-import { RouteConfig } from "../interfaces";
+import { HttpRequest, HttpResponse } from "../interfaces";
 
 function init(): Application {
   const app = express();
@@ -28,7 +28,7 @@ function init(): Application {
   const occurrenceController = new OccurrenceController(scheduleService, occurrenceService);
 
   const routerV1 = express.Router();
-  routerV1.use("/schedules", registerRoutes(scheduleController));
+  routerV1.use("/schedules", scheduleController.router());
   routerV1.use("/exceptions", exceptionController.router());
   routerV1.use("/occurrences", occurrenceController.router());
   app.use("/api/v1", routerV1);
@@ -41,14 +41,24 @@ function init(): Application {
   return app;
 }
 
-function registerRoutes(controller: any): Router {
-  const router = express.Router();
-  Reflect.getMetadataKeys(controller).map((key) => {
-    const routeConfig: RouteConfig = Reflect.getMetadata(key, controller);
-    const { method, path, handler } = routeConfig;
-    router[method](path, handler);
-  });
-  return router;
+function expressWrapper(handler: (httpRequest: HttpRequest) => Promise<HttpResponse<any>>) {
+  return async (req: Request, res: Response) => {
+    const httpRequest = makeHttpRequest(req);
+    const result = await handler(httpRequest);
+    res.status(result.status).send(result.data);
+  };
+}
+
+function makeHttpRequest(req: Request): HttpRequest {
+  const querystring = req.baseUrl.split("?")[1];
+  const query = new URLSearchParams(querystring);
+  return {
+    query,
+    url: req.url,
+    body: req.body,
+    userId: req.userId,
+    method: req.method,
+  };
 }
 
 export { init as initExpressApp };

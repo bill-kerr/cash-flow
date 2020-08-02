@@ -1,9 +1,9 @@
-import { HttpResponse } from "../interfaces";
+import { HttpResponseCode } from "../interfaces";
 import { SerializedError } from "./base-error";
 
 interface ErrorResponse {
   object: "list";
-  statusCode: HttpResponse;
+  statusCode: HttpResponseCode;
   errors: SerializedError[];
 }
 

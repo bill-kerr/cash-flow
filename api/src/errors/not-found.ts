@@ -1,8 +1,8 @@
 import { BaseError, SerializedError } from "./base-error";
-import { HttpResponse } from "../interfaces";
+import { HttpResponseCode } from "../interfaces";
 
 class NotFoundError extends BaseError {
-  statusCode = HttpResponse.NOT_FOUND;
+  statusCode = HttpResponseCode.NOT_FOUND;
   error: SerializedError = {
     object: "error-detail",
     title: "Not found",
