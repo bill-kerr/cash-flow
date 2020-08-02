@@ -4,8 +4,9 @@ import { Schedule } from "../entities";
 import { BadRequestError, NotFoundError } from "../errors";
 import { Repository } from "typeorm";
 import { recurrenceRule, hasOccurrences } from "../util/recurrence";
+import { IScheduleService } from "../interfaces";
 
-export class ScheduleService {
+export class ScheduleService implements IScheduleService {
   constructor(private repository: Repository<Schedule>) {}
 
   private removeUnnecessaryFields(dto: CreateScheduleDto): CreateScheduleDto {

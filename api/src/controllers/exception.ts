@@ -1,12 +1,11 @@
 import express, { Request, Response, Router } from "express";
 import { requireAuth, handleValidationResult } from "../middleware";
-import { ExceptionService } from "../services";
 import { UpdateExceptionDto, CreateExceptionDto, HttpResponse } from "../types";
 import { createExceptionValidator, updateExceptionValidator } from "../middleware/validators";
-import { Controller } from ".";
+import { IExceptionController, IExceptionService } from "../interfaces";
 
-export class ExceptionController implements Controller {
-  constructor(private exceptionService: ExceptionService) {}
+export class ExceptionController implements IExceptionController {
+  constructor(private exceptionService: IExceptionService) {}
 
   private configureRouter = (router: Router) => {
     router.use(requireAuth);
@@ -21,7 +20,7 @@ export class ExceptionController implements Controller {
     router.delete("/:id", this.deleteException);
   };
 
-  private getExceptions = async (req: Request, res: Response) => {
+  getExceptions = async (req: Request, res: Response) => {
     const exceptions = await this.exceptionService.getExceptionsByUser(req.userId);
     const resData = {
       object: "list",
@@ -30,12 +29,12 @@ export class ExceptionController implements Controller {
     res.status(HttpResponse.OK).send(resData);
   };
 
-  private getException = async (req: Request, res: Response) => {
+  getException = async (req: Request, res: Response) => {
     const exception = await this.exceptionService.getExceptionById(req.params.id, req.userId);
     res.status(HttpResponse.OK).send(exception);
   };
 
-  private createException = async (req: Request, res: Response) => {
+  createException = async (req: Request, res: Response) => {
     const data: CreateExceptionDto = {
       ...req.body,
       userId: req.userId,
@@ -45,18 +44,18 @@ export class ExceptionController implements Controller {
     res.status(HttpResponse.CREATED).send(exception);
   };
 
-  private updateException = async (req: Request, res: Response) => {
+  updateException = async (req: Request, res: Response) => {
     const data: UpdateExceptionDto = { ...req.body, id: req.params.id };
     const exception = await this.exceptionService.updateException(data);
     res.status(HttpResponse.OK).send(exception);
   };
 
-  private deleteException = async (req: Request, res: Response) => {
+  deleteException = async (req: Request, res: Response) => {
     const exception = await this.exceptionService.deleteException(req.params.id, req.userId);
     res.status(HttpResponse.OK).send(exception);
   };
 
-  public router = () => {
+  router = () => {
     const router = express.Router();
     this.configureRouter(router);
     return router;

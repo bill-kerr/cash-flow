@@ -1,20 +1,19 @@
 import express, { Request, Response, Router } from "express";
 import { HttpResponse } from "../types";
 import { handleValidationResult, requireAuth } from "../middleware";
-import { ExceptionService, ScheduleService, OccurrenceService } from "../services";
 import {
   createScheduleValidator,
   updateScheduleValidator,
   queryDateRangeValidator,
   createExceptionByScheduleValidator,
 } from "../middleware/validators";
-import { Controller } from ".";
+import { IScheduleController, IScheduleService, IExceptionService, IOccurrenceService } from "../interfaces";
 
-export class ScheduleController implements Controller {
+export class ScheduleController implements IScheduleController {
   constructor(
-    private scheduleService: ScheduleService,
-    private exceptionService: ExceptionService,
-    private occurrenceService: OccurrenceService
+    private scheduleService: IScheduleService,
+    private exceptionService: IExceptionService,
+    private occurrenceService: IOccurrenceService
   ) {}
 
   private configureRouter = (router: Router) => {
@@ -33,7 +32,7 @@ export class ScheduleController implements Controller {
     router.delete("/:id", this.deleteSchedule);
   };
 
-  private getSchedules = async (req: Request, res: Response) => {
+  getSchedules = async (req: Request, res: Response) => {
     const schedules = await this.scheduleService.getSchedules(req.userId);
 
     const resData = {
@@ -44,12 +43,12 @@ export class ScheduleController implements Controller {
     res.status(HttpResponse.OK).send(resData);
   };
 
-  private getSchedule = async (req: Request, res: Response) => {
+  getSchedule = async (req: Request, res: Response) => {
     const schedule = await this.scheduleService.getScheduleById(req.params.id, req.userId);
     res.status(HttpResponse.OK).send(schedule);
   };
 
-  private getOccurrences = async (req: Request, res: Response) => {
+  getOccurrences = async (req: Request, res: Response) => {
     const { startDate, endDate } = req.query;
     const schedule = await this.scheduleService.getScheduleById(req.params.id, req.userId);
     const occurrences = await this.occurrenceService.getOccurrencesBySchedule(
@@ -65,7 +64,7 @@ export class ScheduleController implements Controller {
     res.status(HttpResponse.OK).send(resData);
   };
 
-  private getExceptions = async (req: Request, res: Response) => {
+  getExceptions = async (req: Request, res: Response) => {
     const schedule = await this.scheduleService.getScheduleById(req.params.id, req.userId);
     const exceptions = await this.exceptionService.getExceptionsBySchedule(schedule);
 
@@ -76,13 +75,13 @@ export class ScheduleController implements Controller {
     res.status(HttpResponse.OK).send(resData);
   };
 
-  private createSchedule = async (req: Request, res: Response) => {
+  createSchedule = async (req: Request, res: Response) => {
     const data = { ...req.body, userId: req.userId };
     const schedule = await this.scheduleService.createSchedule(data);
     res.status(HttpResponse.CREATED).send(schedule);
   };
 
-  private createException = async (req: Request, res: Response) => {
+  createException = async (req: Request, res: Response) => {
     const schedule = await this.scheduleService.getScheduleById(req.params.id, req.userId);
     const exception = await this.exceptionService.createException({
       ...req.body,
@@ -92,18 +91,18 @@ export class ScheduleController implements Controller {
     res.status(HttpResponse.CREATED).send(exception);
   };
 
-  private updateSchedule = async (req: Request, res: Response) => {
+  updateSchedule = async (req: Request, res: Response) => {
     const data = { ...req.body, id: req.params.id };
     const schedule = await this.scheduleService.updateSchedule(data);
     res.status(HttpResponse.OK).send(schedule);
   };
 
-  private deleteSchedule = async (req: Request, res: Response) => {
+  deleteSchedule = async (req: Request, res: Response) => {
     const schedule = await this.scheduleService.deleteSchedule(req.params.id, req.userId);
     res.status(HttpResponse.OK).send(schedule);
   };
 
-  public router = (): Router => {
+  router = (): Router => {
     const router = express.Router();
     this.configureRouter(router);
     return router;

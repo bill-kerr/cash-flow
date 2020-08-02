@@ -2,11 +2,10 @@ import express, { Request, Response, Router } from "express";
 import { HttpResponse } from "../types";
 import { requireAuth, handleValidationResult } from "../middleware";
 import { queryDateRangeValidator } from "../middleware/validators";
-import { Controller } from ".";
-import { OccurrenceService, ScheduleService } from "../services";
+import { IOccurrenceController, IOccurrenceService, IScheduleService } from "../interfaces";
 
-export class OccurrenceController implements Controller {
-  constructor(private scheduleService: ScheduleService, private occurrenceService: OccurrenceService) {}
+export class OccurrenceController implements IOccurrenceController {
+  constructor(private scheduleService: IScheduleService, private occurrenceService: IOccurrenceService) {}
 
   private configureRouter = (router: Router) => {
     router.use(requireAuth);
@@ -14,7 +13,7 @@ export class OccurrenceController implements Controller {
     router.get("/", queryDateRangeValidator, handleValidationResult, this.getOccurrences);
   };
 
-  private getOccurrences = async (req: Request, res: Response) => {
+  getOccurrences = async (req: Request, res: Response) => {
     const schedules = await this.scheduleService.getSchedules(req.userId);
     const { startDate, endDate } = req.query;
     const occurrences = await this.occurrenceService.getOccurrencesBySchedules(
@@ -30,7 +29,7 @@ export class OccurrenceController implements Controller {
     res.status(HttpResponse.OK).send(resData);
   };
 
-  public router = (): Router => {
+  router = (): Router => {
     const router = express.Router();
     this.configureRouter(router);
     return router;
