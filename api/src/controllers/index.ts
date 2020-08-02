@@ -1,8 +1,8 @@
 import { Router } from "express";
 
-export { occurrenceRouter } from "./occurrence";
-export { exceptionRouter } from "./exception";
-export { scheduleRouter } from "./schedule";
+export { OccurrenceController } from "./occurrence";
+export { ExceptionController } from "./exception";
+export { ScheduleController } from "./schedule";
 
 export interface Controller {
   router(): Router;
