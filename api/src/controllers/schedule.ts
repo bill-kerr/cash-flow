@@ -1,5 +1,4 @@
 import express, { Request, Response, Router } from "express";
-import { HttpResponse } from "../types";
 import { handleValidationResult, requireAuth } from "../middleware";
 import { ExceptionService, ScheduleService, OccurrenceService } from "../services";
 import {
@@ -8,7 +7,9 @@ import {
   queryDateRangeValidator,
   createExceptionByScheduleValidator,
 } from "../middleware/validators";
-import { httpWrapper, HttpRequest } from "../interfaces/http";
+import { HttpRequest, ListResponse, HttpResponse } from "../interfaces";
+import { Schedule } from "../entities";
+import { Get } from "../decorators";
 
 export class ScheduleController {
   constructor(
@@ -20,7 +21,7 @@ export class ScheduleController {
   private configureRouter = (router: Router) => {
     router.use(requireAuth);
 
-    router.get("/", httpWrapper(this.getSchedules));
+    //router.get("/", httpWrapper(this.getSchedules));
     router.get("/:id", this.getSchedule);
     router.get("/:id/occurrences", queryDateRangeValidator, handleValidationResult, this.getOccurrences);
     router.get("/:id/exceptions", this.getExceptions);
@@ -33,15 +34,26 @@ export class ScheduleController {
     router.delete("/:id", this.deleteSchedule);
   };
 
-  private getSchedules = async (req: HttpRequest) => {
+  @Get("/")
+  public async testMethod(req: HttpRequest): Promise<any> {
+    console.log(this);
+    await this.scheduleService.getScheduleById("lsdfjlksd", req.userId);
+    return { test: "slfjlsdj" };
+  }
+
+  @Get("/dsad")
+  public async testMethod2(req: HttpRequest): Promise<any> {
+    console.log(req);
+    return "lsdjflsd";
+  }
+
+  public getSchedules = async (req: HttpRequest): Promise<ListResponse<Schedule>> => {
     const schedules = await this.scheduleService.getSchedules(req.userId);
 
-    const resData = {
+    return {
       object: "list",
       data: schedules,
     };
-
-    res.status(HttpResponse.OK).send(resData);
   };
 
   private getSchedule = async (req: Request, res: Response) => {

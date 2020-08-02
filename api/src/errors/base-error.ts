@@ -1,4 +1,4 @@
-import { HttpResponse } from "../types";
+import { HttpResponse } from "../interfaces";
 
 export interface SerializedError {
   object: "error-detail";

@@ -1,5 +1,5 @@
 import express, { Request, Response, Router } from "express";
-import { HttpResponse } from "../types";
+import { HttpResponse } from "../interfaces";
 import { requireAuth, handleValidationResult } from "../middleware";
 import { queryDateRangeValidator } from "../middleware/validators";
 import { OccurrenceService, ScheduleService } from "../services";

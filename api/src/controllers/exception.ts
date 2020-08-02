@@ -1,7 +1,8 @@
 import express, { Request, Response, Router } from "express";
 import { requireAuth, handleValidationResult } from "../middleware";
 import { ExceptionService } from "../services";
-import { UpdateExceptionDto, CreateExceptionDto, HttpResponse } from "../types";
+import { UpdateExceptionDto, CreateExceptionDto } from "../types";
+import { HttpResponse } from "../interfaces";
 import { createExceptionValidator, updateExceptionValidator } from "../middleware/validators";
 
 export class ExceptionController {

@@ -1,4 +1,4 @@
-import { HttpResponse } from "../types";
+import { HttpResponse } from "../interfaces";
 import { SerializedError } from "./base-error";
 
 interface ErrorResponse {

@@ -1,5 +1,5 @@
 import { BaseError, SerializedError } from "./base-error";
-import { HttpResponse } from "../types";
+import { HttpResponse } from "../interfaces";
 
 class BadRequestError extends BaseError {
   statusCode = HttpResponse.BAD_REQUEST;

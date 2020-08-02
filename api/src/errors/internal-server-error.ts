@@ -1,5 +1,5 @@
 import { BaseError, SerializedError } from "./base-error";
-import { HttpResponse } from "../types";
+import { HttpResponse } from "../interfaces";
 
 class InternalServerError extends BaseError {
   statusCode = HttpResponse.INTERNAL_SERVER_ERROR;

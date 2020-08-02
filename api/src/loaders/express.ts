@@ -1,4 +1,4 @@
-import express, { Application } from "express";
+import express, { Application, Router } from "express";
 import { json } from "body-parser";
 import "express-async-errors";
 import cors from "cors";
@@ -9,6 +9,7 @@ import { getRepository } from "typeorm";
 import { Schedule, Exception } from "../entities";
 import { ExceptionService, OccurrenceService, ScheduleService } from "../services";
 import { ExceptionController, ScheduleController, OccurrenceController } from "../controllers";
+import { RouteConfig } from "../interfaces";
 
 function init(): Application {
   const app = express();
@@ -27,7 +28,7 @@ function init(): Application {
   const occurrenceController = new OccurrenceController(scheduleService, occurrenceService);
 
   const routerV1 = express.Router();
-  routerV1.use("/schedules", scheduleController.router());
+  routerV1.use("/schedules", registerRoutes(scheduleController));
   routerV1.use("/exceptions", exceptionController.router());
   routerV1.use("/occurrences", occurrenceController.router());
   app.use("/api/v1", routerV1);
@@ -38,6 +39,16 @@ function init(): Application {
 
   app.use(errorHandler);
   return app;
+}
+
+function registerRoutes(controller: any): Router {
+  const router = express.Router();
+  Reflect.getMetadataKeys(controller).map((key) => {
+    const routeConfig: RouteConfig = Reflect.getMetadata(key, controller);
+    const { method, path, handler } = routeConfig;
+    router[method](path, handler);
+  });
+  return router;
 }
 
 export { init as initExpressApp };
