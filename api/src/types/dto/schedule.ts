@@ -29,4 +29,5 @@ export interface UpdateScheduleDto {
   dayOfMonth?: number | null;
   month?: Month | null;
   recurrenceRule?: string;
+  userId: string;
 }

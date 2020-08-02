@@ -16,4 +16,5 @@ export interface UpdateExceptionDto {
   currentDate?: string;
   amount?: number;
   description?: string;
+  userId: string;
 }

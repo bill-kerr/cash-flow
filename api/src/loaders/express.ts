@@ -5,7 +5,11 @@ import cors from "cors";
 import helmet from "helmet";
 import { NotFoundError } from "../errors";
 import { errorHandler, verifyJsonMediaType, requestMethodChecker } from "../middleware";
-import { scheduleRouter, exceptionRouter, occurrenceRouter } from "../controllers";
+import { ScheduleController, ExceptionController, OccurrenceController } from "../controllers";
+import { ScheduleService } from "../services/schedule";
+import { getRepository } from "typeorm";
+import { Schedule, Exception } from "../entities";
+import { ExceptionService, OccurrenceService } from "../services";
 
 function init(): Application {
   const app = express();
@@ -16,9 +20,18 @@ function init(): Application {
   app.use(requestMethodChecker);
   app.use(verifyJsonMediaType);
 
-  app.use("/api/v1/schedules", scheduleRouter);
-  app.use("/api/v1/exceptions", exceptionRouter);
-  app.use("/api/v1/occurrences", occurrenceRouter);
+  const scheduleService = new ScheduleService(getRepository(Schedule));
+  const exceptionService = new ExceptionService(scheduleService, getRepository(Exception));
+  const occurrenceService = new OccurrenceService(exceptionService);
+  const scheduleController = new ScheduleController(scheduleService, exceptionService, occurrenceService);
+  const exceptionController = new ExceptionController(exceptionService);
+  const occurrenceController = new OccurrenceController(scheduleService, occurrenceService);
+
+  const routerV1 = express.Router();
+  routerV1.use("/schedules", scheduleController.router());
+  routerV1.use("/exceptions", exceptionController.router());
+  routerV1.use("/occurrences", occurrenceController.router());
+  app.use("/api/v1", routerV1);
 
   app.all("*", () => {
     throw new NotFoundError("The specified endpoint does not exist.");

@@ -1,7 +1,6 @@
 import { Entity, Column, BeforeInsert, PrimaryColumn, BaseEntity, ManyToOne, BeforeUpdate, JoinColumn } from "typeorm";
-import { id, getUnixTime, merge } from "../util";
+import { id, getUnixTime } from "../util";
 import { Schedule } from "./schedule";
-import { UpdateExceptionDto } from "../types";
 
 @Entity()
 export class Exception extends BaseEntity {
@@ -28,12 +27,9 @@ export class Exception extends BaseEntity {
   @Column({ nullable: false })
   userId: string;
 
-  @ManyToOne(() => Schedule, (schedule) => schedule.exceptions, { onDelete: "CASCADE" })
-  @JoinColumn({ name: "schedule" })
+  @ManyToOne(() => Schedule, (schedule) => schedule.exceptions, { onDelete: "CASCADE", eager: false })
+  @JoinColumn()
   schedule: Schedule;
-
-  @Column()
-  scheduleId: string;
 
   @Column()
   createdAt: number;
@@ -55,9 +51,5 @@ export class Exception extends BaseEntity {
   @BeforeInsert()
   updateUpdatedTimestamp() {
     this.updatedAt = getUnixTime();
-  }
-
-  update(dto: UpdateExceptionDto) {
-    return merge(this, dto);
   }
 }
