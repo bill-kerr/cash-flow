@@ -1,14 +1,21 @@
-import request from "supertest";
-import { ScheduleService } from "../../src/services";
-import { Frequency } from "../../src/types";
-import { initApp, buildMakeRequest } from "../setup";
-import { getRepository } from "typeorm";
-import { Schedule } from "../../src/entities";
+import { initialize, TestClient, makeClient } from "../setup";
+import { Application } from "express";
 
-const app = initApp();
-const { makeRequest, url, headers } = buildMakeRequest("/api/v1/schedules", app);
+let app: Application;
+let client: TestClient;
+beforeAll(async () => {
+  app = await initialize();
+  client = makeClient(
+    "/api/v1/schedules",
+    {
+      "Content-Type": "application/json",
+      Authorization: "Bearer lsdjkflksd",
+    },
+    app
+  );
+});
 
-const fakeData = {
+const testData = {
   amount: 500,
   description: "test description",
   startDate: "2020-05-01",
@@ -18,20 +25,20 @@ const fakeData = {
 };
 
 it("returns a 201 on successful request", async () => {
-  const res = await makeRequest(fakeData);
+  const res = await client.post(testData);
   expect(res.status).toBe(201);
 });
 
 it("returns a properly formatted object on successful request", async () => {
-  const res = await makeRequest(fakeData);
+  const res = await client.post(testData);
   expect(res.body).toEqual({
     id: expect.any(String),
     object: "schedule",
-    amount: fakeData.amount,
-    description: fakeData.description,
-    startDate: fakeData.startDate,
-    endDate: fakeData.endDate,
-    frequency: fakeData.frequency,
+    amount: testData.amount,
+    description: testData.description,
+    startDate: testData.startDate,
+    endDate: testData.endDate,
+    frequency: testData.frequency,
     recurrenceRule: expect.any(String),
     interval: 1,
     occurrenceCount: null,
@@ -45,16 +52,13 @@ it("returns a properly formatted object on successful request", async () => {
 });
 
 it("rejects a request with improperly formatted data", async () => {
-  await request(app)
-    .post(url)
-    .set(headers)
-    .send({
-      amount: "500",
-      description: 123,
-      startDate: "2020-5-01",
-      endDate: "2020-05-3",
-    })
-    .expect(400);
+  const res = await client.post({
+    amount: "500",
+    description: 123,
+    startDate: "2020-5-01",
+    endDate: "2020-05-3",
+  });
+  expect(res.status).toBe(400);
 });
 
 it("rejects a request when endDate is before startDate", async () => {
@@ -66,29 +70,24 @@ it("rejects a request when endDate is before startDate", async () => {
     endDate: "2020-04-01",
   };
 
-  const res = await makeRequest(data);
+  const res = await client.post(data);
   expect(res.status).toBe(400);
   expect(res.body.errors[0].detail).toBe("The end date must occur after the start date.");
 });
 
 it("creates a schedule with occurrences on the last day of the month when dayOfMonth is set to 0", async () => {
-  const scheduleService = new ScheduleService(getRepository(Schedule));
-  const data = {
+  const scheduleRes = await client.post({
     userId: "fake-id",
     amount: 500,
     description: "test",
-    frequency: Frequency.MONTHLY,
+    frequency: "MONTHLY",
     dayOfMonth: 0,
     startDate: "2020-01-01",
-  };
-  const schedule = await scheduleService.createSchedule(data);
+  });
+  const id = scheduleRes.body.id;
 
-  const res = await request(app)
-    .get(`/api/v1/schedules/${schedule.id}/occurrences`)
-    .set(headers)
-    .query({ startDate: "2020-01-01", endDate: "2021-03-01" })
-    .send();
-
+  const res = await client.get(`/${id}/occurrences?startDate=2020-01-01&endDate=2021-03-01`);
+  console.log(res.body);
   const occurrences = res.body.data;
   expect(occurrences[0].date).toBe("2020-01-31");
   expect(occurrences[3].date).toBe("2020-04-30");
@@ -109,7 +108,7 @@ it("sets unnecessary fields to null on once schedule creation", async () => {
     startDate: "2020-05-01",
     endDate: "2020-05-06",
   };
-  const res = await makeRequest(data);
+  const res = await client.post(data);
 
   const schedule = res.body;
   expect(schedule.month).toBe(null);
@@ -130,7 +129,7 @@ it("sets unnecessary fields to null on daily schedule creation", async () => {
     dayOfMonth: 15,
     startDate: "2020-05-01",
   };
-  const res = await makeRequest(data);
+  const res = await client.post(data);
 
   const schedule = res.body;
   expect(schedule.month).toBe(null);
@@ -148,7 +147,7 @@ it("sets unnecessary fields to null on weekly schedule creation", async () => {
     dayOfMonth: 15,
     startDate: "2020-05-01",
   };
-  const res = await makeRequest(data);
+  const res = await client.post(data);
 
   const schedule = res.body;
   expect(schedule.month).toBe(null);
@@ -165,7 +164,7 @@ it("sets unnecessary fields to null on monthly schedule creation", async () => {
     dayOfMonth: 15,
     startDate: "2020-05-01",
   };
-  const res = await makeRequest(data);
+  const res = await client.post(data);
 
   const schedule = res.body;
   expect(schedule.month).toBe(null);
@@ -182,7 +181,7 @@ it("sets unnecessary fields to null on yearly schedule creation", async () => {
     dayOfMonth: 15,
     startDate: "2020-05-01",
   };
-  const res = await makeRequest(data);
+  const res = await client.post(data);
 
   const schedule = res.body;
   expect(schedule.dayOfWeek).toBe(null);
@@ -197,7 +196,7 @@ it("sets endDate to null when occurrrenceCount is set", async () => {
     startDate: "2020-05-01",
     endDate: "2020-05-25",
   };
-  const res = await makeRequest(data);
+  const res = await client.post(data);
   expect(res.body.endDate).toBe(null);
 });
 
@@ -211,7 +210,7 @@ it("rejects schedules that have no occurrences", async () => {
     startDate: "2020-01-01",
     endDate: "2020-12-01",
   };
-  const res = await makeRequest(data);
+  const res = await client.post(data);
   expect(res.status).toBe(400);
   expect(res.body.errors[0].detail).toBe("The provided schedule has no occurrences.");
 });

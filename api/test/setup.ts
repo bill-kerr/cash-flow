@@ -1,70 +1,45 @@
-import { initExpressApp } from "../src/loaders/express";
-import request from "supertest";
 import { createConnection } from "typeorm";
 import { Schedule, Exception } from "../src/entities";
-import { initTypeOrm } from "../src/loaders/typeorm";
-jest.mock("firebase-admin");
+import { initExpressApp } from "../src/loaders/express";
+import { Application } from "express";
+import request from "supertest";
 
-initTypeOrm = jest.mock();
+export const initialize = async () => {
+  await createConnection({
+    type: "sqlite",
+    database: ":memory:",
+    dropSchema: true,
+    entities: [Schedule, Exception],
+    synchronize: true,
+    logging: false,
+    name: "default",
+  });
 
-beforeAll(async () => {
-  console.clear();
-  try {
-    const connection = await createConnection({
-      type: "sqlite",
-      database: ":memory:",
-      dropSchema: true,
-      entities: [Schedule, Exception],
-      synchronize: true,
-      logging: false,
-    });
-
-    return connection;
-  } catch (error) {
-    console.error(error);
-    console.log("Server shutting down.");
-    process.exit();
-  }
-});
-
-beforeEach(async () => {
-  await Schedule.delete({});
-  await Exception.delete({});
-});
-
-afterAll(async () => {
-  //await getConnection().close();
-});
-
-export const initApp = () => {
   return initExpressApp();
 };
 
-export const emptyMessage = (field: string) => {
-  return `The ${field} field is required and should not be empty.`;
-};
+export interface TestClient {
+  get(url?: string, headers?: {}): Promise<request.Response>;
+  post(body: any, url?: string, headers?: {}): Promise<request.Response>;
+  put(body: any, url?: string, headers?: {}): Promise<request.Response>;
+  delete(url?: string, headers?: {}): Promise<request.Response>;
+}
 
-export const badTypeMessage = (field: string, contains: string) => {
-  return `The ${field} field must contain ${contains}.`;
-};
-
-export const shouldNotBeEmptyMessage = (field: string, frequencySetTo: string) => {
-  return `The ${field} field should not be empty if frequency is set to ${frequencySetTo}.`;
-};
-
-export const buildMakeRequest = (
-  url: string,
-  app = initExpressApp(),
-  headers = {
-    Authorization: "Bearer sldjflk",
-    "Content-Type": "application/json",
-  }
-) => {
-  return {
-    makeRequest: async (body: {}) => {
-      return request(app).post(url).set(headers).send(body);
+export const makeClient = (baseUrl: string, defaultHeaders: {}, app: Application) => {
+  const makeUrl = (url?: string) => (url ? baseUrl + url : baseUrl);
+  const client: TestClient = {
+    get: (url?: string, headers = defaultHeaders) => {
+      return request(app).get(makeUrl(url)).set(headers).send();
     },
-    url,
-    headers,
+    post: (body: any, url?: string, headers = defaultHeaders) => {
+      return request(app).post(makeUrl(url)).set(headers).send(body);
+    },
+    put: (body: any, url?: string, headers = defaultHeaders) => {
+      return request(app).put(makeUrl(url)).set(headers).send(body);
+    },
+    delete: (url?: string, headers = defaultHeaders) => {
+      return request(app).delete(makeUrl(url)).set(headers).send();
+    },
   };
+  return client;
 };

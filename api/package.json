@@ -5,13 +5,17 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --exec ts-node --files src/app.ts",
-    "test": "jest --runInBand --watchAll --no-cache"
+    "test-server": "set NODE_ENV=test && ts-node src/index.ts",
+    "test": "set NODE_ENV=test && jest --runInBand --watchAll --no-cache"
   },
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
     "setupFilesAfterEnv": [
       "./test/setup.ts"
+    ],
+    "testPathIgnorePatterns": [
+      "/test-old"
     ]
   },
   "keywords": [],
