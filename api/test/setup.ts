@@ -1,8 +1,17 @@
-import { createConnection } from "typeorm";
+import { createConnection, getConnection } from "typeorm";
 import { Schedule, Exception } from "../src/entities";
 import { initExpressApp } from "../src/loaders/express";
 import { Application } from "express";
 import request from "supertest";
+
+afterEach(async () => {
+  await Schedule.clear();
+  await Exception.clear();
+});
+
+afterAll(async () => {
+  getConnection().close();
+});
 
 export const initialize = async () => {
   await createConnection({

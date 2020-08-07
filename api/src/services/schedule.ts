@@ -131,7 +131,7 @@ export class ScheduleService implements IScheduleService {
     }
 
     this.validateDates(schedule, dto);
-    this.repository.update(schedule, dto);
+    this.repository.merge(schedule, dto);
     this.nullUnnecessaryFields(schedule);
     schedule.recurrenceRule = recurrenceRule({ ...schedule });
 

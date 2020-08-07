@@ -86,13 +86,13 @@ export class ScheduleController implements IScheduleController {
     const exception = await this.exceptionService.createException({
       ...req.body,
       userId: req.userId,
-      scheduleId: schedule.id,
+      schedule: schedule.id,
     });
     res.status(HttpResponse.CREATED).send(exception);
   };
 
   updateSchedule = async (req: Request, res: Response) => {
-    const data = { ...req.body, id: req.params.id };
+    const data = { ...req.body, id: req.params.id, userId: req.userId };
     const schedule = await this.scheduleService.updateSchedule(data);
     res.status(HttpResponse.OK).send(schedule);
   };

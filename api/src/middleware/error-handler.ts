@@ -2,9 +2,10 @@ import { Request, Response, NextFunction } from "express";
 import { HttpResponse } from "../types";
 import { BaseError, ErrorResponse } from "../errors";
 
-const defaultError: ErrorResponse = {
+const defaultError = (requestUrl: string): ErrorResponse => ({
   object: "list",
   statusCode: HttpResponse.INTERNAL_SERVER_ERROR,
+  requestUrl,
   errors: [
     {
       object: "error-detail",
@@ -12,13 +13,14 @@ const defaultError: ErrorResponse = {
       detail: "An unknown error occurred.",
     },
   ],
-};
+});
 
-function errorHandler(err: Error, _req: Request, res: Response, _next: NextFunction) {
+function errorHandler(err: Error, req: Request, res: Response, _next: NextFunction) {
   if (err instanceof BaseError) {
     const errorResponse: ErrorResponse = {
       object: "list",
       statusCode: err.statusCode,
+      requestUrl: req.url,
       errors: err.serializeErrors(),
     };
 
@@ -29,6 +31,7 @@ function errorHandler(err: Error, _req: Request, res: Response, _next: NextFunct
     const errorResponse: ErrorResponse = {
       object: "list",
       statusCode: HttpResponse.BAD_REQUEST,
+      requestUrl: req.originalUrl,
       errors: [
         {
           object: "error-detail",
@@ -42,7 +45,7 @@ function errorHandler(err: Error, _req: Request, res: Response, _next: NextFunct
   }
 
   console.error(err);
-  return res.status(HttpResponse.INTERNAL_SERVER_ERROR).send(defaultError);
+  return res.status(HttpResponse.INTERNAL_SERVER_ERROR).send(defaultError(req.originalUrl));
 }
 
 export { errorHandler };

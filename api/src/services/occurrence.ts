@@ -53,8 +53,6 @@ export class OccurrenceService implements IOccurrenceService {
     const exceptions = await this.exceptionService.getExceptionsBySchedule(schedule);
     exceptions.map((exception) => (occurrenceDates[exception.date] = exception));
 
-    console.log(exceptions);
-
     const occurrences: Occurrence[] = [];
     Object.keys(occurrenceDates).map((date) => {
       const exception = occurrenceDates[date];

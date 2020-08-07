@@ -2,4 +2,3 @@ node_modules
 .env
 /src/config/firebase/*
 yarn-error.log
-test-old

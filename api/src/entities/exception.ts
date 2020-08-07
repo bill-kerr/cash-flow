@@ -1,4 +1,14 @@
-import { Entity, Column, BeforeInsert, PrimaryColumn, BaseEntity, ManyToOne, BeforeUpdate, JoinColumn } from "typeorm";
+import {
+  Entity,
+  Column,
+  BeforeInsert,
+  PrimaryColumn,
+  BaseEntity,
+  ManyToOne,
+  BeforeUpdate,
+  JoinColumn,
+  RelationId,
+} from "typeorm";
 import { id, getUnixTime } from "../util";
 import { Schedule } from "./schedule";
 
@@ -29,7 +39,10 @@ export class Exception extends BaseEntity {
 
   @ManyToOne(() => Schedule, (schedule) => schedule.exceptions, { onDelete: "CASCADE", eager: false })
   @JoinColumn()
-  schedule: Schedule;
+  scheduleDoc: Schedule;
+
+  @RelationId("scheduleDoc")
+  schedule: string;
 
   @Column()
   createdAt: number;

@@ -77,7 +77,6 @@ it("rejects a request when endDate is before startDate", async () => {
 
 it("creates a schedule with occurrences on the last day of the month when dayOfMonth is set to 0", async () => {
   const scheduleRes = await client.post({
-    userId: "fake-id",
     amount: 500,
     description: "test",
     frequency: "MONTHLY",
@@ -87,7 +86,6 @@ it("creates a schedule with occurrences on the last day of the month when dayOfM
   const id = scheduleRes.body.id;
 
   const res = await client.get(`/${id}/occurrences?startDate=2020-01-01&endDate=2021-03-01`);
-  console.log(res.body);
   const occurrences = res.body.data;
   expect(occurrences[0].date).toBe("2020-01-31");
   expect(occurrences[3].date).toBe("2020-04-30");
