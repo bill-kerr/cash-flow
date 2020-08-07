@@ -4,7 +4,7 @@ import "express-async-errors";
 import cors from "cors";
 import helmet from "helmet";
 import { NotFoundError } from "../errors";
-import { errorHandler, verifyJsonMediaType, requestMethodChecker } from "../middleware";
+import { errorHandler, verifyJsonMediaType, requestMethodChecker, responseWrapper } from "../middleware";
 import { ScheduleController, ExceptionController, OccurrenceController } from "../controllers";
 import { ScheduleService } from "../services/schedule";
 import { getRepository } from "typeorm";
@@ -17,6 +17,7 @@ function init(): Application {
   app.use(helmet());
   app.use(cors());
   app.use(json());
+  app.use(responseWrapper);
   app.use(requestMethodChecker);
   app.use(verifyJsonMediaType);
 

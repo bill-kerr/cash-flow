@@ -40,7 +40,7 @@ export class ScheduleController implements IScheduleController {
       data: schedules,
     };
 
-    res.status(HttpResponse.OK).send(resData);
+    res.sendRes(resData);
   };
 
   getSchedule = async (req: Request, res: Response) => {

@@ -6,8 +6,8 @@ import {
   BaseEntity,
   ManyToOne,
   BeforeUpdate,
-  JoinColumn,
   RelationId,
+  JoinColumn,
 } from "typeorm";
 import { id, getUnixTime } from "../util";
 import { Schedule } from "./schedule";
