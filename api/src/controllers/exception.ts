@@ -26,12 +26,12 @@ export class ExceptionController implements IExceptionController {
       object: "list",
       data: exceptions,
     };
-    res.status(HttpResponse.OK).send(resData);
+    res.sendRes(resData);
   };
 
   getException = async (req: Request, res: Response) => {
     const exception = await this.exceptionService.getExceptionById(req.params.id, req.userId);
-    res.status(HttpResponse.OK).send(exception);
+    res.sendRes(exception);
   };
 
   createException = async (req: Request, res: Response) => {
@@ -41,18 +41,18 @@ export class ExceptionController implements IExceptionController {
     };
 
     const exception = await this.exceptionService.createException(data);
-    res.status(HttpResponse.CREATED).send(exception);
+    res.sendRes(exception, HttpResponse.CREATED);
   };
 
   updateException = async (req: Request, res: Response) => {
-    const data: UpdateExceptionDto = { ...req.body, id: req.params.id };
+    const data: UpdateExceptionDto = { ...req.body, id: req.params.id, userId: req.userId };
     const exception = await this.exceptionService.updateException(data);
-    res.status(HttpResponse.OK).send(exception);
+    res.sendRes(exception);
   };
 
   deleteException = async (req: Request, res: Response) => {
     const exception = await this.exceptionService.deleteException(req.params.id, req.userId);
-    res.status(HttpResponse.OK).send(exception);
+    res.sendRes(exception);
   };
 
   router = () => {

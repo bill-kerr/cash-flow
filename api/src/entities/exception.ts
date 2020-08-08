@@ -11,6 +11,7 @@ import {
 } from "typeorm";
 import { id, getUnixTime } from "../util";
 import { Schedule } from "./schedule";
+import { Exclude } from "class-transformer";
 
 @Entity()
 export class Exception extends BaseEntity {
@@ -37,6 +38,7 @@ export class Exception extends BaseEntity {
   @Column({ nullable: false })
   userId: string;
 
+  @Exclude()
   @ManyToOne(() => Schedule, (schedule) => schedule.exceptions, { onDelete: "CASCADE", eager: false })
   @JoinColumn()
   scheduleDoc: Schedule;

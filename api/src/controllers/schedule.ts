@@ -34,18 +34,12 @@ export class ScheduleController implements IScheduleController {
 
   getSchedules = async (req: Request, res: Response) => {
     const schedules = await this.scheduleService.getSchedules(req.userId);
-
-    const resData = {
-      object: "list",
-      data: schedules,
-    };
-
-    res.sendRes(resData);
+    res.sendRes(schedules);
   };
 
   getSchedule = async (req: Request, res: Response) => {
     const schedule = await this.scheduleService.getScheduleById(req.params.id, req.userId);
-    res.status(HttpResponse.OK).send(schedule);
+    res.sendRes(schedule);
   };
 
   getOccurrences = async (req: Request, res: Response) => {
@@ -57,28 +51,20 @@ export class ScheduleController implements IScheduleController {
       endDate!.toString()
     );
 
-    const resData = {
-      object: "list",
-      data: occurrences,
-    };
-    res.status(HttpResponse.OK).send(resData);
+    res.sendRes(occurrences);
   };
 
   getExceptions = async (req: Request, res: Response) => {
     const schedule = await this.scheduleService.getScheduleById(req.params.id, req.userId);
     const exceptions = await this.exceptionService.getExceptionsBySchedule(schedule);
 
-    const resData = {
-      object: "list",
-      data: exceptions,
-    };
-    res.status(HttpResponse.OK).send(resData);
+    res.sendRes(exceptions);
   };
 
   createSchedule = async (req: Request, res: Response) => {
     const data = { ...req.body, userId: req.userId };
     const schedule = await this.scheduleService.createSchedule(data);
-    res.status(HttpResponse.CREATED).send(schedule);
+    res.sendRes(schedule, HttpResponse.CREATED);
   };
 
   createException = async (req: Request, res: Response) => {
@@ -88,18 +74,18 @@ export class ScheduleController implements IScheduleController {
       userId: req.userId,
       schedule: schedule.id,
     });
-    res.status(HttpResponse.CREATED).send(exception);
+    res.sendRes(exception, HttpResponse.CREATED);
   };
 
   updateSchedule = async (req: Request, res: Response) => {
     const data = { ...req.body, id: req.params.id, userId: req.userId };
     const schedule = await this.scheduleService.updateSchedule(data);
-    res.status(HttpResponse.OK).send(schedule);
+    res.sendRes(schedule);
   };
 
   deleteSchedule = async (req: Request, res: Response) => {
     const schedule = await this.scheduleService.deleteSchedule(req.params.id, req.userId);
-    res.status(HttpResponse.OK).send(schedule);
+    res.sendRes(schedule);
   };
 
   router = (): Router => {

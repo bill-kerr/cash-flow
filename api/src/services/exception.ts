@@ -1,6 +1,6 @@
 import { CreateExceptionDto, UpdateExceptionDto } from "../types";
 import { Exception, Schedule } from "../entities";
-import { BadRequestError, NotFoundError } from "../errors";
+import { NotFoundError } from "../errors";
 import { Repository } from "typeorm";
 import { IExceptionService, IScheduleService } from "../interfaces";
 
@@ -8,7 +8,7 @@ export class ExceptionService implements IExceptionService {
   constructor(private scheduleService: IScheduleService, private repository: Repository<Exception>) {}
 
   public async getExceptionById(exceptionId: string, userId: string, loadSchedule = false): Promise<Exception> {
-    const relations = loadSchedule ? ["schedule"] : [];
+    const relations = loadSchedule ? ["scheduleDoc"] : [];
     const exception = await this.repository.findOne({ where: { id: exceptionId, userId }, relations });
     if (!exception) {
       throw new NotFoundError();
@@ -41,16 +41,15 @@ export class ExceptionService implements IExceptionService {
       await oldException.remove();
     }
 
+    if (!dto.currentDate) {
+      dto.currentDate = dto.date;
+    }
+
     return this.repository.create({ ...dto, scheduleDoc: schedule }).save();
   }
 
   public async updateException(dto: UpdateExceptionDto): Promise<Exception> {
     const exception = await this.getExceptionById(dto.id, dto.userId, true);
-
-    if (dto.date && (await this.getExceptionByScheduleAndDate(exception.scheduleDoc, dto.date))) {
-      throw new BadRequestError(`An exception already exists for the occurrence on ${dto.date}.`);
-    }
-
     return this.repository.merge(exception, dto).save();
   }
 

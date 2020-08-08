@@ -3,7 +3,7 @@ import { HttpResponse } from "../types";
 import { BaseError, ErrorResponse } from "../errors";
 
 const defaultError = (requestUrl: string): ErrorResponse => ({
-  object: "list",
+  object: "error",
   statusCode: HttpResponse.INTERNAL_SERVER_ERROR,
   requestUrl,
   errors: [
@@ -18,18 +18,18 @@ const defaultError = (requestUrl: string): ErrorResponse => ({
 function errorHandler(err: Error, req: Request, res: Response, _next: NextFunction) {
   if (err instanceof BaseError) {
     const errorResponse: ErrorResponse = {
-      object: "list",
+      object: "error",
       statusCode: err.statusCode,
       requestUrl: req.url,
       errors: err.serializeErrors(),
     };
 
-    return res.status(err.statusCode).send(errorResponse);
+    return res.sendRes(errorResponse, err.statusCode);
   }
 
   if (err instanceof SyntaxError) {
     const errorResponse: ErrorResponse = {
-      object: "list",
+      object: "error",
       statusCode: HttpResponse.BAD_REQUEST,
       requestUrl: req.originalUrl,
       errors: [
@@ -41,11 +41,11 @@ function errorHandler(err: Error, req: Request, res: Response, _next: NextFuncti
       ],
     };
 
-    return res.status(HttpResponse.BAD_REQUEST).send(errorResponse);
+    return res.sendRes(errorResponse, HttpResponse.BAD_REQUEST);
   }
 
   console.error(err);
-  return res.status(HttpResponse.INTERNAL_SERVER_ERROR).send(defaultError(req.originalUrl));
+  res.sendRes(defaultError(req.originalUrl), HttpResponse.INTERNAL_SERVER_ERROR);
 }
 
 export { errorHandler };

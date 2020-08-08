@@ -2,7 +2,7 @@ import { HttpResponse } from "../types";
 import { SerializedError } from "./base-error";
 
 interface ErrorResponse {
-  object: "list";
+  object: "error";
   statusCode: HttpResponse;
   requestUrl: string;
   errors: SerializedError[];
