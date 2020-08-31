@@ -1,14 +1,14 @@
-import { CreateExceptionDto, UpdateExceptionDto } from "../types";
-import { Exception, Schedule } from "../entities";
-import { NotFoundError } from "../errors";
-import { Repository } from "typeorm";
-import { IExceptionService, IScheduleService } from "../interfaces";
+import { CreateExceptionDto, UpdateExceptionDto } from '../types';
+import { Exception, Schedule } from '../entities';
+import { NotFoundError } from '../errors';
+import { Repository } from 'typeorm';
+import { IExceptionService, IScheduleService } from '../interfaces';
 
 export class ExceptionService implements IExceptionService {
   constructor(private scheduleService: IScheduleService, private repository: Repository<Exception>) {}
 
   public async getExceptionById(exceptionId: string, userId: string, loadSchedule = false): Promise<Exception> {
-    const relations = loadSchedule ? ["scheduleDoc"] : [];
+    const relations = loadSchedule ? ['scheduleDoc'] : [];
     const exception = await this.repository.findOne({ where: { id: exceptionId, userId }, relations });
     if (!exception) {
       throw new NotFoundError();
@@ -18,7 +18,7 @@ export class ExceptionService implements IExceptionService {
   }
 
   public async getExceptionByScheduleAndDate(schedule: Schedule, date: string): Promise<Exception | undefined> {
-    const exception = await this.repository.findOne({ scheduleDoc: schedule, date });
+    const exception = await this.repository.findOne({ schedule, date });
     if (!exception) {
       throw new NotFoundError();
     }
@@ -27,7 +27,7 @@ export class ExceptionService implements IExceptionService {
   }
 
   public getExceptionsBySchedule(schedule: Schedule): Promise<Exception[]> {
-    return this.repository.find({ scheduleDoc: schedule });
+    return this.repository.find({ schedule });
   }
 
   public getExceptionsByUser(userId: string): Promise<Exception[]> {
@@ -36,7 +36,7 @@ export class ExceptionService implements IExceptionService {
 
   public async createException(dto: CreateExceptionDto): Promise<Exception> {
     const schedule = await this.scheduleService.getScheduleById(dto.schedule, dto.userId);
-    const oldException = await this.repository.findOne({ date: dto.date, scheduleDoc: schedule });
+    const oldException = await this.repository.findOne({ date: dto.date, schedule });
     if (oldException) {
       await oldException.remove();
     }
@@ -45,7 +45,7 @@ export class ExceptionService implements IExceptionService {
       dto.currentDate = dto.date;
     }
 
-    return this.repository.create({ ...dto, scheduleDoc: schedule }).save();
+    return this.repository.create({ ...dto, schedule }).save();
   }
 
   public async updateException(dto: UpdateExceptionDto): Promise<Exception> {
