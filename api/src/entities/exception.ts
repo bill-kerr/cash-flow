@@ -1,14 +1,4 @@
-import {
-  Entity,
-  Column,
-  BeforeInsert,
-  PrimaryColumn,
-  BaseEntity,
-  ManyToOne,
-  BeforeUpdate,
-  JoinColumn,
-  RelationId,
-} from 'typeorm';
+import { Entity, Column, BeforeInsert, PrimaryColumn, BaseEntity, ManyToOne, BeforeUpdate, RelationId } from 'typeorm';
 import { id, getUnixTime } from '../util';
 import { Schedule } from './schedule';
 import { Expose } from 'class-transformer';
@@ -39,7 +29,6 @@ export class Exception extends BaseEntity {
   userId: string;
 
   @ManyToOne(() => Schedule, (schedule) => schedule.exceptions, { onDelete: 'CASCADE', eager: false })
-  @JoinColumn()
   schedule: Schedule;
 
   @Expose({ name: 'schedule' })

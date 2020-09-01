@@ -1,28 +1,28 @@
-import { omit } from "lodash";
-import { Frequency, CreateScheduleDto, UpdateScheduleDto } from "../types";
-import { Schedule } from "../entities";
-import { BadRequestError, NotFoundError } from "../errors";
-import { Repository } from "typeorm";
-import { recurrenceRule, hasOccurrences } from "../util/recurrence";
-import { IScheduleService } from "../interfaces";
+import { omit } from 'lodash';
+import { Frequency, CreateScheduleDto, UpdateScheduleDto } from '../types';
+import { Schedule } from '../entities';
+import { BadRequestError, NotFoundError } from '../errors';
+import { Repository } from 'typeorm';
+import { recurrenceRule, hasOccurrences } from '../util/recurrence';
+import { IScheduleService } from '../interfaces';
 
 export class ScheduleService implements IScheduleService {
   constructor(private repository: Repository<Schedule>) {}
 
   private removeUnnecessaryFields(dto: CreateScheduleDto): CreateScheduleDto {
-    dto = dto.occurrenceCount ? omit(dto, "endDate") : dto;
+    dto = dto.occurrenceCount ? omit(dto, 'endDate') : dto;
 
     switch (dto.frequency) {
       case Frequency.ONCE:
-        return omit(dto, ["month", "dayOfWeek", "dayOfMonth", "endDate", "interval", "occurrenceCount"]);
+        return omit(dto, ['month', 'dayOfWeek', 'dayOfMonth', 'endDate', 'interval', 'occurrenceCount']);
       case Frequency.DAILY:
-        return omit(dto, ["month", "dayOfMonth", "dayOfWeek"]);
+        return omit(dto, ['month', 'dayOfMonth', 'dayOfWeek']);
       case Frequency.WEEKLY:
-        return omit(dto, ["dayOfMonth", "month"]);
+        return omit(dto, ['dayOfMonth', 'month']);
       case Frequency.MONTHLY:
-        return omit(dto, ["dayOfWeek", "month"]);
+        return omit(dto, ['dayOfWeek', 'month']);
       case Frequency.YEARLY:
-        return omit(dto, "dayOfWeek");
+        return omit(dto, 'dayOfWeek');
       default:
         return dto;
     }
@@ -69,19 +69,19 @@ export class ScheduleService implements IScheduleService {
   private validateDates(schedule: Schedule, dto: UpdateScheduleDto) {
     if (dto.startDate && dto.endDate) {
       if (dto.startDate > dto.endDate) {
-        throw new BadRequestError("The start date must occur before the end date.");
+        throw new BadRequestError('The start date must occur before the end date.');
       }
     }
 
     if (dto.startDate && !dto.endDate && schedule.endDate) {
       if (dto.startDate >= schedule.endDate) {
-        throw new BadRequestError("The start date must occur before the existing end date.");
+        throw new BadRequestError('The start date must occur before the existing end date.');
       }
     }
 
     if (dto.endDate && !dto.startDate) {
       if (dto.endDate <= schedule.startDate) {
-        throw new BadRequestError("The end date must occur after the existing start date.");
+        throw new BadRequestError('The end date must occur after the existing start date.');
       }
     }
   }
@@ -91,11 +91,11 @@ export class ScheduleService implements IScheduleService {
     dto.recurrenceRule = recurrenceRule(dto);
 
     if (dto.endDate && dto.endDate < dto.startDate) {
-      throw new BadRequestError("The end date must occur after the start date.");
+      throw new BadRequestError('The end date must occur after the start date.');
     }
 
     if (dto.endDate && !hasOccurrences(recurrenceRule(dto), dto.startDate, dto.endDate)) {
-      throw new BadRequestError("The provided schedule has no occurrences.");
+      throw new BadRequestError('The provided schedule has no occurrences.');
     }
 
     return this.repository.create(dto).save();
@@ -106,7 +106,7 @@ export class ScheduleService implements IScheduleService {
   }
 
   public async getScheduleById(scheduleId: string, userId: string, loadExceptions = false): Promise<Schedule> {
-    const relations = loadExceptions ? ["exceptions"] : [];
+    const relations = loadExceptions ? ['exceptions'] : [];
     const schedule = await this.repository.findOne({ id: scheduleId, userId }, { relations });
 
     if (!schedule) {
@@ -122,11 +122,11 @@ export class ScheduleService implements IScheduleService {
 
   public async updateSchedule(dto: UpdateScheduleDto): Promise<Schedule> {
     if (!dto.id) {
-      throw new BadRequestError("A schedule id must be supplied to update a schedule.");
+      throw new BadRequestError('A schedule id must be supplied to update a schedule.');
     }
     const schedule = await this.getScheduleById(dto.id, dto.userId);
 
-    if (dto.endDate === "") {
+    if (dto.endDate === '') {
       dto.endDate = null;
     }
 
@@ -136,7 +136,7 @@ export class ScheduleService implements IScheduleService {
     schedule.recurrenceRule = recurrenceRule({ ...schedule });
 
     if (!hasOccurrences(schedule.recurrenceRule, schedule.startDate, schedule.endDate)) {
-      throw new BadRequestError("The updated schedule has no occurrences.");
+      throw new BadRequestError('The updated schedule has no occurrences.');
     }
 
     return schedule.save();

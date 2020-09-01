@@ -1,8 +1,8 @@
-import express, { Request, Response, Router } from "express";
-import { requireAuth, handleValidationResult } from "../middleware";
-import { UpdateExceptionDto, CreateExceptionDto, HttpResponse } from "../types";
-import { createExceptionValidator, updateExceptionValidator } from "../middleware/validators";
-import { IExceptionController, IExceptionService } from "../interfaces";
+import express, { Request, Response, Router } from 'express';
+import { requireAuth, handleValidationResult } from '../middleware';
+import { UpdateExceptionDto, CreateExceptionDto, HttpResponse } from '../types';
+import { createExceptionValidator, updateExceptionValidator } from '../middleware/validators';
+import { IExceptionController, IExceptionService } from '../interfaces';
 
 export class ExceptionController implements IExceptionController {
   constructor(private exceptionService: IExceptionService) {}
@@ -10,20 +10,20 @@ export class ExceptionController implements IExceptionController {
   private configureRouter = (router: Router) => {
     router.use(requireAuth);
 
-    router.get("/", this.getExceptions);
-    router.get("/:id", this.getException);
+    router.get('/', this.getExceptions);
+    router.get('/:id', this.getException);
 
-    router.post("/", createExceptionValidator, handleValidationResult, this.createException);
+    router.post('/', createExceptionValidator, handleValidationResult, this.createException);
 
-    router.put("/:id", updateExceptionValidator, handleValidationResult, this.updateException);
+    router.put('/:id', updateExceptionValidator, handleValidationResult, this.updateException);
 
-    router.delete("/:id", this.deleteException);
+    router.delete('/:id', this.deleteException);
   };
 
   getExceptions = async (req: Request, res: Response) => {
     const exceptions = await this.exceptionService.getExceptionsByUser(req.userId);
     const resData = {
-      object: "list",
+      object: 'list',
       data: exceptions,
     };
     res.sendRes(resData);
@@ -51,8 +51,8 @@ export class ExceptionController implements IExceptionController {
   };
 
   deleteException = async (req: Request, res: Response) => {
-    const exception = await this.exceptionService.deleteException(req.params.id, req.userId);
-    res.sendRes(exception);
+    await this.exceptionService.deleteException(req.params.id, req.userId);
+    res.sendRes(null, HttpResponse.NO_CONTENT);
   };
 
   router = () => {

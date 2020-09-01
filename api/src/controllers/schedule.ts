@@ -1,13 +1,13 @@
-import express, { Request, Response, Router } from "express";
-import { HttpResponse } from "../types";
-import { handleValidationResult, requireAuth } from "../middleware";
+import express, { Request, Response, Router } from 'express';
+import { HttpResponse } from '../types';
+import { handleValidationResult, requireAuth } from '../middleware';
 import {
   createScheduleValidator,
   updateScheduleValidator,
   queryDateRangeValidator,
   createExceptionByScheduleValidator,
-} from "../middleware/validators";
-import { IScheduleController, IScheduleService, IExceptionService, IOccurrenceService } from "../interfaces";
+} from '../middleware/validators';
+import { IScheduleController, IScheduleService, IExceptionService, IOccurrenceService } from '../interfaces';
 
 export class ScheduleController implements IScheduleController {
   constructor(
@@ -19,17 +19,17 @@ export class ScheduleController implements IScheduleController {
   private configureRouter = (router: Router) => {
     router.use(requireAuth);
 
-    router.get("/", this.getSchedules);
-    router.get("/:id", this.getSchedule);
-    router.get("/:id/occurrences", queryDateRangeValidator, handleValidationResult, this.getOccurrences);
-    router.get("/:id/exceptions", this.getExceptions);
+    router.get('/', this.getSchedules);
+    router.get('/:id', this.getSchedule);
+    router.get('/:id/occurrences', queryDateRangeValidator, handleValidationResult, this.getOccurrences);
+    router.get('/:id/exceptions', this.getExceptions);
 
-    router.post("/", createScheduleValidator, handleValidationResult, this.createSchedule);
-    router.post("/:id/exceptions", createExceptionByScheduleValidator, handleValidationResult, this.createException);
+    router.post('/', createScheduleValidator, handleValidationResult, this.createSchedule);
+    router.post('/:id/exceptions', createExceptionByScheduleValidator, handleValidationResult, this.createException);
 
-    router.put("/:id", updateScheduleValidator, handleValidationResult, this.updateSchedule);
+    router.put('/:id', updateScheduleValidator, handleValidationResult, this.updateSchedule);
 
-    router.delete("/:id", this.deleteSchedule);
+    router.delete('/:id', this.deleteSchedule);
   };
 
   getSchedules = async (req: Request, res: Response) => {
@@ -84,8 +84,8 @@ export class ScheduleController implements IScheduleController {
   };
 
   deleteSchedule = async (req: Request, res: Response) => {
-    const schedule = await this.scheduleService.deleteSchedule(req.params.id, req.userId);
-    res.sendRes(schedule);
+    await this.scheduleService.deleteSchedule(req.params.id, req.userId);
+    res.sendRes(null, HttpResponse.NO_CONTENT);
   };
 
   router = (): Router => {

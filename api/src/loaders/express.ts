@@ -1,23 +1,23 @@
-import express, { Application } from "express";
-import { json } from "body-parser";
-import "express-async-errors";
-import cors from "cors";
-import helmet from "helmet";
-import { NotFoundError } from "../errors";
-import { errorHandler, verifyJsonMediaType, requestMethodChecker, responseWrapper } from "../middleware";
-import { ScheduleController, ExceptionController, OccurrenceController } from "../controllers";
-import { ScheduleService } from "../services/schedule";
-import { getRepository } from "typeorm";
-import { Schedule, Exception } from "../entities";
-import { ExceptionService, OccurrenceService } from "../services";
+import express, { Application } from 'express';
+import { json } from 'body-parser';
+import 'express-async-errors';
+import cors from 'cors';
+import helmet from 'helmet';
+import { NotFoundError } from '../errors';
+import { errorHandler, verifyJsonMediaType, requestMethodChecker, responseWrapper } from '../middleware';
+import { ScheduleController, ExceptionController, OccurrenceController } from '../controllers';
+import { ScheduleService } from '../services/schedule';
+import { getRepository } from 'typeorm';
+import { Schedule, Exception } from '../entities';
+import { ExceptionService, OccurrenceService } from '../services';
 
 function init(): Application {
   const app = express();
 
+  app.use(responseWrapper);
   app.use(helmet());
   app.use(cors());
   app.use(json());
-  app.use(responseWrapper);
   app.use(requestMethodChecker);
   app.use(verifyJsonMediaType);
 
@@ -29,13 +29,13 @@ function init(): Application {
   const occurrenceController = new OccurrenceController(scheduleService, occurrenceService);
 
   const routerV1 = express.Router();
-  routerV1.use("/schedules", scheduleController.router());
-  routerV1.use("/exceptions", exceptionController.router());
-  routerV1.use("/occurrences", occurrenceController.router());
-  app.use("/api/v1", routerV1);
+  routerV1.use('/schedules', scheduleController.router());
+  routerV1.use('/exceptions', exceptionController.router());
+  routerV1.use('/occurrences', occurrenceController.router());
+  app.use('/api/v1', routerV1);
 
-  app.all("*", () => {
-    throw new NotFoundError("The specified endpoint does not exist.");
+  app.all('*', () => {
+    throw new NotFoundError('The specified endpoint does not exist.');
   });
 
   app.use(errorHandler);

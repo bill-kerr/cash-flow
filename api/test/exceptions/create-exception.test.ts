@@ -7,17 +7,17 @@ import { getRepository } from 'typeorm';
 import { Schedule } from '../../src/entities';
 
 let app: Application;
-let client: TestClient;
+let exceptionClient: TestClient;
+let scheduleClient: TestClient;
 beforeAll(async () => {
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: 'Bearer lsdjkflksd',
+  };
+
   app = await initialize();
-  client = makeClient(
-    '/api/v1/exceptions',
-    {
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer lsdjkflksd',
-    },
-    app
-  );
+  exceptionClient = makeClient('/api/v1/exceptions', headers, app);
+  scheduleClient = makeClient('/api/v1/schedules', headers, app);
 });
 
 const getTestData = async (
@@ -27,11 +27,9 @@ const getTestData = async (
     description: 'test description',
     frequency: Frequency.DAILY,
     startDate: '2020-07-01',
-    userId: 'fake-id',
   }
 ) => {
-  const scheduleService = new ScheduleService(getRepository(Schedule));
-  const schedule = await scheduleService.createSchedule(scheduleData);
+  const schedule = (await scheduleClient.post(scheduleData)).body;
   const dto: any = {
     ...dtoData,
     schedule: schedule.id,
@@ -42,13 +40,13 @@ const getTestData = async (
 
 it('creates a correct exception with valid data', async () => {
   const { dto, schedule } = await getTestData();
-  let res = await client.post(dto);
+  let res = await exceptionClient.post(dto);
   expect(res.status).toBe(201);
   expect(res.body).toStrictEqual({
     object: 'exception',
     id: expect.any(String),
     occurrenceDeleted: false,
-    currentDate: null,
+    currentDate: dto.date,
     amount: null,
     description: null,
     date: dto.date,
@@ -65,7 +63,7 @@ it('creates a correct exception with valid data', async () => {
     amount: 444,
     description: 'this was changed',
   });
-  res = await client.post(dto2);
+  res = await exceptionClient.post(dto2);
   expect(res.status).toBe(201);
   expect(res.body).toStrictEqual({
     object: 'exception',
@@ -84,17 +82,17 @@ it('creates a correct exception with valid data', async () => {
 
 it('overwrites an exception on a given date', async () => {
   const { dto, schedule } = await getTestData();
-  let res = await client.post(dto);
+  let res = await exceptionClient.post(dto);
 
-  const dto2 = { scheduleId: schedule.id, date: '2020-07-09' };
-  res = await client.post(dto2);
+  const dto2 = { schedule: schedule.id, date: '2020-07-09' };
+  res = await exceptionClient.post(dto2);
 
   expect(res.status).toBe(201);
   expect(res.body).toStrictEqual({
     object: 'exception',
     id: expect.any(String),
     amount: null,
-    currentDate: null,
+    currentDate: dto2.date,
     occurrenceDeleted: false,
     description: null,
     date: dto2.date,
@@ -111,6 +109,12 @@ it('overwrites an exception on a given date', async () => {
   expect(res.body.data.length).toBe(1);
 });
 
+it('rejects exception creation when schedule does not exist', async () => {
+  const dto = { schedule: 'shouldnotexist', date: '2020-07-09' };
+  const res = await exceptionClient.post(dto);
+  expect(res.status).toBe(404);
+});
+
 it('disallows requests with an unowned schedule', async () => {
   const scheduleService = new ScheduleService(getRepository(Schedule));
   const schedule = await scheduleService.createSchedule({
@@ -122,7 +126,6 @@ it('disallows requests with an unowned schedule', async () => {
   });
 
   const dto = { schedule: schedule.id, date: '2020-07-09' };
-  const res = await client.post(dto);
-
-  expect(res.status).toBe(400);
+  const res = await exceptionClient.post(dto);
+  expect(res.status).toBe(404);
 });
