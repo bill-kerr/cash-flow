@@ -15,6 +15,7 @@
     "formik": "^2.1.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-redux": "^7.2.1",
     "react-scripts": "3.4.3",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
@@ -25,7 +26,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "build:css": "postcss ./public/tailwind.css -o ./public/styles.css --watch"
+    "build:css": "postcss ./src/assets/tailwind.css -o ./src/assets/styles.css --watch"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -43,8 +44,10 @@
     ]
   },
   "devDependencies": {
+    "@types/react-redux": "^7.1.9",
     "@types/redux": "^3.6.0",
     "@types/redux-thunk": "^2.1.0",
+    "autoprefixer": "^9.8.6",
     "postcss-cli": "^7.1.2",
     "tailwindcss": "^1.8.0"
   }
