@@ -1,19 +1,30 @@
 import { combineReducers } from 'redux';
-import { TypedUseSelectorHook, useSelector, ConnectedProps, connect } from 'react-redux';
+import { TypedUseSelectorHook, useSelector, useDispatch } from 'react-redux';
+import { ThunkDispatch, ThunkAction } from 'redux-thunk';
 import { authReducer } from './auth/reducers';
-import { SIGN_IN, SIGN_OUT } from './auth/types';
+import { AuthActionTypes, SIGN_OUT } from './auth/types';
 
 export const rootReducer = combineReducers({
   auth: authReducer,
 });
 
+export type ActionTypes = AuthActionTypes;
+
 export type RootState = ReturnType<typeof rootReducer>;
 export const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
 
-const mapState = (state: RootState) => ({ auth: state.auth });
-const mapDispatch = {
-  signIn: () => ({ type: SIGN_IN }),
-  signOut: () => ({ type: SIGN_OUT }),
+export type Dispatch = <TReturnType>(action: ActionTypes) => TReturnType;
+export const useTypedDispatch = () => useDispatch<Dispatch>();
+
+export type AsyncDispatch = ThunkDispatch<RootState, any, ActionTypes>;
+export const useThunkDispatch = () => useDispatch<AsyncDispatch>();
+
+export const fetchPosts: ThunkAction<Promise<void>, number, null, AuthActionTypes> = (ms: number) => async (dispatch: Dispatch, _getState: () => RootState) => {
+  await new Promise((resolve) => setTimeout(() => resolve(1), ms));
+  dispatch({ type: SIGN_OUT });
 };
-export const connector = connect(mapState, mapDispatch);
-export type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export const fetchPeople: ThunkAction<void, RootState, void, AuthActionTypes> = () => async (dispatch) => {
+  await new Promise((resolve) => setTimeout(() => resolve(1), 3000));
+  dispatch({ type:  });
+};

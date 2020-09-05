@@ -1,16 +1,19 @@
 import React from 'react';
-import { PropsFromRedux, connector } from '../store';
+import { useAuth } from '../hooks/useAuth';
+import { useThunkDispatch, fetchPosts } from '../store';
 
-interface AppProps extends PropsFromRedux {
-  backgroundColor: string;
-}
+const App: React.FC = () => {
+  const user = useAuth();
+  //const dispatch = useTypedDispatch();
+  const asyncDispatch = useThunkDispatch();
 
-const App: React.FC<AppProps> = ({ backgroundColor, auth }) => {
   return (
-    <div style={{ backgroundColor }}>
-      <img src={auth.user.photoUrl} alt="" className="h-6 w-6 object-contain" />
+    <div className="h-64">
+      <img src={user.photoUrl} alt="" />
+      <span>{user.displayName}</span>
+      <button onClick={() => asyncDispatch(fetchPosts(1000))}>Sign Out</button>
     </div>
   );
 };
 
-export default connector(App);
+export default App;

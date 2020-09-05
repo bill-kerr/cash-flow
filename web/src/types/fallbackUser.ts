@@ -1,9 +1,10 @@
 import { User } from '../store/auth/types';
-import defaultUserImage from '../assets/images/default-user.svg';
+import defaultUserImage from '../assets/images/default-user.png';
 
 export const fallbackUser: User = {
   displayName: 'Anonymous',
-  email: 'anonymous@anonymous.com',
-  id: '0',
+  email: '',
+  id: '',
   photoUrl: defaultUserImage,
+  token: null,
 };
