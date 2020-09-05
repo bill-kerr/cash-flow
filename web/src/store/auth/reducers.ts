@@ -9,5 +9,7 @@ export const authReducer = (state = initialState, action: AuthActionTypes): Auth
       return { ...state, user: action.payload };
     case SIGN_OUT:
       return { ...state, user: fallbackUser };
+    default:
+      return state;
   }
 };
