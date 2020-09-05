@@ -12,8 +12,10 @@ export interface AuthState {
   user: User;
 }
 
-export const SIGN_IN = 'Auth:SignIn';
-export const SIGN_OUT = 'Auth:SignOut';
+export const START_SIGN_IN = 'Auth:StartSignIn';
+export const SIGNED_IN = 'Auth:SignedIn';
+export const START_SIGN_OUT = 'Auth:StartSignOut';
+export const SIGNED_OUT = 'Auth:SignedOut';
 
 // interface SendSignInAction {
 //   type: typeof SIGN_IN;
@@ -24,9 +26,10 @@ export const SIGN_OUT = 'Auth:SignOut';
 //   type: typeof SIGN_OUT;
 // }
 
-export interface ISignInAction extends Action<typeof SIGN_IN> {
+export interface IStartSignInAction extends Action<typeof START_SIGN_IN> {}
+export interface ISignedInAction extends Action<typeof SIGNED_IN> {
   user: User;
 }
-export interface ISignOutAction extends Action<typeof SIGN_OUT> {}
-
-export type AuthActionTypes = ISignInAction | ISignOutAction;
+export interface IStartSignOutAction extends Action<typeof START_SIGN_OUT> {}
+export interface ISignedOutAction extends Action<typeof SIGNED_OUT> {}
+export type AuthActionTypes = IStartSignInAction | ISignedInAction | ISignedOutAction | IStartSignOutAction;

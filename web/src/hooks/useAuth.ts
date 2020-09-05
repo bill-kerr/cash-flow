@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useTypedSelector, useTypedDispatch } from '../store';
 import { onAuthStateChanged, getIdToken } from '../apis/auth';
-import { SIGN_IN } from '../store/auth/types';
+import { SIGNED_IN } from '../store/auth/types';
 
 export const useAuth = () => {
   const dispatch = useTypedDispatch();
@@ -9,7 +9,7 @@ export const useAuth = () => {
     onAuthStateChanged(async (newUser) => {
       if (newUser) {
         const token = await getIdToken();
-        dispatch({ type: SIGN_IN, user: { ...newUser, token } });
+        dispatch({ type: SIGNED_IN, user: { ...newUser, token } });
       }
     });
   }, [dispatch]);

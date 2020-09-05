@@ -14,7 +14,7 @@ export const FIREBASE_CONFIG = {
   appId: '1:236580790004:web:38e2dde703ecf012be88a1',
 };
 
-export const mapFirebaseUser = (firebaseUser: firebase.User | null): User => {
+export const mapFirebaseUser = (firebaseUser: firebase.User | null, token: string | null = null): User => {
   // Firebase sign-in anonymously failed. Return fallback user.
   if (!firebaseUser) {
     return fallbackUser;
@@ -25,7 +25,7 @@ export const mapFirebaseUser = (firebaseUser: firebase.User | null): User => {
     email: firebaseUser.email || '',
     id: firebaseUser.uid,
     photoUrl: firebaseUser.photoURL || defaultUserImage,
-    token: null,
+    token,
   };
 };
 
@@ -38,20 +38,18 @@ export const getIdToken = async () => {
   return currentUser ? currentUser.getIdToken() : null;
 };
 
-export const signInWithGoogle = (type: 'redirect' | 'popup' = 'redirect') => {
+export const signInWithGoogle = async () => {
   const provider = new firebase.auth.GoogleAuthProvider();
-  return type === 'redirect' ? signInWithRedirect(provider) : signInWithPopup(provider);
-};
-
-const signInWithRedirect = (provider: firebase.auth.AuthProvider) => {
-  return firebase.auth().signInWithRedirect(provider);
+  const userCredentials = await signInWithPopup(provider);
+  const token = await getIdToken();
+  return mapFirebaseUser(userCredentials.user, token);
 };
 
 const signInWithPopup = (provider: firebase.auth.AuthProvider) => {
   return firebase.auth().signInWithPopup(provider);
 };
 
-export const signOut = () => {
+export const authSignOut = () => {
   return firebase.auth().signOut();
 };
 
@@ -59,3 +57,5 @@ export type AuthUnsubscribe = () => void;
 export const onAuthStateChanged = (callback: (user: User | null) => void): AuthUnsubscribe => {
   return firebase.auth().onAuthStateChanged((user) => callback(mapFirebaseUser(user)));
 };
+
+export const currentUser = () => mapFirebaseUser(firebase.auth().currentUser);
