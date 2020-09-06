@@ -1,7 +1,6 @@
 import { AuthState, AuthActionTypes, AUTH_STATE_CHANGED } from './types';
-import { fallbackUser } from '../../types/fallbackUser';
 
-const initialState: AuthState = { user: fallbackUser };
+const initialState: AuthState = { user: null };
 
 export const authReducer = (state = initialState, action: AuthActionTypes) => {
   switch (action.type) {

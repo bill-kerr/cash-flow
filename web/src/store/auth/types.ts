@@ -1,13 +1,14 @@
 export interface User {
-  id: string;
   displayName: string;
-  email: string;
+  id: string | null;
+  email: string | null;
   photoUrl: string;
   token: string | null;
+  isAnonymous: boolean;
 }
 
 export interface AuthState {
-  user: User;
+  user: User | null;
 }
 
 export const AUTH_STATE_CHANGED = 'Auth:StateChanged';
@@ -18,7 +19,7 @@ export const SIGN_OUT_COMPLETE = 'Auth:SignOutComplete';
 
 export interface IAuthStateChangedAction {
   type: typeof AUTH_STATE_CHANGED;
-  user: User;
+  user: User | null;
 }
 
 export interface ISignInStartAction {

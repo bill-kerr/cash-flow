@@ -2,10 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { createStore, applyMiddleware, compose } from 'redux';
 import reduxThunk from 'redux-thunk';
+import { Provider } from 'react-redux';
 import './assets/styles.css';
 import App from './components/App';
 import { rootReducer } from './store';
-import { Provider } from 'react-redux';
 import { initializeAuth } from './apis/auth';
 
 declare global {

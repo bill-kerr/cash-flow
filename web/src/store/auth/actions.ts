@@ -43,11 +43,11 @@ export const signOut: ActionCreator<ThunkAction<
 export const authStateChange: ActionCreator<ThunkAction<
   Promise<IAuthStateChangedAction>,
   RootState,
-  null,
+  User,
   IAuthStateChangedAction
->> = (user: User) => {
+>> = (user: User | null) => {
   return async (dispatch: Dispatch) => {
-    const token = await getIdToken();
-    return dispatch({ type: AUTH_STATE_CHANGED, user: { ...user, token } });
+    const newUser = user ? { ...user, token: await getIdToken() } : null;
+    return dispatch({ type: AUTH_STATE_CHANGED, user: newUser });
   };
 };
