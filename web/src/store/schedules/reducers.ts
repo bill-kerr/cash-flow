@@ -1,4 +1,5 @@
-import { ScheduleState, ScheduleActionTypes, FETCH_SCHEDULES_START } from './types';
+import { mapKeys } from 'lodash';
+import { ScheduleState, ScheduleActionTypes, FETCH_SCHEDULES_COMPLETE } from './types';
 
 const initialState: ScheduleState = {
   schedules: {},
@@ -6,8 +7,8 @@ const initialState: ScheduleState = {
 
 export const scheduleReducer = (state = initialState, action: ScheduleActionTypes) => {
   switch (action.type) {
-    case FETCH_SCHEDULES_START:
-      return state;
+    case FETCH_SCHEDULES_COMPLETE:
+      return { ...state, schedules: mapKeys(action.schedules, 'id') };
     default:
       return state;
   }

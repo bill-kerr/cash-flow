@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { Schedule } from '../../store/schedules/types';
 import { ScheduleListResponse, ErrorResponse, ErrorDetail } from './responseTypes';
+import { Schedule } from '../../store/schedules/types';
 
-export const cashFlowClient = axios.create({
-  baseURL: 'http://localhost:3333/api',
+const axiosClient = axios.create({
+  baseURL: 'http://localhost:3333/api/v1',
 });
 
 export interface CashFlowHeaders {
@@ -11,17 +11,19 @@ export interface CashFlowHeaders {
   'Content-Type': 'application/json';
 }
 
-export const getHeaders = (authToken: string): CashFlowHeaders => {
-  return {
-    Authorization: `Bearer ${authToken}`,
-    'Content-Type': 'application/json',
-  };
-};
+export const cashFlowClient = {
+  getHeaders: function (authToken: string): CashFlowHeaders {
+    return {
+      Authorization: `Bearer ${authToken}`,
+      'Content-Type': 'application/json',
+    };
+  },
 
-export const getSchedules = async (authToken: string): Promise<Schedule[] | ErrorDetail[]> => {
-  const res = await cashFlowClient.get<ScheduleListResponse | ErrorResponse>('/schedules', {
-    headers: getHeaders(authToken),
-  });
+  getSchedules: async function (authToken: string): Promise<[Schedule[], ErrorDetail[]]> {
+    const res = await axiosClient.get<ScheduleListResponse | ErrorResponse>('/schedules', {
+      headers: this.getHeaders(authToken),
+    });
 
-  return res.data.object === 'list' ? res.data.data : res.data.errors;
+    return res.data.object === 'error' ? [[], res.data.errors] : [res.data.data, []];
+  },
 };

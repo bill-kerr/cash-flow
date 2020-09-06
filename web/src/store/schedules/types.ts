@@ -22,7 +22,7 @@ export interface Schedule {
 }
 
 export interface ScheduleState {
-  schedules: Record<string, Schedule>;
+  schedules: { [key: string]: Schedule };
 }
 
 export const FETCH_SCHEDULES_START = 'Schedules:FetchStart';
