@@ -1,14 +1,12 @@
-import { AuthState, AuthActionTypes, SIGNED_IN, SIGNED_OUT } from './types';
+import { AuthState, AuthActionTypes, AUTH_STATE_CHANGED } from './types';
 import { fallbackUser } from '../../types/fallbackUser';
 
 const initialState: AuthState = { user: fallbackUser };
 
 export const authReducer = (state = initialState, action: AuthActionTypes): AuthState => {
   switch (action.type) {
-    case SIGNED_IN:
+    case AUTH_STATE_CHANGED:
       return { ...state, user: action.user };
-    case SIGNED_OUT:
-      return { ...state, user: fallbackUser };
     default:
       return state;
   }

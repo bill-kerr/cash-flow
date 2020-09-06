@@ -2,19 +2,17 @@ import React, { useEffect } from 'react';
 import { signIn, signOut } from '../store/auth/actions';
 import { useTypedDispatch, useTypedSelector } from '../store';
 import { onAuthStateChanged } from '../apis/auth';
-import { SIGNED_IN } from '../store/auth/types';
+import { AUTH_STATE_CHANGED } from '../store/auth/types';
 
 const App: React.FC = () => {
-  //const user = useAuth();
   const dispatch = useTypedDispatch();
   const user = useTypedSelector((state) => state.auth.user);
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged((newUser) => {
+    return onAuthStateChanged((newUser) => {
       if (newUser && user.id !== newUser.id) {
-        dispatch({ type: SIGNED_IN, user: newUser });
+        dispatch({ type: AUTH_STATE_CHANGED, user: newUser });
       }
     });
-    return unsubscribe;
   }, [user, dispatch]);
 
   return (

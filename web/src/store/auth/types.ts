@@ -1,5 +1,3 @@
-import { Action } from 'redux';
-
 export interface User {
   id: string;
   displayName: string;
@@ -12,24 +10,36 @@ export interface AuthState {
   user: User;
 }
 
-export const START_SIGN_IN = 'Auth:StartSignIn';
-export const SIGNED_IN = 'Auth:SignedIn';
-export const START_SIGN_OUT = 'Auth:StartSignOut';
-export const SIGNED_OUT = 'Auth:SignedOut';
+export const AUTH_STATE_CHANGED = 'Auth:StateChanged';
+export const SIGN_IN_START = 'Auth:SignInStart';
+export const SIGN_IN_COMPLETE = 'Auth:SignInComplete';
+export const SIGN_OUT_START = 'Auth:SignOutStart';
+export const SIGN_OUT_COMPLETE = 'Auth:SignOutComplete';
 
-// interface SendSignInAction {
-//   type: typeof SIGN_IN;
-//   payload: User;
-// }
-
-// interface SendSignOutAction {
-//   type: typeof SIGN_OUT;
-// }
-
-export interface IStartSignInAction extends Action<typeof START_SIGN_IN> {}
-export interface ISignedInAction extends Action<typeof SIGNED_IN> {
+export interface IAuthStateChangedAction {
+  type: typeof AUTH_STATE_CHANGED;
   user: User;
 }
-export interface IStartSignOutAction extends Action<typeof START_SIGN_OUT> {}
-export interface ISignedOutAction extends Action<typeof SIGNED_OUT> {}
-export type AuthActionTypes = IStartSignInAction | ISignedInAction | ISignedOutAction | IStartSignOutAction;
+
+export interface ISignInStartAction {
+  type: typeof SIGN_IN_START;
+}
+
+export interface ISignInCompleteAction {
+  type: typeof SIGN_IN_COMPLETE;
+}
+
+export interface ISignOutStartAction {
+  type: typeof SIGN_OUT_START;
+}
+
+export interface ISignOutCompleteAction {
+  type: typeof SIGN_OUT_COMPLETE;
+}
+
+export type AuthActionTypes =
+  | IAuthStateChangedAction
+  | ISignInStartAction
+  | ISignInCompleteAction
+  | ISignOutStartAction
+  | ISignOutCompleteAction;

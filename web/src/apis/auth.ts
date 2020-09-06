@@ -58,4 +58,4 @@ export const onAuthStateChanged = (callback: (user: User | null) => void): AuthU
   return firebase.auth().onAuthStateChanged((user) => callback(mapFirebaseUser(user)));
 };
 
-export const currentUser = () => mapFirebaseUser(firebase.auth().currentUser);
+export const getCurrentUser = () => mapFirebaseUser(firebase.auth().currentUser);
