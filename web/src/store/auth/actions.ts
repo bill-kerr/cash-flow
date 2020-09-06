@@ -10,7 +10,7 @@ import {
   ISignOutCompleteAction,
 } from './types';
 import { ThunkAction } from 'redux-thunk';
-import { signInWithGoogle, authSignOut } from '../../apis/auth';
+import { signInWithGoogle, authSignOut, getIdToken } from '../../apis/auth';
 import { Dispatch, RootState } from '..';
 import { ActionCreator } from 'redux';
 
@@ -47,6 +47,7 @@ export const authStateChange: ActionCreator<ThunkAction<
   IAuthStateChangedAction
 >> = (user: User) => {
   return async (dispatch: Dispatch) => {
-    return dispatch({ type: AUTH_STATE_CHANGED, user });
+    const token = await getIdToken();
+    return dispatch({ type: AUTH_STATE_CHANGED, user: { ...user, token } });
   };
 };

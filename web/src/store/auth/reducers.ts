@@ -3,7 +3,7 @@ import { fallbackUser } from '../../types/fallbackUser';
 
 const initialState: AuthState = { user: fallbackUser };
 
-export const authReducer = (state = initialState, action: AuthActionTypes): AuthState => {
+export const authReducer = (state = initialState, action: AuthActionTypes) => {
   switch (action.type) {
     case AUTH_STATE_CHANGED:
       return { ...state, user: action.user };

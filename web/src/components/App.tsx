@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
-import { signIn, signOut } from '../store/auth/actions';
+import { signIn, signOut, authStateChange } from '../store/auth/actions';
 import { useTypedDispatch, useTypedSelector } from '../store';
 import { onAuthStateChanged } from '../apis/auth';
-import { AUTH_STATE_CHANGED } from '../store/auth/types';
 
 const App: React.FC = () => {
   const dispatch = useTypedDispatch();
@@ -10,7 +9,7 @@ const App: React.FC = () => {
   useEffect(() => {
     return onAuthStateChanged((newUser) => {
       if (newUser && user.id !== newUser.id) {
-        dispatch({ type: AUTH_STATE_CHANGED, user: newUser });
+        dispatch(authStateChange(newUser));
       }
     });
   }, [user, dispatch]);
