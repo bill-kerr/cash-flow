@@ -38,4 +38,8 @@
   @apply bg-green-800;
 }
 
+.small-header {
+  @apply text-gray-500 font-bold uppercase tracking-wider text-xs;
+}
+
 @tailwind utilities;
