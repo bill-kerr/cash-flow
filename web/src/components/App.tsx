@@ -1,47 +1,31 @@
 import React, { useEffect } from 'react';
-import { signIn, signOut } from '../store/auth/actions';
 import { useAuthStateListener } from '../hooks/useAuthStateListener';
-import { useTypedDispatch } from '../store';
-import { User } from '../store/auth/types';
 import { detectSignIn } from '../utils/expectSignIn';
-import { getSchedules } from '../store/schedules/actions';
+import { MainNavbar } from './MainNavbar';
 
 const App: React.FC = () => {
   const user = useAuthStateListener();
-  const dispatch = useTypedDispatch();
-
   useEffect(() => {
     detectSignIn();
   }, [user]);
 
-  const renderApp = (user: User) => {
+  const renderApp = () => {
     return (
-      <div className="p-6 max-w-screen-xl mx-auto">
-        <img src={user.photoUrl} alt={user.displayName} className="h-12 w-12 rounded-full" />
-        <span>{user.displayName}</span>
-        {!user.isAnonymous ? (
-          <button
-            className="ml-4 py-2 px-3 bg-red-900 font-medium text-white rounded shadow hover:bg-red-800 focus:outline-none focus:shadow-outline"
-            onClick={() => dispatch(signOut())}
-          >
-            Sign Out
-          </button>
-        ) : (
-          <button
-            className="ml-4 py-2 px-3 bg-blue-900 font-medium text-white rounded shadow hover:bg-blue-800 focus:outline-none focus:shadow-outline"
-            onClick={() => dispatch(signIn())}
-          >
-            Sign In
-          </button>
-        )}
-        <button
-          className="ml-4 py-2 px-3 bg-blue-900 font-medium text-white rounded shadow hover:bg-blue-800 focus:outline-none focus:shadow-outline"
-          onClick={() => dispatch(getSchedules())}
-        >
-          Get Schedules
-        </button>
-        <div></div>
-      </div>
+      <>
+        <div>
+          <MainNavbar />
+        </div>
+        <div className="mt-6 container flex flex-col md:flex-row">
+          <div className="flex-1">
+            <div className="bg-gray-700 p-4 rounded-t shadow">Your Bank Account</div>
+            <div className="bg-gray-800 p-4 rounded-b shadow">this is a test</div>
+          </div>
+          <div className="mt-6 md:ml-6 md:mt-0 flex-1">
+            <div className="bg-gray-700 p-4 rounded-t shadow">Your Investments</div>
+            <div className="bg-gray-800 p-4 rounded-b shadow">this is a test</div>
+          </div>
+        </div>
+      </>
     );
   };
 
@@ -49,7 +33,7 @@ const App: React.FC = () => {
     return <div>Loading...</div>;
   };
 
-  return user ? renderApp(user) : renderLoading();
+  return user ? renderApp() : renderLoading();
 };
 
 export default App;

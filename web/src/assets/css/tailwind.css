@@ -1,0 +1,41 @@
+@tailwind base;
+
+@tailwind components;
+
+.container {
+  @apply px-6 mx-auto max-w-screen-xl;
+}
+
+.btn {
+  @apply py-2 px-3 flex items-center justify-center rounded shadow transition-colors duration-100;
+}
+
+.btn:focus {
+  @apply outline-none shadow-outline;
+}
+
+.btn-blue {
+  @apply bg-blue-900 text-gray-100;
+}
+
+.btn-blue:hover {
+  @apply bg-blue-800;
+}
+
+.btn-white {
+  @apply bg-white text-gray-900;
+}
+
+.btn-white:hover {
+  @apply bg-gray-100;
+}
+
+.btn-green {
+  @apply bg-green-900 text-gray-100;
+}
+
+.btn-green:hover {
+  @apply bg-green-800;
+}
+
+@tailwind utilities;
