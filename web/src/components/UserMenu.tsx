@@ -33,7 +33,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
         <animated.div
           aria-hidden={!open}
           aria-expanded={open}
-          className={`absolute block rounded-sm bg-white shadow text-gray-900 text-center`}
+          className={`absolute block rounded-sm bg-white shadow text-gray-900 text-center whitespace-no-wrap`}
           style={{
             ...animationProps,
             top: 'calc(100% + 1rem)',

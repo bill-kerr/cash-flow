@@ -3,6 +3,7 @@ import { UserMenu } from './UserMenu';
 import { useTypedSelector, useTypedDispatch } from '../store';
 import { signIn } from '../store/auth/actions';
 import { CashOutline } from '@graywolfai/react-heroicons';
+import { Dropdown } from './Dropdown';
 
 export const MainNavbar: React.FC = () => {
   const user = useTypedSelector(({ auth }) => auth.user);
@@ -15,13 +16,17 @@ export const MainNavbar: React.FC = () => {
         <span className="ml-2">Cash Flow</span>
       </div>
       {!user || user.isAnonymous ? (
-        <div className="flex justify-end flex-1 flex-shrink-0">
+        <div className="flex justify-end">
           <button className="btn shadow-none" onClick={() => dispatch(signIn())}>
             Log In
           </button>
         </div>
       ) : (
-        <div className="flex-1 flex-shrink-0">
+        <div className="flex items-center">
+          <div className="mr-4">Target div</div>
+          <Dropdown className="mr-4">
+            <div>Test menu</div>
+          </Dropdown>
           <UserMenu user={user} />
         </div>
       )}
