@@ -1,7 +1,7 @@
 import React from 'react';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { NumberField } from '../forms/NewNumberField';
+import { NumberField } from '../forms/NumberField';
 
 interface CashFormValues {
   cash: number;
@@ -21,7 +21,7 @@ export const CurrentCash: React.FC = () => {
       <Formik initialValues={{ cash: 0 }} onSubmit={onSubmit} validationSchema={validationSchema}>
         {(formik) => (
           <Form>
-            <NumberField name="cash" label="Current Cash" icon="$" />
+            <NumberField name="cash" label="Current Cash" icon="$" textAlign="right" />
             <div className="mt-2 p-2 text-sm text-gray-900 rounded bg-gray-300 font-mono">
               {JSON.stringify(formik, null, 2)}
             </div>
