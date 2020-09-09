@@ -15,7 +15,7 @@ export const ClickOutside: React.FC<ClickOutsideProps> = ({ onClose, isOpen, chi
         onClose();
       }
     },
-    [ref.current]
+    [onClose]
   );
 
   const escapeListener = useCallback((e: KeyboardEvent) => {
