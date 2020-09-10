@@ -44,10 +44,14 @@ export const getIdToken = async () => {
 };
 
 export const signInWithGoogle = async () => {
-  const provider = new firebase.auth.GoogleAuthProvider();
-  const userCredentials = await signInWithPopup(provider);
-  const token = await getIdToken();
-  return mapFirebaseUser(userCredentials.user, token);
+  try {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    const userCredentials = await signInWithPopup(provider);
+    const token = await getIdToken();
+    return mapFirebaseUser(userCredentials.user, token);
+  } catch (error) {
+    return null;
+  }
 };
 
 const signInWithPopup = (provider: firebase.auth.AuthProvider) => {

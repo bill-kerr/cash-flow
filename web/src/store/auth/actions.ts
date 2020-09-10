@@ -14,7 +14,7 @@ import { signInWithGoogle, authSignOut, getIdToken } from '../../apis/auth';
 import { Dispatch, RootState } from '..';
 import { ActionCreator } from 'redux';
 
-export const signIn: ActionCreator<ThunkAction<
+export const googleSignIn: ActionCreator<ThunkAction<
   Promise<ISignInCompleteAction>,
   RootState,
   null,

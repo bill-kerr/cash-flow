@@ -5,6 +5,9 @@ module.exports = {
       fontFamily: {
         display: ['Barlow'],
       },
+      screens: {
+        xs: '480px',
+      },
     },
   },
   variants: {

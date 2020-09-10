@@ -4,6 +4,7 @@ import { useTypedSelector } from '../store';
 import { CashOutline } from '@graywolfai/react-heroicons';
 import { Dropdown } from './Dropdown';
 import { Modal } from './Modal';
+import { LoginDialog } from './auth/LoginDialog';
 
 export const MainNavbar: React.FC = () => {
   const user = useTypedSelector(({ auth }) => auth.user);
@@ -38,11 +39,7 @@ export const MainNavbar: React.FC = () => {
 
       {showModal && (
         <Modal element="modal" onDismissed={() => setShowModal(false)}>
-          {({ isDismissing }) => (
-            <div className="flex items-center justify-center fixed z-50 bg-gray-900 bg-opacity-50 top-0 bottom-0 right-0 left-0">
-              <button className="bg-green-700">Dismiss {isDismissing ? 'dismissing' : 'not dismissing'}</button>
-            </div>
-          )}
+          {({ dismiss }) => <LoginDialog dismiss={dismiss} />}
         </Modal>
       )}
     </div>

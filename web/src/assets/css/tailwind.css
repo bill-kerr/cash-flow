@@ -42,4 +42,12 @@
   @apply text-gray-500 font-bold uppercase tracking-wider text-xs;
 }
 
+.link {
+  @apply text-blue-600;
+}
+
+.link:hover {
+  @apply text-blue-500 cursor-pointer;
+}
+
 @tailwind utilities;
