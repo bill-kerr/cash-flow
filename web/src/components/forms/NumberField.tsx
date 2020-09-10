@@ -1,25 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, HTMLAttributes } from 'react';
 import { Field, FieldProps } from 'formik';
 import NumberFormat from 'react-number-format';
 
 interface NumberFieldProps {
   name: string;
-  label: string;
-  labelPosition?: 'left' | 'top';
   textAlign?: 'left' | 'right' | 'middle';
   icon?: string | JSX.Element;
   iconPosition?: 'left' | 'right';
+  customWrapperClasses?: string;
+  customFieldClasses?: string;
 }
 
-export const NumberField: React.FC<NumberFieldProps> = ({
-  labelPosition = 'left',
-  iconPosition = 'left',
+export const NumberField: React.FC<NumberFieldProps & HTMLAttributes<HTMLDivElement>> = ({
+  name,
   textAlign = 'left',
+  icon = '',
+  iconPosition = 'left',
+  customWrapperClasses = '',
+  customFieldClasses = '',
   ...props
 }) => {
   const [inputElem, setInputElement] = useState<HTMLInputElement | null>(null);
-  const containerDisplay = labelPosition === 'left' ? 'flex-row items-center' : 'flex-col';
-  const inputMargin = labelPosition === 'left' ? 'ml-2' : 'mt-2';
   const iconDisplay = iconPosition === 'left' ? 'flex-row' : 'flex-row-reverse';
   const iconMargin = iconPosition === 'left' ? 'ml-2' : 'mr-2';
   const alignments = { left: 'text-left', right: 'text-right', middle: 'text-center' };
@@ -27,24 +28,20 @@ export const NumberField: React.FC<NumberFieldProps> = ({
     <Field
       component={FormattedNumberInput}
       setInputElement={setInputElement}
-      className={`p-2 tracking-wide h-full w-full bg-transparent rounded focus:outline-none ${alignments[textAlign]}`}
-      {...props}
+      className={`p-2 tracking-wide h-full w-full bg-transparent rounded focus:outline-none ${alignments[textAlign]} ${customFieldClasses}`}
+      name={name}
     />
   );
 
   return (
-    <div className={`flex ${containerDisplay}`}>
-      <label htmlFor={props.label} className="whitespace-no-wrap">
-        {props.label}
-      </label>
-      <div
-        className={`${inputMargin} relative flex ${iconDisplay} items-center w-full bg-gray-700 rounded focus-within:shadow-outline transition-shadow duration-100 cursor-text`}
-        onFocus={() => inputElem?.select()}
-        onClick={() => inputElem?.select()}
-      >
-        <span className={`${iconMargin} pointer-events-none`}>{props.icon}</span>
-        {renderField()}
-      </div>
+    <div
+      onFocus={() => inputElem?.select()}
+      onClick={() => inputElem?.select()}
+      className={`relative flex ${iconDisplay} items-center w-full bg-gray-700 rounded focus-within:shadow-outline transition-shadow duration-100 cursor-text ${customWrapperClasses}`}
+      {...props}
+    >
+      {icon !== '' && <span className={`${iconMargin} pointer-events-none`}>{icon}</span>}
+      {renderField()}
     </div>
   );
 };

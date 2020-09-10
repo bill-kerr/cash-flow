@@ -19,11 +19,13 @@ export const CurrentCash: React.FC = () => {
   return (
     <div>
       <Formik initialValues={{ cash: 0 }} onSubmit={onSubmit} validationSchema={validationSchema}>
-        {(formik) => (
+        {({ submitForm }) => (
           <Form>
-            <NumberField name="cash" label="Current Cash" icon="$" textAlign="right" />
-            <div className="mt-2 p-2 text-sm text-gray-900 rounded bg-gray-300 font-mono">
-              {JSON.stringify(formik, null, 2)}
+            <div className="flex items-center w-64">
+              <label htmlFor="cash" className="whitespace-no-wrap">
+                Current Cash:
+              </label>
+              <NumberField name="cash" icon="$" textAlign="right" customWrapperClasses="ml-2" onBlur={submitForm} />
             </div>
           </Form>
         )}
