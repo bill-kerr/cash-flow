@@ -1,24 +1,23 @@
 import React from 'react';
 import { Formik, Form } from 'formik';
-import * as Yup from 'yup';
 import { NumberField } from '../forms/NumberField';
+import { useTypedDispatch } from '../../store';
+import { setCurrentCash } from '../../store/settings/actions';
 
 interface CashFormValues {
   cash: number;
 }
 
 export const CurrentCash: React.FC = () => {
-  const onSubmit = (values: CashFormValues) => {
-    console.log(values);
-  };
+  const dispatch = useTypedDispatch();
 
-  const validationSchema = Yup.object({
-    cash: Yup.string().required('Please enter a number.'),
-  });
+  const onSubmit = (values: CashFormValues) => {
+    dispatch(setCurrentCash(values.cash));
+  };
 
   return (
     <div>
-      <Formik initialValues={{ cash: 0 }} onSubmit={onSubmit} validationSchema={validationSchema}>
+      <Formik initialValues={{ cash: 0 }} onSubmit={onSubmit}>
         {({ submitForm }) => (
           <Form>
             <div className="flex items-center w-64">

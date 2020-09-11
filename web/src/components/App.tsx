@@ -5,6 +5,7 @@ import { MainNavbar } from './MainNavbar';
 import { SectionTitleBar } from './SectionTitleBar';
 import { ScheduleCategory } from './schedules/ScheduleCategory';
 import { CurrentCash } from './cash/CurrentCash';
+import { OccurrenceList } from './occurrences/OccurrenceList';
 
 const App: React.FC = () => {
   const user = useAuthStateListener();
@@ -41,7 +42,7 @@ const App: React.FC = () => {
         <div className="mt-6 container flex flex-col md:flex-row">
           <div className="flex-1">
             <SectionTitleBar iconType="upcoming_transactions" titleText="Your upcoming transactions" />
-            <div className="bg-gray-800 p-4 rounded-b shadow">this is a test</div>
+            <OccurrenceList />
           </div>
         </div>
       </>

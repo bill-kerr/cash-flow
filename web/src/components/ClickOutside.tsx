@@ -18,11 +18,14 @@ export const ClickOutside: React.FC<ClickOutsideProps> = ({ onClose, isOpen, chi
     [onClose]
   );
 
-  const escapeListener = useCallback((e: KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      onClose();
-    }
-  }, []);
+  const escapeListener = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    },
+    [onClose]
+  );
 
   useEffect(() => {
     if (!isOpen) {
@@ -36,7 +39,7 @@ export const ClickOutside: React.FC<ClickOutsideProps> = ({ onClose, isOpen, chi
       document.removeEventListener('click', clickListener);
       document.removeEventListener('keyup', escapeListener);
     };
-  }, [isOpen]);
+  }, [isOpen, clickListener, escapeListener]);
 
   return <div ref={ref}>{children}</div>;
 };

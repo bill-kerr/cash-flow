@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useTypedDispatch, useTypedSelector, Dispatch } from '../store';
 import { onAuthStateChanged } from '../apis/auth';
 import { authStateChange } from '../store/auth/actions';
-import { getExpectSignIn, setExpectSignIn } from '../utils/expectSignIn';
+import { setExpectSignIn } from '../utils/expectSignIn';
 
 const setAuthStateListener = (dispatch: Dispatch) => {
   return onAuthStateChanged((user) => {
@@ -12,7 +12,6 @@ const setAuthStateListener = (dispatch: Dispatch) => {
       setExpectSignIn(true);
     }
 
-    console.log(user, getExpectSignIn());
     dispatch(authStateChange(user));
   });
 };

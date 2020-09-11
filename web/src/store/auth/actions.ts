@@ -9,44 +9,27 @@ import {
   SIGN_OUT_COMPLETE,
   ISignOutCompleteAction,
 } from './types';
-import { ThunkAction } from 'redux-thunk';
 import { signInWithGoogle, authSignOut, getIdToken } from '../../apis/auth';
-import { Dispatch, RootState } from '..';
-import { ActionCreator } from 'redux';
+import { AsyncActionCreator } from '..';
 
-export const googleSignIn: ActionCreator<ThunkAction<
-  Promise<ISignInCompleteAction>,
-  RootState,
-  null,
-  ISignInCompleteAction
->> = () => {
-  return async (dispatch: Dispatch) => {
+export const googleSignIn: AsyncActionCreator<ISignInCompleteAction> = () => {
+  return async (dispatch) => {
     dispatch({ type: SIGN_IN_START });
     await signInWithGoogle();
     return dispatch({ type: SIGN_IN_COMPLETE });
   };
 };
 
-export const signOut: ActionCreator<ThunkAction<
-  Promise<ISignOutCompleteAction>,
-  RootState,
-  null,
-  ISignInCompleteAction
->> = () => {
-  return async (dispatch: Dispatch) => {
+export const signOut: AsyncActionCreator<ISignOutCompleteAction> = () => {
+  return async (dispatch) => {
     dispatch({ type: SIGN_OUT_START });
     await authSignOut();
     return dispatch({ type: SIGN_OUT_COMPLETE });
   };
 };
 
-export const authStateChange: ActionCreator<ThunkAction<
-  Promise<IAuthStateChangedAction>,
-  RootState,
-  User,
-  IAuthStateChangedAction
->> = (user: User | null) => {
-  return async (dispatch: Dispatch) => {
+export const authStateChange: AsyncActionCreator<IAuthStateChangedAction, User | null> = (user: User | null) => {
+  return async (dispatch) => {
     const newUser = user ? { ...user, token: await getIdToken() } : null;
     return dispatch({ type: AUTH_STATE_CHANGED, user: newUser });
   };
