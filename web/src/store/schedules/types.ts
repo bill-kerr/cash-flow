@@ -1,6 +1,6 @@
-import { Frequency } from '../../types/Frequency';
-import { DayOfWeek } from '../../types/DayOfWeek';
-import { Month } from '../../types/Month';
+import { Frequency } from '../../types/frequency';
+import { DayOfWeek } from '../../types/dayOfWeek';
+import { Month } from '../../types/month';
 
 export interface Schedule {
   object: 'schedule';
@@ -27,6 +27,7 @@ export interface ScheduleState {
 
 export const FETCH_SCHEDULES_START = 'Schedules:FetchStart';
 export const FETCH_SCHEDULES_COMPLETE = 'Schedules:FetchComplete';
+export const FETCH_SCHEDULES_ERROR = 'Schedules:FetchError';
 
 export interface IFetchSchedulesCompleteAction {
   type: typeof FETCH_SCHEDULES_COMPLETE;
@@ -37,4 +38,12 @@ export interface IFetchSchedulesStartAction {
   type: typeof FETCH_SCHEDULES_START;
 }
 
-export type ScheduleActionTypes = IFetchSchedulesStartAction | IFetchSchedulesCompleteAction;
+export interface IFetchSchedulesErrorAction {
+  type: typeof FETCH_SCHEDULES_ERROR;
+  error: string;
+}
+
+export type ScheduleActionTypes =
+  | IFetchSchedulesStartAction
+  | IFetchSchedulesCompleteAction
+  | IFetchSchedulesErrorAction;

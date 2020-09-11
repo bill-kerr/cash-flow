@@ -1,6 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useTypedSelector, useTypedDispatch } from '../../store';
+import { getOccurrences } from '../../store/occurrences/actions';
 
 export const OccurrenceList: React.FC = () => {
+  const occurrences = useTypedSelector((state) => state.occurrences.occurrences);
+  const dispatch = useTypedDispatch();
+  useEffect(() => {
+    dispatch(getOccurrences('2020-05-01', '2020-06-01'));
+  }, []);
+
   return (
     <div>
       <div className="flex bg-gray-700">
@@ -10,7 +18,7 @@ export const OccurrenceList: React.FC = () => {
         <ListHeading classes="w-1/12 pl-2" align="right" heading="Balance" />
         <ListHeading classes="w-1/5 pl-2 pr-4" align="right" heading="Actions" />
       </div>
-      <div className="bg-gray-800">this is where the list goes</div>
+      <div className="bg-gray-800">{JSON.stringify(occurrences)}</div>
     </div>
   );
 };

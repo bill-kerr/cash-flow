@@ -1,4 +1,5 @@
 import { Schedule } from '../../store/schedules/types';
+import { Occurrence } from '../../store/occurrences/types';
 
 export interface ErrorResponse {
   object: 'error';
@@ -17,3 +18,10 @@ export interface ScheduleListResponse {
   object: 'list';
   data: Schedule[];
 }
+
+export interface OccurrenceListResponse {
+  object: 'list';
+  data: Occurrence[];
+}
+
+export type CashFlowResponse = ErrorResponse | ScheduleListResponse | OccurrenceListResponse;

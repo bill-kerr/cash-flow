@@ -7,14 +7,17 @@ import { scheduleReducer } from './schedules/reducers';
 import { ScheduleActionTypes } from './schedules/types';
 import { SettingsActionTypes } from './settings/types';
 import { settingsReducer } from './settings/reducers';
+import { occurrenceReducer } from './occurrences/reducers';
+import { OccurrenceActionTypes } from './occurrences/types';
 
 export const rootReducer = combineReducers({
   auth: authReducer,
   schedules: scheduleReducer,
+  occurrences: occurrenceReducer,
   settings: settingsReducer,
 });
 
-export type ActionTypes = AuthActionTypes | ScheduleActionTypes | SettingsActionTypes;
+export type ActionTypes = AuthActionTypes | ScheduleActionTypes | SettingsActionTypes | OccurrenceActionTypes;
 
 export type RootState = ReturnType<typeof rootReducer>;
 export const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
