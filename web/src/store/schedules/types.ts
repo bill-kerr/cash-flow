@@ -1,6 +1,6 @@
-import { Frequency } from '../../types/frequency';
-import { DayOfWeek } from '../../types/dayOfWeek';
-import { Month } from '../../types/month';
+import { Frequency } from '../../types/Frequency';
+import { DayOfWeek } from '../../types/DayOfWeek';
+import { Month } from '../../types/Month';
 
 export interface Schedule {
   object: 'schedule';
