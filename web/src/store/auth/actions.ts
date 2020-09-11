@@ -2,12 +2,12 @@ import {
   SIGN_OUT_START,
   SIGN_IN_START,
   IAuthStateChangedAction,
-  User,
   AUTH_STATE_CHANGED,
   ISignInCompleteAction,
   SIGN_IN_COMPLETE,
   SIGN_OUT_COMPLETE,
   ISignOutCompleteAction,
+  User,
 } from './types';
 import { signInWithGoogle, authSignOut, getIdToken } from '../../apis/auth';
 import { AsyncActionCreator } from '..';
@@ -28,7 +28,7 @@ export const signOut: AsyncActionCreator<ISignOutCompleteAction> = () => {
   };
 };
 
-export const authStateChange: AsyncActionCreator<IAuthStateChangedAction, User | null> = (user: User | null) => {
+export const authStateChange: AsyncActionCreator<IAuthStateChangedAction, User | null> = (user) => {
   return async (dispatch) => {
     const newUser = user ? { ...user, token: await getIdToken() } : null;
     return dispatch({ type: AUTH_STATE_CHANGED, user: newUser });

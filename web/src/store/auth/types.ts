@@ -11,6 +11,8 @@ export interface AuthState {
   user: User | null;
 }
 
+export type UserData = User | null;
+
 export const AUTH_STATE_CHANGED = 'Auth:StateChanged';
 export const SIGN_IN_START = 'Auth:SignInStart';
 export const SIGN_IN_COMPLETE = 'Auth:SignInComplete';

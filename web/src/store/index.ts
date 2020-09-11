@@ -23,4 +23,4 @@ export type Dispatch = ThunkDispatch<RootState, any, ActionTypes>;
 export const useTypedDispatch = () => useDispatch<Dispatch>();
 
 export type AsyncAction<A extends Action> = (dispatch: Dispatch, getState: () => RootState) => Promise<A>;
-export type AsyncActionCreator<A extends Action, T = undefined> = (args: T) => AsyncAction<A>;
+export type AsyncActionCreator<A extends Action, T = undefined> = (...args: T[]) => AsyncAction<A>;
