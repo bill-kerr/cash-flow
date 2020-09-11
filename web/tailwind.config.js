@@ -8,6 +8,9 @@ module.exports = {
       screens: {
         xs: '480px',
       },
+      animation: {
+        rise: 'translate3d(0,15%,0) 0.2s linear',
+      },
     },
   },
   variants: {
