@@ -2,13 +2,21 @@ import { useState } from 'react';
 import moment from 'moment';
 
 type PickerInputDate = Exclude<moment.MomentInput, null | undefined>;
+type PickerInputRange = { startDate: PickerInputDate; endDate: PickerInputDate };
 type PickerDate = moment.Moment;
 
 interface DatePickerConfig {
+  name: string;
   initialDate?: PickerInputDate;
-  initialRange?: { startDate: PickerInputDate; endDate: PickerInputDate };
+  initialRange?: PickerInputRange;
   monthStrings?: MonthStrings;
   yearDigits?: 2 | 4;
+}
+
+interface DatePickerBag {
+  field: React.InputHTMLAttributes<HTMLInputElement>;
+  setDate: (date: PickerInputDate) => void;
+  setRange: (range: PickerInputRange) => void;
 }
 
 interface DateRange {
@@ -47,13 +55,24 @@ const defaultMonthStrings: MonthStrings = {
 };
 
 export const useDatePicker = ({
+  name,
   monthStrings = defaultMonthStrings,
   yearDigits = 4,
   initialDate = new Date(),
   initialRange = getDateRange(moment()),
-}: DatePickerConfig) => {
+}: DatePickerConfig): DatePickerBag => {
   const [currentDate, setCurrentDate] = useState(moment(initialDate));
   const [currentRange, setCurrentRange] = useState(makeDateRange(initialRange));
+
+  return {
+    field: { type: 'text', readOnly: true, value: currentDate.toString() },
+    setDate: (date: PickerInputDate) => {
+      setCurrentDate(moment(date));
+    },
+    setRange: (range: PickerInputRange) => {
+      setCurrentRange(makeDateRange(range));
+    },
+  };
 };
 
 const makeDateRange = (range: { startDate: PickerInputDate; endDate: PickerInputDate }): DateRange => {
