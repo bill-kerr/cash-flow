@@ -9,7 +9,7 @@ export const OccurrenceList: React.FC = () => {
   const dispatch = useTypedDispatch();
   useEffect(() => {
     dispatch(getOccurrences('2020-05-01', '2020-06-01'));
-  }, []);
+  }, [dispatch]);
 
   let currentBalance = balance;
   const renderList = () =>
