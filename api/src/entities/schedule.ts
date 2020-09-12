@@ -1,16 +1,16 @@
-import { Entity, Column, BeforeInsert, PrimaryColumn, BaseEntity, OneToMany, BeforeUpdate } from "typeorm";
-import { Frequency, DayOfWeek, Month } from "../types";
-import { id, getUnixTime } from "../util";
-import { Exception } from "./exception";
+import { Entity, Column, BeforeInsert, PrimaryColumn, BaseEntity, OneToMany, BeforeUpdate } from 'typeorm';
+import { Frequency, DayOfWeek, Month } from '../types';
+import { id, getUnixTime } from '../util';
+import { Exception } from './exception';
 
 @Entity()
 export class Schedule extends BaseEntity {
-  object = "schedule";
+  object = 'schedule';
 
   @PrimaryColumn()
   id: string;
 
-  @Column({ default: 0, type: "float", nullable: false })
+  @Column({ default: 0, type: 'integer', nullable: false })
   amount: number;
 
   @Column({ nullable: false })
@@ -19,7 +19,7 @@ export class Schedule extends BaseEntity {
   @Column({ nullable: false })
   startDate: string;
 
-  @Column({ default: null, type: "varchar" })
+  @Column({ default: null, type: 'varchar' })
   endDate: string | null;
 
   @Column({ nullable: false })
@@ -28,16 +28,16 @@ export class Schedule extends BaseEntity {
   @Column({ default: 1, nullable: false })
   interval: number;
 
-  @Column({ default: null, type: "int" })
+  @Column({ default: null, type: 'int' })
   occurrenceCount: number | null;
 
-  @Column({ default: null, type: "varchar" })
+  @Column({ default: null, type: 'varchar' })
   dayOfWeek: DayOfWeek | null;
 
-  @Column({ default: null, type: "varchar" })
+  @Column({ default: null, type: 'varchar' })
   dayOfMonth: number | null;
 
-  @Column({ default: null, type: "varchar" })
+  @Column({ default: null, type: 'varchar' })
   month: Month | null;
 
   @Column({ nullable: false })
@@ -46,7 +46,7 @@ export class Schedule extends BaseEntity {
   @Column({ nullable: false })
   userId: string;
 
-  @OneToMany(() => Exception, (exception) => exception.schedule, { onDelete: "CASCADE" })
+  @OneToMany(() => Exception, (exception) => exception.schedule, { onDelete: 'CASCADE' })
   exceptions: Exception[];
 
   @Column()

@@ -1,11 +1,10 @@
-import moment from "moment";
-import { body } from "express-validator";
-import { DayOfWeek, Frequency, Month } from "../../types";
-import { round } from "../../util";
+import moment from 'moment';
+import { body } from 'express-validator';
+import { DayOfWeek, Frequency, Month } from '../../types';
 
 export const isValidDate = (dateString: string): boolean => {
-  if (dateString < "1000-01-01") return false;
-  return moment(dateString, "YYYY-MM-DD", true).isValid();
+  if (dateString < '1000-01-01') return false;
+  return moment(dateString, 'YYYY-MM-DD', true).isValid();
 };
 
 export const isDayOfWeek = (value: string): boolean => {
@@ -32,16 +31,16 @@ export const stringField = (fieldName: string) =>
     .isString()
     .withMessage(`The ${fieldName} field must contain a string.`);
 
-export const floatField = (fieldName: string) =>
+export const intField = (fieldName: string) =>
   body(fieldName)
     .notEmpty()
     .bail()
     .withMessage(requiredMessage(fieldName))
     .trim()
     .escape()
-    .isFloat()
-    .withMessage(`The ${fieldName} field must contain a number.`)
-    .customSanitizer((val) => round(val));
+    .isInt()
+    .withMessage(`The ${fieldName} field must contain an integer.`)
+    .toInt();
 
 export const booleanField = (fieldName: string) =>
   body(fieldName)
@@ -53,7 +52,7 @@ export const booleanField = (fieldName: string) =>
     .customSanitizer((val) => val.toLowerCase())
     .isBoolean()
     .withMessage(`The ${fieldName} field must contain a boolean.`)
-    .customSanitizer((val) => val === "true");
+    .customSanitizer((val) => val === 'true');
 
 export const dateField = (fieldName: string) =>
   body(fieldName)
@@ -98,7 +97,7 @@ export const positiveIntegerField = (fieldName: string) =>
 
 export const dayOfWeekField = (fieldName: string) =>
   body(fieldName)
-    .if(body("frequency").equals(Frequency.WEEKLY))
+    .if(body('frequency').equals(Frequency.WEEKLY))
     .notEmpty()
     .bail()
     .withMessage(`The ${fieldName} field should not be empty if frequency is set to \'WEEKLY\'.`)
@@ -111,7 +110,7 @@ export const dayOfWeekField = (fieldName: string) =>
 
 export const dayOfMonthField = (fieldName: string) =>
   body(fieldName)
-    .if(body("frequency").custom((val) => val === Frequency.MONTHLY || val === Frequency.YEARLY))
+    .if(body('frequency').custom((val) => val === Frequency.MONTHLY || val === Frequency.YEARLY))
     .notEmpty()
     .bail()
     .withMessage(`The ${fieldName} field should not be empty if frequency is set to \'MONTHLY\' or \'YEARLY\'.`)
@@ -123,7 +122,7 @@ export const dayOfMonthField = (fieldName: string) =>
 
 export const monthField = (fieldName: string) =>
   body(fieldName)
-    .if(body("frequency").equals(Frequency.YEARLY))
+    .if(body('frequency').equals(Frequency.YEARLY))
     .notEmpty()
     .bail()
     .withMessage(`The ${fieldName} field should not be empty if frequency is set to \'YEARLY\'.`)

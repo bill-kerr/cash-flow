@@ -19,7 +19,7 @@ export class Exception extends BaseEntity {
   @Column({ default: null })
   currentDate: string;
 
-  @Column({ type: 'float', default: null })
+  @Column({ type: 'integer', default: null })
   amount: number;
 
   @Column({ default: null })
