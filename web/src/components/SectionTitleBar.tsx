@@ -23,9 +23,15 @@ export const SectionTitleBar: React.FC<SectionTitleBarProps & React.HTMLProps<HT
   ...props
 }) => {
   return (
-    <div {...props} className={`${props.className} bg-gray-700 p-4 rounded-t shadow flex align-center`}>
-      {icons[iconType]}
-      <span className="ml-2 font-medium">{titleText}</span>
+    <div
+      {...props}
+      className={`${props.className} flex items-center justify-between bg-gray-700 p-4 rounded-t shadow flex align-center`}
+    >
+      <div className="flex items-center">
+        {icons[iconType]}
+        <span className="ml-2 font-medium">{titleText}</span>
+      </div>
+      <div>{props.children}</div>
     </div>
   );
 };
