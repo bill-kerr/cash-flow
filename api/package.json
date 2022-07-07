@@ -31,7 +31,7 @@
     "firebase-admin": "^8.12.1",
     "helmet": "^3.22.0",
     "lodash": "^4.17.15",
-    "moment": "^2.26.0",
+    "moment": "^2.29.4",
     "pg": "^8.3.0",
     "reflect-metadata": "^0.1.13",
     "round-to": "^4.1.0",
